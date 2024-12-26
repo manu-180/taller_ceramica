@@ -293,7 +293,7 @@ Widget build(BuildContext context) {
     appBar: ResponsiveAppBar(isTablet: size.width > 600),
     body: Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 600), // Ancho máximo de 600
+        constraints: const BoxConstraints(maxWidth: 600), // Ancho máximo de 600
         child: Column(
           children: [
             const Padding(

@@ -35,7 +35,7 @@ class CustomAppBarState extends State<CustomAppBar> {
           {'value': '/gestionclasesivanna', 'label': 'Gestión de clases'},
           {'value': '/usuariosivanna', 'label': 'Alumnos/as'},
           {'value': '/configuracionivanna', 'label': 'Configuración'},
-          // {'value': '/cambiarpassword', 'label': 'prueba'},
+          {'value': '/pruebaivanna', 'label': 'prueba'},
         ];
 
         final userRoutes = [

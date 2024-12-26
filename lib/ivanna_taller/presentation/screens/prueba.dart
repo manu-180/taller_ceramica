@@ -3,8 +3,13 @@ import 'package:go_router/go_router.dart';
 // import 'package:taller_ceramica/ivanna_taller/utils/generar_fechas.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 
+
+
 class Prueba extends StatelessWidget {
   const Prueba({super.key});
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +18,7 @@ class Prueba extends StatelessWidget {
     //     DateTime(2024, 12, 2); // 2 de diciembre de 2024
     // final DateTime fechaFin = DateTime(2025, 1, 3);
     // final List<String> resultado = GenerarFechas().generarFechas(fechaInicio, fechaFin);
+    
 
     return Scaffold(
       appBar: ResponsiveAppBar( isTablet: size.width > 600),
