@@ -20,6 +20,7 @@ flutter build appbundle
 
 despliegue en web:
 *eliminar docs*
+flutter build web
 mkdir docs    
 cp -r build/web/* docs/
 git add .

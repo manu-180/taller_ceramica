@@ -3,18 +3,18 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 
-class TabletAppBar extends StatefulWidget implements PreferredSizeWidget {
+class TabletAppBarManu extends StatefulWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize;
 
-  const  TabletAppBar({super.key})
+  const  TabletAppBarManu({super.key})
       : preferredSize = const Size.fromHeight(kToolbarHeight * 2.2);
 
   @override
   CustomAppBarState createState() => CustomAppBarState();
 }
 
-class CustomAppBarState extends State<TabletAppBar> {
+class CustomAppBarState extends State<TabletAppBarManu> {
   bool _isMenuOpen = false;
 
   @override

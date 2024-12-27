@@ -3,17 +3,17 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
+class CustomAppBarManu extends StatefulWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize;
 
-  const CustomAppBar({super.key}) : preferredSize = const Size.fromHeight(70.0);
+  const CustomAppBarManu({super.key}) : preferredSize = const Size.fromHeight(70.0);
 
   @override
   CustomAppBarState createState() => CustomAppBarState();
 }
 
-class CustomAppBarState extends State<CustomAppBar> {
+class CustomAppBarState extends State<CustomAppBarManu> {
   bool _isMenuOpen = false;
 
   @override
@@ -29,19 +29,19 @@ class CustomAppBarState extends State<CustomAppBar> {
         final userId = user?.id;
 
         final adminRoutes = [
-          {'value': '/turnosivanna', 'label': 'Clases'},
-          {'value': '/misclasesivanna', 'label': 'Mis clases'},
-          {'value': '/gestionhorariosivanna', 'label': 'Gestión de horarios'},
-          {'value': '/gestionclasesivanna', 'label': 'Gestión de clases'},
-          {'value': '/usuariosivanna', 'label': 'Alumnos/as'},
-          {'value': '/configuracionivanna', 'label': 'Configuración'},
-          {'value': '/pruebaivanna', 'label': 'prueba'},
+          {'value': '/turnosmanu', 'label': 'Clases'},
+          {'value': '/misclasesmanu', 'label': 'Mis clases'},
+          {'value': '/gestionhorariosmanu', 'label': 'Gestión de horarios'},
+          {'value': '/gestionclasesmanu', 'label': 'Gestión de clases'},
+          {'value': '/usuariosmanu', 'label': 'Alumnos/as'},
+          {'value': '/configuracionmanu', 'label': 'Configuración'},
+          {'value': '/pruebamanu', 'label': 'prueba'},
         ];
 
         final userRoutes = [
-          {'value': '/turnosivanna', 'label': 'Clases'},
-          {'value': '/misclasesivanna', 'label': 'Mis clases'},
-          {'value': '/configuracionivanna', 'label': 'Configuración'},
+          {'value': '/turnosmanu', 'label': 'Clases'},
+          {'value': '/misclasesmanu', 'label': 'Mis clases'},
+          {'value': '/configuracionmanu', 'label': 'Configuración'},
         ];
 
         final menuItems = (userId == "e2446a58-b391-4f22-ab76-17648442acb6" ||
@@ -57,7 +57,7 @@ class CustomAppBarState extends State<CustomAppBar> {
             children: [
               GestureDetector(
                 onTap: () {
-                  context.push("/homeivanna");
+                  context.push("/homemanu");
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,7 +71,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                       ),
                     ),
                     Text(
-                      'Cerámica',
+                      'Manu',
                       style: TextStyle(
                         fontSize: size.width * 0.05, // Tamaño relativo
                         fontWeight: FontWeight.bold,
@@ -122,7 +122,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                         height: size.height * 0.044,
                         child: ElevatedButton(
                           onPressed: () {
-                            context.push('/crear-usuarioivanna');
+                            context.push('/crear-usuariomanu');
                           },
                           child: Text(
                             'Crear',
@@ -136,7 +136,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                         height: size.height * 0.044,
                         child: ElevatedButton(
                           onPressed: () {
-                            context.push('/iniciar-sesionivanna');
+                            context.push('/iniciar-sesionmanu');
                           },
                           child: Text(
                             'Iniciar',
