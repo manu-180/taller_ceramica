@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/config/router/barril_screens.dart';
 import 'package:taller_ceramica/home.dart';
+import 'package:taller_ceramica/ivanna_taller/presentation/screens/configuracion.dart';
 import 'package:taller_ceramica/screens_globales/cambiar_password.dart';
-import 'package:taller_ceramica/screens_globales/configuracion.dart';
+import 'package:taller_ceramica/manu_taller/presentation/screens/configuracion.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/gestion_clases_screen.dart';
 import 'package:taller_ceramica/screens_globales/prueba.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/responsive_turnos_screens/resposive_clases_screen.dart';
@@ -40,9 +41,9 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
       // name: "usuarios",
       builder: (context, state) => const UsuariosScreen()),
   GoRoute(
-      path: "/configuracion",
+      path: "/configuracionivanna",
       // name: "configuracion",
-      builder: (context, state) => const Configuracion()),
+      builder: (context, state) => const ConfiguracionIvanna()),
   GoRoute(
       path: "/crear-usuarioivanna",
       // name: "crear usuario",
@@ -55,8 +56,8 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
       path: "/cambiarpassword",
       builder: (context, state) => const CambiarPassword()),
   GoRoute(
-      path: "/cambiarfullname",
-      builder: (context, state) => const UpdateNameScreen()),
+      path: "/cambiarfullnameivanna",
+      builder: (context, state) => const UpdateNameIvannaScreen()),
   GoRoute(
       path: "/homemanu", builder: (context, state) => const HomeScreenManu()),
   GoRoute(
@@ -79,6 +80,11 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
       // name: "usuarios",
       builder: (context, state) => const UsuariosScreenManu()),
   GoRoute(
+      path: "/configuracionmanu",
+      // name: "usuarios",
+      builder: (context, state) => const ConfiguracionManu()),
+  
+  GoRoute(
       path: "/crear-usuariomanu",
       // name: "crear usuario",
       builder: (context, state) => const SignUpScreenManu()),
@@ -89,4 +95,5 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
   GoRoute(
       path: "/cambiarfullnamemanu",
       builder: (context, state) => const UpdateNameScreenManu()),
+  
 ]);

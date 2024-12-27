@@ -9,14 +9,14 @@ import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
 
-class Configuracion extends ConsumerStatefulWidget {
-  const Configuracion({super.key});
+class ConfiguracionIvanna extends ConsumerStatefulWidget {
+  const ConfiguracionIvanna({super.key});
 
   @override
   _ConfiguracionState createState() => _ConfiguracionState();
 }
 
-class _ConfiguracionState extends ConsumerState<Configuracion> {
+class _ConfiguracionState extends ConsumerState<ConfiguracionIvanna> {
   User? user;
 
   @override
@@ -41,7 +41,7 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
       },
       {
         'title': 'Cambiar nombre de usuario',
-        'route': '/cambiarfullname',
+        'route': '/cambiarfullnameivanna',
       },
     ];
 

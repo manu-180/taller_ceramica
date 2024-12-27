@@ -30,19 +30,19 @@ class CustomAppBarState extends State<TabletAppBarManu> {
           final userId = user?.id;
 
           final adminRoutes = [
-            {'value': '/turnosivanna', 'label': 'Clases'},
-            {'value': '/misclasesivanna', 'label': 'Mis clases'},
-            {'value': '/gestionhorariosivanna', 'label': 'Gestión de horarios'},
-            {'value': '/gestionclasesivanna', 'label': 'Gestión de clases'},
-            {'value': '/usuariosivanna', 'label': 'Alumnos/as'},
-            {'value': '/configuracionivanna', 'label': 'Configuración'},
+            {'value': '/turnosmanu', 'label': 'Clases'},
+            {'value': '/misclasesmanu', 'label': 'Mis clases'},
+            {'value': '/gestionhorariosmanu', 'label': 'Gestión de horarios'},
+            {'value': '/gestionclasesmanu', 'label': 'Gestión de clases'},
+            {'value': '/usuariosmanu', 'label': 'Alumnos/as'},
+            {'value': '/configuracionmanu', 'label': 'Configuración'},
             // {'value': '/prueba', 'label': 'prueba'},
           ];
 
           final userRoutes = [
-            {'value': '/turnosivanna', 'label': 'Clases'},
-            {'value': '/misclasesivanna', 'label': 'Mis clases'},
-            {'value': '/configuracionivanna', 'label': 'Configuración'},
+            {'value': '/turnosmanu', 'label': 'Clases'},
+            {'value': '/misclasesmanu', 'label': 'Mis clases'},
+            {'value': '/configuracionmanu', 'label': 'Configuración'},
           ];
 
           final menuItems = (userId == "e2446a58-b391-4f22-ab76-17648442acb6" ||
