@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/funciones_globales/utils/utils_barril.dart';
+import 'package:taller_ceramica/funciones_globales/utils_barril.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
 

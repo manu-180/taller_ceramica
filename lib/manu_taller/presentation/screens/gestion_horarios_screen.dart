@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/manu_taller/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/manu_taller/widgets/mostrar_dia_segun_fecha.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 
-import '../../../funciones_globales/utils/utils_barril.dart';
+import '../../../funciones_globales/utils_barril.dart';
 
 class GestionHorariosScreenManu extends StatefulWidget {
   const GestionHorariosScreenManu({super.key});

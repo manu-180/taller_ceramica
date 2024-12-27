@@ -5,7 +5,7 @@ import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_i
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
-import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
+import 'package:taller_ceramica/funciones_globales/utils/box_text.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_clase.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/generar_id.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_lugar_disponible.dart';

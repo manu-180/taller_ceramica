@@ -6,7 +6,7 @@ import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 
-import '../../../../funciones_globales/utils/utils_barril.dart';
+import '../../../../funciones_globales/utils_barril.dart';
 
 class ClasesTabletScreenManu extends StatefulWidget {
   const ClasesTabletScreenManu({super.key});

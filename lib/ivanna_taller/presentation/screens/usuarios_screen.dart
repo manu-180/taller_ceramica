@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/models/usuario_models.dart';
-import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
+import 'package:taller_ceramica/funciones_globales/utils/box_text.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/alumnos_en_clase.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_de_bd.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_usuario.dart';
