@@ -76,11 +76,6 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
         );
         _fullnameController.clear();
       }
-    } catch (e) {
-      print("el error es :$e");
-      setState(() {
-        _errorMessage = e.toString();
-      });
     } finally {
       setState(() {
         _isLoading = false;

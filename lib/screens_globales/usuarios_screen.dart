@@ -210,7 +210,6 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: widget.appBar,
       body: isLoading
