@@ -4,7 +4,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/redirijir_usuario_al_taller.dart';
 import 'dart:convert';
 
-import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -74,7 +73,6 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(

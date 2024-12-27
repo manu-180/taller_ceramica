@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/update_user.dart';
-import 'package:taller_ceramica/ivanna_taller/utils/capitalize.dart';
+import 'package:taller_ceramica/funciones_globales/utils/capitalize.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
 

@@ -1,7 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/funciones_globales/utils/utils_barril.dart';
 import 'package:taller_ceramica/manu_taller/models/clase_models.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
-import 'package:taller_ceramica/manu_taller/utils/utils_barril.dart';
 
 class AgregarUsuarioManu {
   final SupabaseClient supabaseClient;

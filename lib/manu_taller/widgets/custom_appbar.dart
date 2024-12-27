@@ -122,7 +122,7 @@ class CustomAppBarState extends State<CustomAppBarManu> {
                         height: size.height * 0.044,
                         child: ElevatedButton(
                           onPressed: () {
-                            context.push('/iniciar-sesionmanu');
+                            context.push('/iniciar-sesionivanna');
                           },
                           child: Text(
                             'Iniciar',
@@ -133,44 +133,47 @@ class CustomAppBarState extends State<CustomAppBarManu> {
                     ],
                   )
                 : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                        width: size.width * 0.23,
-                        height: size.height * 0.044,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            context.push('/crear-usuariomanu');
-                          },
-                          child: Text(
-                            'Crear',
-                            style: TextStyle(fontSize: size.width * 0.032),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: size.width * 0.02),
-                      SizedBox(
-                        width: size.width * 0.23,
-                        height: size.height * 0.044,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await Supabase.instance.client.auth.signOut();
-
-                            final prefs = await SharedPreferences.getInstance();
-                            await prefs.remove('session');
-                            if (context.mounted) {
-                              context.push('/');
-                            }
-                            return;
-                          },
-                          child: Text(
-                            'Cerrar',
-                            style: TextStyle(fontSize: size.width * 0.032),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      if(userId == "e2446a58-b391-4f22-ab76-17648442acb6" ||
+                                          userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b") ...[
+                                      SizedBox(
+                                        width: size.width * 0.23,
+                                        height: size.height * 0.044,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            context.push('/crear-usuarioivanna');
+                                          },
+                                          child: Text(
+                                            'Crear',
+                                            style: TextStyle(fontSize: size.width * 0.032),
+                                          ),
+                                        ),
+                                      )],
+                                      SizedBox(width: size.width * 0.02),
+                                      SizedBox(
+                                        width: userId == "e2446a58-b391-4f22-ab76-17648442acb6" ||
+                                          userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b" ? size.width * 0.23 : size.width * 0.34,
+                                        height: size.height * 0.044,
+                                        child: ElevatedButton(
+                                          onPressed: () async {
+                                            await Supabase.instance.client.auth.signOut();
+                
+                                            final prefs = await SharedPreferences.getInstance();
+                                            await prefs.remove('session');
+                                            if (context.mounted) {
+                                              context.push('/');
+                                            }
+                                            return;
+                                          },
+                                          child: Text(
+                                            'Cerrar',
+                                            style: TextStyle(fontSize: size.width * 0.032),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
             SizedBox(width: size.width * 0.032),
             ]);
         

@@ -5,7 +5,8 @@ import 'package:taller_ceramica/ivanna_taller/supabase/functions/calcular_24hs.d
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/manu_taller/models/clase_models.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
-import 'package:taller_ceramica/manu_taller/utils/utils_barril.dart';
+
+import '../../../../funciones_globales/utils/utils_barril.dart';
 
 class ClasesTabletScreenManu extends StatefulWidget {
   const ClasesTabletScreenManu({super.key});
