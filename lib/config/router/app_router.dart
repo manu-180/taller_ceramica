@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/config/router/barril_screens.dart';
 import 'package:taller_ceramica/home.dart';
-import 'package:taller_ceramica/ivanna_taller/presentation/screens/cambiar_password.dart';
-import 'package:taller_ceramica/ivanna_taller/presentation/screens/configuracion.dart';
+import 'package:taller_ceramica/screens_globales/cambiar_password.dart';
+import 'package:taller_ceramica/screens_globales/configuracion.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/gestion_clases_screen.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/prueba.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/responsive_turnos_screens/resposive_clases_screen.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/update_name_screen.dart';
-import 'package:taller_ceramica/manu_taller/presentation/screens/cambiar_password.dart';
-import 'package:taller_ceramica/manu_taller/presentation/screens/configuracion.dart';
 import 'package:taller_ceramica/manu_taller/presentation/screens/gestion_clases_screen.dart';
 import 'package:taller_ceramica/manu_taller/presentation/screens/gestion_horarios_screen.dart';
 import 'package:taller_ceramica/manu_taller/presentation/screens/home_screen.dart';
@@ -47,7 +45,7 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
       // name: "usuarios",
       builder: (context, state) => const UsuariosScreen()),
   GoRoute(
-      path: "/configuracionivanna",
+      path: "/configuracion",
       // name: "configuracion",
       builder: (context, state) => const Configuracion()),
   GoRoute(
@@ -91,10 +89,6 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
       // name: "usuarios",
       builder: (context, state) => const UsuariosScreenManu()),
   GoRoute(
-      path: "/configuracionmanu",
-      // name: "configuracion",
-      builder: (context, state) => const ConfiguracionManu()),
-  GoRoute(
       path: "/iniciar-sesionmanu",
       // name: "iniciar sesion",
       builder: (context, state) => const LoginScreenManu()),
@@ -106,9 +100,7 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
   GoRoute(
       path: "/gestionclasesmanu",
       builder: (context, state) => const GestionDeClasesScreenManu()),
-  GoRoute(
-      path: "/cambiarpasswordmanu",
-      builder: (context, state) => const CambiarPasswordManu()),
+
   GoRoute(
       path: "/cambiarfullnamemanu",
       builder: (context, state) => const UpdateNameScreenManu()),
