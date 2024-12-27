@@ -148,9 +148,9 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                   title: const Text('Actualizar datos'),
                   children: [
                     ListView.builder(
-                      shrinkWrap: true, // Evita problemas de scroll
+                      shrinkWrap: true, 
                       physics:
-                          const NeverScrollableScrollPhysics(), // Desactiva el scroll dentro del ExpansionTile
+                          const NeverScrollableScrollPhysics(),
                       itemCount: options.length,
                       itemBuilder: (context, index) {
                         final option = options[index];

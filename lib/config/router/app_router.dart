@@ -11,7 +11,6 @@ import 'package:taller_ceramica/ivanna_taller/presentation/screens/update_name_s
 import 'package:taller_ceramica/manu_taller/presentation/screens/gestion_clases_screen.dart';
 import 'package:taller_ceramica/manu_taller/presentation/screens/gestion_horarios_screen.dart';
 import 'package:taller_ceramica/manu_taller/presentation/screens/home_screen.dart';
-import 'package:taller_ceramica/manu_taller/presentation/screens/login_screen.dart';
 import 'package:taller_ceramica/manu_taller/presentation/screens/mis_clases_screens.dart';
 import 'package:taller_ceramica/manu_taller/presentation/screens/responsive_turnos_screens/resposive_clases_screen.dart';
 import 'package:taller_ceramica/manu_taller/presentation/screens/sign_up_screen.dart';
@@ -49,10 +48,6 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
       // name: "configuracion",
       builder: (context, state) => const Configuracion()),
   GoRoute(
-      path: "/iniciar-sesionivanna",
-      // name: "iniciar sesion",
-      builder: (context, state) => const LoginScreen()),
-  GoRoute(
       path: "/crear-usuarioivanna",
       // name: "crear usuario",
       builder: (context, state) => const SignUpScreen()),
@@ -88,10 +83,6 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
       path: "/usuariosmanu",
       // name: "usuarios",
       builder: (context, state) => const UsuariosScreenManu()),
-  GoRoute(
-      path: "/iniciar-sesionmanu",
-      // name: "iniciar sesion",
-      builder: (context, state) => const LoginScreenManu()),
   GoRoute(
       path: "/crear-usuariomanu",
       // name: "crear usuario",

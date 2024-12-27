@@ -16,14 +16,11 @@ ResposiveClasesScreen({super.key, required bool isTablet})
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    // Define un umbral de ancho para tablets
     const double tabletThreshold = 600;
 
     if (size.width > tabletThreshold) {
-      // Renderiza el AppBar para tablets
       return const ClasesTabletScreen();
     } else {
-      // Renderiza el AppBar para celulares
       return const ClasesScreen();
     }
   }

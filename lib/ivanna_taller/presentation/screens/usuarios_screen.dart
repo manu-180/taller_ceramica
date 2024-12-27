@@ -174,12 +174,12 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(false), // Cancelar
+                  onPressed: () => Navigator.of(context).pop(false), 
                   child: const Text('Cancelar'),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop(true); // Confirmar
+                    Navigator.of(context).pop(true); 
                   },
                   child: const Text('Confirmar'),
                 ),
@@ -191,7 +191,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
     );
 
     if (resultado == true) {
-      onConfirmar(contador); // Envía la cantidad seleccionada al callback
+      onConfirmar(contador); 
     }
   }
 
