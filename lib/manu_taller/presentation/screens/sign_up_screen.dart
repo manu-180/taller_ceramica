@@ -239,7 +239,7 @@ class _SignUpScreenState extends State<SignUpScreenManu> {
                           data: {'fullname': Capitalize().capitalize(fullname)},
                         );
           
-                        await supabase.from('usuarios').insert({
+                        await supabase.from('usuariosmanu').insert({
                           'id': await GenerarIdManu().generarIdUsuarioManu(),
                           'usuario': email,
                           'fullname': Capitalize().capitalize(fullname),
