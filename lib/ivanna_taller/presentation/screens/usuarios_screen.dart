@@ -2,10 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/models/usuario_models.dart';
-import 'package:taller_ceramica/funciones_globales/utils/box_text.dart';
+import 'package:taller_ceramica/widget_globales/box_text.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/alumnos_en_clase.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_de_bd.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_usuario.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
@@ -38,8 +36,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   }
 
   Future<void> eliminarUsuario(int userId, String userUid) async {
-    await EliminarUsuario().eliminarDeBaseDatos(userId);
-    await EliminarDeBD().deleteCurrentUser(userUid);
+    // await EliminarUsuario().eliminarDeBaseDatos(userId);
+    // await EliminarDeBD().deleteCurrentUser(userUid);
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Usuario eliminado exitosamente')),
@@ -174,12 +172,12 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(false), 
+                  onPressed: () => Navigator.of(context).pop(false),
                   child: const Text('Cancelar'),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop(true); 
+                    Navigator.of(context).pop(true);
                   },
                   child: const Text('Confirmar'),
                 ),
@@ -191,7 +189,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
     );
 
     if (resultado == true) {
-      onConfirmar(contador); 
+      onConfirmar(contador);
     }
   }
 
@@ -199,13 +197,13 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: ResponsiveAppBar( isTablet: size.width > 600),
+      appBar: ResponsiveAppBar(isTablet: size.width > 600),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: Column(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: Column(
                   children: [
                     const Padding(
                       padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
@@ -266,14 +264,16 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                     IconButton(
                                       icon: const Icon(Icons.add,
                                           color: Colors.green),
-                                      onPressed: () => mostrarDialogoConContador(
+                                      onPressed: () =>
+                                          mostrarDialogoConContador(
                                         context: context,
                                         titulo: 'Agregar Créditos',
                                         contenido:
                                             'Selecciona cuántos créditos quieres agregar:',
                                         onConfirmar: (cantidad) async {
                                           for (int i = 0; i < cantidad; i++) {
-                                            await agregarCredito(usuario.fullname);
+                                            await agregarCredito(
+                                                usuario.fullname);
                                           }
                                         },
                                       ),
@@ -281,14 +281,16 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                     IconButton(
                                       icon: const Icon(Icons.remove,
                                           color: Colors.orange),
-                                      onPressed: () => mostrarDialogoConContador(
+                                      onPressed: () =>
+                                          mostrarDialogoConContador(
                                         context: context,
                                         titulo: 'Remover Créditos',
                                         contenido:
                                             'Selecciona cuántos créditos quieres remover:',
                                         onConfirmar: (cantidad) async {
                                           for (int i = 0; i < cantidad; i++) {
-                                            await removerCredito(usuario.fullname);
+                                            await removerCredito(
+                                                usuario.fullname);
                                           }
                                         },
                                       ),
@@ -303,8 +305,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                     ),
                   ],
                 ),
+              ),
             ),
-          ),
     );
   }
 }

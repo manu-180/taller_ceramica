@@ -1,6 +1,6 @@
 export 'package:taller_ceramica/funciones_globales/utils/eliminar_de_bd.dart';
 
-export 'package:taller_ceramica/funciones_globales/utils/box_text.dart';
+export 'package:taller_ceramica/widget_globales/box_text.dart';
 
 export 'package:taller_ceramica/funciones_globales/utils/capitalize.dart';
 export 'package:taller_ceramica/funciones_globales/utils/dia_con_fecha.dart';

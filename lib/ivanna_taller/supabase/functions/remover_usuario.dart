@@ -1,6 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/calcular_24hs.dart';
+import 'package:taller_ceramica/funciones_globales/utils/calcular_24hs.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/funciones_globales/utils_barril.dart';

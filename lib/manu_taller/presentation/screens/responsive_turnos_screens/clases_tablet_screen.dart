@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/calcular_24hs.dart';
+import 'package:taller_ceramica/funciones_globales/utils/calcular_24hs.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
@@ -133,7 +133,7 @@ class _ClasesScreenState extends State<ClasesTabletScreenManu> {
       return;
     }
 
-    if (Calcular24hsManu().esMenorA0HorasManu(clase.fecha, clase.hora)) {
+    if (Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)) {
       mensaje = 'No puedes inscribirte a esta clase';
       if (context.mounted) {
         _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
@@ -152,7 +152,6 @@ class _ClasesScreenState extends State<ClasesTabletScreenManu> {
   void _mostrarDialogo(
       BuildContext context, String mensaje, bool mostrarBotonAceptar,
       [ClaseModels? clase, dynamic user]) {
-    // Verificar si el widget sigue montado antes de usar el contexto
     if (!context.mounted) return;
 
     showDialog(
@@ -267,16 +266,16 @@ class _ClasesScreenState extends State<ClasesTabletScreenManu> {
   }
 
   @override
-Widget build(BuildContext context) {
-  final color = Theme.of(context).primaryColor;
-  final colors = Theme.of(context).colorScheme;
-  final size = MediaQuery.of(context).size;
-  final user = Supabase.instance.client.auth.currentUser;
+  Widget build(BuildContext context) {
+    final color = Theme.of(context).primaryColor;
+    final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
+    final user = Supabase.instance.client.auth.currentUser;
 
-
-  return Scaffold(
-    appBar: ResponsiveAppBarManu(isTablet: size.width > 600),
-    body: user == null ? Center(
+    return Scaffold(
+      appBar: ResponsiveAppBarManu(isTablet: size.width > 600),
+      body: user == null
+          ? Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -293,90 +292,90 @@ Widget build(BuildContext context) {
                   ),
                 ],
               ),
-            ) : Center(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 600), 
-        child: Column(
-          children: [
-            _SemanaNavigation(
-              semanaSeleccionada: semanaSeleccionada,
-              cambiarSemanaAdelante: cambiarSemanaAdelante,
-              cambiarSemanaAtras: cambiarSemanaAtras,
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-  flex: 2,
-  child: isLoading
-      ? const Center(
-          child: SizedBox(
-            width: 50,
-            height: 50,
-            child: CircularProgressIndicator(),
-          ),
-        )
-      : _DiaSelection(
-          diasUnicos: diasUnicos,
-          seleccionarDia: seleccionarDia,
-          fechasDisponibles: fechasDisponibles,
-        ),
-),
-
-                  Expanded(
-                    flex: 3,
-                    child: diaSeleccionado != null
-                        ? isLoading
-                            ? const SizedBox()
-                            : ListView.builder(
-                                itemCount:
-                                    horariosPorDia[diaSeleccionado]?.length ??
-                                        0,
-                                itemBuilder: (context, index) {
-                                  final clase =
-                                      horariosPorDia[diaSeleccionado]![index];
-                                  return construirBotonHorario(clase);
-                                },
-                              )
-                        : const SizedBox(),
-                  ),
-                ],
+            )
+          : Center(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: Column(
+                  children: [
+                    _SemanaNavigation(
+                      semanaSeleccionada: semanaSeleccionada,
+                      cambiarSemanaAdelante: cambiarSemanaAdelante,
+                      cambiarSemanaAtras: cambiarSemanaAtras,
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: isLoading
+                                ? const Center(
+                                    child: SizedBox(
+                                      width: 50,
+                                      height: 50,
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  )
+                                : _DiaSelection(
+                                    diasUnicos: diasUnicos,
+                                    seleccionarDia: seleccionarDia,
+                                    fechasDisponibles: fechasDisponibles,
+                                  ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: diaSeleccionado != null
+                                ? isLoading
+                                    ? const SizedBox()
+                                    : ListView.builder(
+                                        itemCount:
+                                            horariosPorDia[diaSeleccionado]
+                                                    ?.length ??
+                                                0,
+                                        itemBuilder: (context, index) {
+                                          final clase = horariosPorDia[
+                                              diaSeleccionado]![index];
+                                          return construirBotonHorario(clase);
+                                        },
+                                      )
+                                : const SizedBox(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Builder(
+                        builder: (context) {
+                          final diasConClases =
+                              obtenerDiasConClasesDisponibles();
+                          if (isLoading) {
+                            return const SizedBox();
+                          } else if (diasConClases.isEmpty) {
+                            return _AvisoDeClasesDisponibles(
+                              colors: colors,
+                              color: color,
+                              text: "No hay clases disponibles esta semana.",
+                            );
+                          } else {
+                            return _AvisoDeClasesDisponibles(
+                              colors: colors,
+                              color: color,
+                              text:
+                                  "Hay clases disponibles el ${diasConClases.join(', ')}.",
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 20),
-              child: Builder(
-                builder: (context) {
-                  final diasConClases = obtenerDiasConClasesDisponibles();
-                  if (isLoading) {
-                    return const SizedBox();
-                  } else if (diasConClases.isEmpty) {
-                    return _AvisoDeClasesDisponibles(
-                      colors: colors,
-                      color: color,
-                      text: "No hay clases disponibles esta semana.",
-                    );
-                  } else {
-                    return _AvisoDeClasesDisponibles(
-                      colors: colors,
-                      color: color,
-                      text:
-                          "Hay clases disponibles el ${diasConClases.join(', ')}.",
-                    );
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget construirBotonHorario(ClaseModels clase) {
     final partesFecha = clase.fecha.split('/');
@@ -476,7 +475,6 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(
             screenWidth * 0.03), // 3% del ancho para el borde redondeado
-      
       ),
       child: Row(
         children: [
@@ -491,8 +489,8 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
             child: Text(
               text,
               style: TextStyle(
-                fontSize:
-                    screenWidth * 0.015, // 4% del ancho para el tamaño de fuente
+                fontSize: screenWidth *
+                    0.015, // 4% del ancho para el tamaño de fuente
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -523,7 +521,8 @@ class _SemanaNavigation extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: screenWidth * 0.04, vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.04,
+        vertical: screenHeight * 0.02,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

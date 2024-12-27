@@ -13,14 +13,4 @@ class ObtenerTotalInfo {
     return List<UsuarioModels>.from(
         data.map((map) => UsuarioModels.fromMap(map)));
   }
-  Future<List<ClaseModels>> obtenerClaseManu() async {
-    final data = await supabase.from('clasesmanu').select();
-    return List<ClaseModels>.from(data.map((map) => ClaseModels.fromMap(map)));
-  }
-
-  Future<List<UsuarioModels>> obtenerUsuariosManu() async {
-    final data = await supabase.from('usuariosmanu').select();
-    return List<UsuarioModels>.from(
-        data.map((map) => UsuarioModels.fromMap(map)));
-}
 }

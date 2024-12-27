@@ -277,7 +277,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
     double fontSize = screenWidth * 0.04; // 4% del ancho de la pantalla
 
     return Scaffold(
-      appBar: ResponsiveAppBar( isTablet: size.width > 600),
+      appBar: ResponsiveAppBar(isTablet: size.width > 600),
       body: Column(
         children: [
           Padding(

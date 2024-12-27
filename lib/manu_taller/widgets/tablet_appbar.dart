@@ -7,7 +7,7 @@ class TabletAppBarManu extends StatefulWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize;
 
-  const  TabletAppBarManu({super.key})
+  const TabletAppBarManu({super.key})
       : preferredSize = const Size.fromHeight(kToolbarHeight * 2.2);
 
   @override
@@ -36,7 +36,7 @@ class CustomAppBarState extends State<TabletAppBarManu> {
             {'value': '/gestionclasesivanna', 'label': 'Gestión de clases'},
             {'value': '/usuariosivanna', 'label': 'Alumnos/as'},
             {'value': '/configuracionivanna', 'label': 'Configuración'},
-            // {'value': '/cambiarpassword', 'label': 'prueba'},
+            // {'value': '/prueba', 'label': 'prueba'},
           ];
 
           final userRoutes = [
@@ -52,22 +52,17 @@ class CustomAppBarState extends State<TabletAppBarManu> {
 
           return Container(
             color: color.primary,
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16.0),
-          
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
                   onTap: () {
-                   
                     context.push("/homeivanna");
                   },
                   child: Column(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center,
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Taller de Ceramica',
@@ -151,12 +146,12 @@ class CustomAppBarState extends State<TabletAppBarManu> {
                         ],
                       )
                     : SizedBox(
-                      height: size.width * 0.03,
-                      width: size.width * 0.15,
-                      child: ElevatedButton(
+                        height: size.width * 0.03,
+                        width: size.width * 0.15,
+                        child: ElevatedButton(
                           onPressed: () async {
                             await Supabase.instance.client.auth.signOut();
-                      
+
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.remove('session');
                             if (context.mounted) {
@@ -169,7 +164,7 @@ class CustomAppBarState extends State<TabletAppBarManu> {
                             style: TextStyle(fontSize: size.width * 0.015),
                           ),
                         ),
-                    ),
+                      ),
               ],
             ),
           );

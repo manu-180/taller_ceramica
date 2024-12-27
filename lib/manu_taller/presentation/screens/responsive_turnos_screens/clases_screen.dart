@@ -33,16 +33,14 @@ class _ClasesScreenState extends State<ClasesScreenManu> {
 
   Future<void> cargarDatos() async {
     setState(() {
-      isLoading = true; // Indicamos que se está cargando
+      isLoading = true;
     });
 
     final datos = await ObtenerTotalInfoManu().obtenerClaseManu();
 
-    // Filtramos las clases por la semana seleccionada
     final datosSemana =
         datos.where((clase) => clase.semana == semanaSeleccionada).toList();
 
-    // Crea un objeto DateFormat para el formato "dd/MM/yyyy HH:mm"
     final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
 
     // Ordenamos primero por la fecha (ascendente) y luego por la hora (ascendente)
@@ -278,7 +276,7 @@ class _ClasesScreenState extends State<ClasesScreenManu> {
     double fontSize = screenWidth * 0.04; // 4% del ancho de la pantalla
 
     return Scaffold(
-      appBar: ResponsiveAppBarManu( isTablet: size.width > 600),
+      appBar: ResponsiveAppBarManu(isTablet: size.width > 600),
       body: Column(
         children: [
           Padding(

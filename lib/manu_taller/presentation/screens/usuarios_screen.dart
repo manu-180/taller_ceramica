@@ -44,7 +44,8 @@ class _UsuariosScreenState extends State<UsuariosScreenManu> {
   }
 
   Future<void> agregarCredito(String user) async {
-    final resultado = await ModificarCreditoManu().agregarCreditoUsuarioManu(user);
+    final resultado =
+        await ModificarCreditoManu().agregarCreditoUsuarioManu(user);
     if (resultado) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -60,7 +61,8 @@ class _UsuariosScreenState extends State<UsuariosScreenManu> {
   }
 
   Future<void> removerCredito(String user) async {
-    final resultado = await ModificarCreditoManu().removerCreditoUsuarioManu(user);
+    final resultado =
+        await ModificarCreditoManu().removerCreditoUsuarioManu(user);
     if (resultado) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -195,13 +197,13 @@ class _UsuariosScreenState extends State<UsuariosScreenManu> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: ResponsiveAppBarManu( isTablet: size.width > 600),
+      appBar: ResponsiveAppBarManu(isTablet: size.width > 600),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: Column(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: Column(
                   children: [
                     const Padding(
                       padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
@@ -262,14 +264,16 @@ class _UsuariosScreenState extends State<UsuariosScreenManu> {
                                     IconButton(
                                       icon: const Icon(Icons.add,
                                           color: Colors.green),
-                                      onPressed: () => mostrarDialogoConContador(
+                                      onPressed: () =>
+                                          mostrarDialogoConContador(
                                         context: context,
                                         titulo: 'Agregar Créditos',
                                         contenido:
                                             'Selecciona cuántos créditos quieres agregar:',
                                         onConfirmar: (cantidad) async {
                                           for (int i = 0; i < cantidad; i++) {
-                                            await agregarCredito(usuario.fullname);
+                                            await agregarCredito(
+                                                usuario.fullname);
                                           }
                                         },
                                       ),
@@ -277,14 +281,16 @@ class _UsuariosScreenState extends State<UsuariosScreenManu> {
                                     IconButton(
                                       icon: const Icon(Icons.remove,
                                           color: Colors.orange),
-                                      onPressed: () => mostrarDialogoConContador(
+                                      onPressed: () =>
+                                          mostrarDialogoConContador(
                                         context: context,
                                         titulo: 'Remover Créditos',
                                         contenido:
                                             'Selecciona cuántos créditos quieres remover:',
                                         onConfirmar: (cantidad) async {
                                           for (int i = 0; i < cantidad; i++) {
-                                            await removerCredito(usuario.fullname);
+                                            await removerCredito(
+                                                usuario.fullname);
                                           }
                                         },
                                       ),
@@ -299,8 +305,8 @@ class _UsuariosScreenState extends State<UsuariosScreenManu> {
                     ),
                   ],
                 ),
+              ),
             ),
-          ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:taller_ceramica/funciones_globales/utils/box_text.dart';
+import 'package:intl/intl.dart';
+import 'package:taller_ceramica/widget_globales/box_text.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
@@ -57,11 +58,37 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
   }
 
   // Cargar clases para el usuario actual
-  Future<void> cargarClasesUsuario(String fullname) async {
+  Future<void> cargarClasesOrdenadasPorProximidad(String fullname) async {
+    // Obtiene los datos desde Supabase
     final datos = await ObtenerTotalInfo().obtenerInfo();
-    clasesDelUsuario =
-        datos.where((clase) => clase.mails.contains(fullname)).toList();
-    clasesDelUsuario.sort((a, b) => a.id.compareTo(b.id));
+
+    // Crea un objeto DateFormat para el formato de tu fecha y hora
+    final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
+
+    // Filtra las clases donde el usuario está inscrito
+    final clasesUsuario = datos.where((clase) {
+      return clase.mails
+          .contains(fullname); // Verifica si el usuario está inscrito
+    }).toList();
+
+    // Ordena las clases del usuario por proximidad de tiempo
+    clasesUsuario.sort((a, b) {
+      final fechaHoraA = '${a.fecha} ${a.hora}';
+      final fechaHoraB = '${b.fecha} ${b.hora}';
+
+      final dateTimeA = dateFormat.parse(fechaHoraA);
+      final dateTimeB = dateFormat.parse(fechaHoraB);
+
+      final ahora = DateTime.now();
+      final diffA = dateTimeA.difference(ahora).inMilliseconds;
+      final diffB = dateTimeB.difference(ahora).inMilliseconds;
+
+      return diffA.compareTo(diffB);
+    });
+
+    // Almacena las clases ordenadas en la lista global
+    clasesDelUsuario = clasesUsuario;
+
     if (mounted) setState(() {});
   }
 
@@ -70,123 +97,134 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
     super.initState();
     final user = ref.read(authProvider); // Estado inicial del usuario
     if (user != null) {
-      cargarClasesUsuario(user.userMetadata?['fullname']);
+      cargarClasesOrdenadasPorProximidad(
+          user.userMetadata?['fullname']); // Pasa el nombre del usuario
     }
   }
 
   @override
-Widget build(BuildContext context) {
-  final user = ref.watch(authProvider); // Observa el estado del usuario
-  final color = Theme.of(context).colorScheme;
-  final size = MediaQuery.of(context).size;
+  Widget build(BuildContext context) {
+    final user = ref.watch(authProvider); // Observa el estado del usuario
+    final color = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
 
-  return Scaffold(
-    appBar: ResponsiveAppBar(isTablet: size.width > 600),
-    body: Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 600),
-        child: user == null
-            ? Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.lock_outline, size: 80, color: Colors.grey),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Para ver tus clases debes iniciar sesión!',
-                      style: TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold,
-                        color: color.primary,
+    return Scaffold(
+      appBar: ResponsiveAppBar(isTablet: size.width > 600),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: user == null
+              ? Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.lock_outline,
+                          size: 80, color: Colors.grey),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Para ver tus clases debes iniciar sesión!',
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
+                          color: color.primary,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              )
-            : Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
-                    child: BoxText(
-                        text:
-                            "En esta sesión podrás ver y cancelar tus clases pero ¡cuidado! Si cancelas con menos de 24hs de anticipación no podrás recuperar la clase"),
+                    ],
                   ),
-                  const SizedBox(height: 50),
-                  clasesDelUsuario.isEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.event_busy,
-                                  size: 80, color: Colors.grey),
-                              const SizedBox(height: 20),
-                              Text(
-                                'No estás inscripto en ninguna clase',
-                                style: TextStyle(
-                                  fontSize: 19,
-                                  fontWeight: FontWeight.bold,
-                                  color: color.primary,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        )
-                      : Expanded(
-                          child: ListView.builder(
-                            itemCount: clasesDelUsuario.length,
-                            itemBuilder: (context, index) {
-                              final clase = clasesDelUsuario[index];
-                              final partesFecha = clase.fecha.split('/');
-                              final diaMes =
-                                  '${partesFecha[0]}/${partesFecha[1]}';
-                              final diaMesAnio = '${clase.dia} $diaMes';
-                              final claseInfo = '$diaMesAnio - ${clase.hora}';
-
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 10,
-                                ),
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                )
+              : Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                      child: BoxText(
+                          text:
+                              "En esta sesión podrás ver y cancelar tus clases pero ¡cuidado! Si cancelas con menos de 24hs de anticipación no podrás recuperar la clase"),
+                    ),
+                    const SizedBox(height: 50),
+                    clasesDelUsuario.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.event_busy,
+                                    size: 80, color: Colors.grey),
+                                const SizedBox(height: 20),
+                                Text(
+                                  'No estás inscripto en ninguna clase',
+                                  style: TextStyle(
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.bold,
+                                    color: color.primary,
                                   ),
-                                  child: ListTile(
-                                    title: Text(
-                                      claseInfo,
-                                      style: const TextStyle(fontSize: 14),
-                                    ),
-                                    trailing: ElevatedButton(
-                                      onPressed: () {
-                                        mostrarCancelacion(context, clase);
-                                      },
-                                      style: TextButton.styleFrom(
-                                        backgroundColor: const Color.fromARGB(
-                                            166, 252, 93, 93),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          )
+                        : Expanded(
+                            child: ListView.builder(
+                              itemCount: clasesDelUsuario.length,
+                              itemBuilder: (context, index) {
+                                final clase = clasesDelUsuario[index];
+                                final partesFecha = clase.fecha.split('/');
+                                final diaMes =
+                                    '${partesFecha[0]}/${partesFecha[1]}';
+                                final diaMesAnio = '${clase.dia} $diaMes';
+                                final claseInfo = '$diaMesAnio - ${clase.hora}';
+
+                                final bool claseYaPaso = Calcular24hs()
+                                    .esMenorA0Horas(clase.fecha, clase.hora);
+
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 10,
+                                  ),
+                                  child: Opacity(
+                                    opacity: claseYaPaso ? 0.5 : 1.0,
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child: Text(
-                                        'Cancelar',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: color.surface,
+                                      child: ListTile(
+                                        title: Text(
+                                          claseInfo,
+                                          style: const TextStyle(fontSize: 14),
+                                        ),
+                                        trailing: ElevatedButton(
+                                          onPressed: claseYaPaso
+                                              ? null
+                                              : () {
+                                                  mostrarCancelacion(
+                                                      context, clase);
+                                                },
+                                          style: TextButton.styleFrom(
+                                            backgroundColor:
+                                                const Color.fromARGB(
+                                                    166, 252, 93, 93),
+                                          ),
+                                          child: const Text(
+                                            'Cancelar',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                ],
-              ),
+                  ],
+                ),
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   void cancelarClase(int claseId, String fullname) async {
     final clase = clasesDelUsuario.firstWhere((clase) => clase.id == claseId);

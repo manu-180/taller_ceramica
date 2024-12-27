@@ -1,4 +1,3 @@
-
 import 'package:taller_ceramica/manu_taller/supabase/functions/obtener_total_info.dart';
 
 class ObtenerAlertTriggerManu {

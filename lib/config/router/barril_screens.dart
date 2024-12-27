@@ -5,6 +5,4 @@ export 'package:taller_ceramica/ivanna_taller/presentation/screens/usuarios_scre
 
 export 'package:taller_ceramica/ivanna_taller/presentation/screens/mis_clases_screens.dart';
 
-export 'package:taller_ceramica/ivanna_taller/presentation/screens/turnos_screen.dart';
-
 export 'package:taller_ceramica/ivanna_taller/presentation/screens/home_screen.dart';

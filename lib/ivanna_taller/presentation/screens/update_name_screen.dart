@@ -51,7 +51,6 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
         throw 'No hay ningún usuario autenticado.';
       }
 
-      // Actualiza los datos del usuario
       await Supabase.instance.client.auth.updateUser(
         UserAttributes(
           data: {'fullname': Capitalize().capitalize(_fullnameController.text)},
@@ -85,7 +84,7 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
     final color = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: ResponsiveAppBar( isTablet: size.width > 600),
+      appBar: ResponsiveAppBar(isTablet: size.width > 600),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

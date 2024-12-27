@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
-import 'package:taller_ceramica/manu_taller/widgets/mostrar_dia_segun_fecha.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
-
 import '../../../funciones_globales/utils_barril.dart';
+import '../../../widget_globales/mostrar_dia_segun_fecha.dart';
 
 class GestionHorariosScreenManu extends StatefulWidget {
   const GestionHorariosScreenManu({super.key});
 
   @override
-  State<GestionHorariosScreenManu> createState() => _GestionHorariosScreenState();
+  State<GestionHorariosScreenManu> createState() =>
+      _GestionHorariosScreenState();
 }
 
 class _GestionHorariosScreenState extends State<GestionHorariosScreenManu> {
@@ -196,11 +196,9 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreenManu> {
                                           clase, usuarioSeleccionado);
                                   clase.mails.add(usuarioSeleccionado);
                                 } else {
-                                  AgregarUsuarioManu(supabase).agregarUsuarioAClaseManu(
-                                      clase.id,
-                                      usuarioSeleccionado,
-                                      true,
-                                      clase);
+                                  AgregarUsuarioManu(supabase)
+                                      .agregarUsuarioAClaseManu(clase.id,
+                                          usuarioSeleccionado, true, clase);
                                   clase.mails.add(usuarioSeleccionado);
                                 }
                               });
@@ -250,7 +248,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreenManu> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: ResponsiveAppBarManu( isTablet: size.width > 600),
+      appBar: ResponsiveAppBarManu(isTablet: size.width > 600),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
@@ -297,7 +295,8 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreenManu> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Card(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       ListTile(
                                         title: Text(
@@ -310,27 +309,34 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreenManu> {
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
                                             SizedBox(
-                                              width: size.width > 600 ? size.width * 0.15 : size.width * 0.33,
+                                              width: size.width > 600
+                                                  ? size.width * 0.15
+                                                  : size.width * 0.33,
                                               child: ElevatedButton(
                                                 onPressed: () {
-                                                  mostrarDialogo(
-                                                      "insertar", clase, colors);
+                                                  mostrarDialogo("insertar",
+                                                      clase, colors);
                                                 },
                                                 child: const Text(
                                                   "Agregar Usuario",
-                                                  style: TextStyle(fontSize: 10),
+                                                  style:
+                                                      TextStyle(fontSize: 10),
                                                 ),
                                               ),
                                             ),
                                             SizedBox(
-                                              width: size.width > 600 ? size.width * 0.15 : size.width * 0.33,
+                                              width: size.width > 600
+                                                  ? size.width * 0.15
+                                                  : size.width * 0.33,
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   mostrarDialogo(
                                                       "remover", clase, colors);
                                                 },
-                                                child: const Text("Remover Usuario",
-                                                    style: TextStyle(fontSize: 10)),
+                                                child: const Text(
+                                                    "Remover Usuario",
+                                                    style: TextStyle(
+                                                        fontSize: 10)),
                                               ),
                                             ),
                                           ],

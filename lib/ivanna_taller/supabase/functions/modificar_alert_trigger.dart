@@ -6,7 +6,6 @@ class ModificarAlertTrigger {
     final data = await ObtenerTotalInfo().obtenerInfoUsuarios();
 
     for (final usuario in data) {
-      // ignore: unrelated_type_equality_checks
       if (usuario.fullname == user) {
         await supabase
             .from('usuarios')

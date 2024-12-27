@@ -25,7 +25,7 @@ class _CambiarPasswordState extends State<CambiarPassword> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: ResponsiveAppBar( isTablet: size.width > 600),
+      appBar: ResponsiveAppBar(isTablet: size.width > 600),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

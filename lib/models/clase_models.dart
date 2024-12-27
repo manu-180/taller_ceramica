@@ -19,6 +19,11 @@ class ClaseModels {
     required this.lugaresDisponibles,
   });
 
+  @override
+  String toString() {
+    return 'ClaseModels(id: $id, semana: $semana, lugaresDisponibles: $lugaresDisponibles,dia: $dia, fecha: $fecha, hora: $hora, mails: $mails)';
+  }
+
   // Método para actualizar el estado de la clase
   void actualizarLugaresDisponibles(int nuevosLugares) {
     lugaresDisponibles = nuevosLugares;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:taller_ceramica/funciones_globales/utils/box_text.dart';
+import 'package:taller_ceramica/widget_globales/box_text.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/is_mujer.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
@@ -31,7 +31,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth:  600 ),
+                  constraints: const BoxConstraints(maxWidth: 600),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

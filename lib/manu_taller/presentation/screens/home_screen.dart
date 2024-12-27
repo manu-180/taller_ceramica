@@ -16,7 +16,7 @@ class HomeScreenManu extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: ResponsiveAppBarManu( isTablet: size.width > 600),
+      appBar: ResponsiveAppBarManu(isTablet: size.width > 600),
       body: FutureBuilder<bool>(
         future: IsMujer().mujer(fullName),
         builder: (context, snapshot) {
@@ -30,15 +30,13 @@ class HomeScreenManu extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth:  600 ),
+                  constraints: const BoxConstraints(maxWidth: 600),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 10),
                       Text(
-                        isMujer
-                            ? '¡Bienvenida Manu!'
-                            : '¡Bienvenido Manu!',
+                        isMujer ? '¡Bienvenida Manu!' : '¡Bienvenido Manu!',
                         style: TextStyle(
                           fontSize: 33,
                           fontWeight: FontWeight.bold,

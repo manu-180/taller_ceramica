@@ -4,7 +4,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/redirijir_usuario_al_taller.dart';
 import 'dart:convert';
 
-
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -49,17 +48,14 @@ class HomeState extends State<Home> {
   }
 
   Future<void> _checkSession() async {
- 
     // Recuperar la sesión desde SharedPreferences
     final user = Supabase.instance.client.auth.currentUser;
-    
 
-        // Si la sesión es válida, redirigir al usuario
-        if (user != null) {
-          await RedirijirUsuarioAlTaller().redirigirUsuario(context);
-        }
-     
-}
+    // Si la sesión es válida, redirigir al usuario
+    if (user != null) {
+      await RedirijirUsuarioAlTaller().redirigirUsuario(context);
+    }
+  }
 
   @override
   void dispose() {
@@ -111,9 +107,10 @@ class HomeState extends State<Home> {
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {
                     setState(() {
-                      mailError = !emailRegex.hasMatch(emailController.text.trim())
-                          ? 'El correo electrónico es invalido.'
-                          : '';
+                      mailError =
+                          !emailRegex.hasMatch(emailController.text.trim())
+                              ? 'El correo electrónico es invalido.'
+                              : '';
                     });
                   },
                 ),
@@ -140,7 +137,7 @@ class HomeState extends State<Home> {
                   onPressed: () async {
                     final email = emailController.text.trim();
                     final password = passwordController.text.trim();
-          
+
                     if (!emailRegex.hasMatch(email)) {
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -151,7 +148,7 @@ class HomeState extends State<Home> {
                       );
                       return;
                     }
-          
+
                     if (password.length < 6) {
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -163,24 +160,25 @@ class HomeState extends State<Home> {
                       );
                       return;
                     }
-          
+
                     try {
                       // Iniciar sesión
-                      final response =
-                          await Supabase.instance.client.auth.signInWithPassword(
+                      final response = await Supabase.instance.client.auth
+                          .signInWithPassword(
                         email: email,
                         password: password,
                       );
-          
+
                       // Guardar sesión manualmente (SharedPreferences)
                       if (response.session != null) {
                         final prefs = await SharedPreferences.getInstance();
                         final sessionData = response.session!.toJson();
-          
+
                         // Convertir sessionData en una cadena JSON antes de guardarlo
-                        await prefs.setString('session', jsonEncode(sessionData));
+                        await prefs.setString(
+                            'session', jsonEncode(sessionData));
                       }
-                      if(context.mounted) {
+                      if (context.mounted) {
                         RedirijirUsuarioAlTaller().redirigirUsuario(context);
                       }
                       return;

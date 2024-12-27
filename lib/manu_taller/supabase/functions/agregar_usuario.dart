@@ -12,8 +12,11 @@ class AgregarUsuarioManu {
       int idClase, String user, bool parametro, ClaseModels claseModels) async {
     final usuarios = await ObtenerTotalInfoManu().obtenerUsuariosManu();
 
-    final data =
-        await supabaseClient.from('clasesmanu').select().eq('id', idClase).single();
+    final data = await supabaseClient
+        .from('clasesmanu')
+        .select()
+        .eq('id', idClase)
+        .single();
 
     final clase = ClaseModels.fromMap(data);
 

@@ -5,14 +5,16 @@ import 'package:taller_ceramica/funciones_globales/utils_barril.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
-import 'package:taller_ceramica/manu_taller/widgets/mostrar_dia_segun_fecha.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+
+import '../../../widget_globales/mostrar_dia_segun_fecha.dart';
 
 class GestionDeClasesScreenManu extends StatefulWidget {
   const GestionDeClasesScreenManu({super.key});
 
   @override
-  State<GestionDeClasesScreenManu> createState() => _GestionDeClasesScreenState();
+  State<GestionDeClasesScreenManu> createState() =>
+      _GestionDeClasesScreenState();
 }
 
 class _GestionDeClasesScreenState extends State<GestionDeClasesScreenManu> {
@@ -278,139 +280,138 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreenManu> {
   }
 
   @override
-Widget build(BuildContext context) {
-  final color = Theme.of(context).primaryColor;
-  final colors = Theme.of(context).colorScheme;
-  final size = MediaQuery.of(context).size;
+  Widget build(BuildContext context) {
+    final color = Theme.of(context).primaryColor;
+    final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
 
-  return Scaffold(
-    appBar: ResponsiveAppBarManu(isTablet: size.width > 600),
-    body: Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 600), // Ancho máximo de 600
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-              child: BoxText(
-                  text:
-                      "En esta sección podrás gestionar las clases disponibles. Agregar o remover lugares, eliminar clases y agregar nuevas clases."),
-            ),
-            const SizedBox(height: 10),
-            MostrarDiaSegunFecha(
-              text: fechaSeleccionada ?? '-',
-              colors: colors,
-              color: color,
-              cambiarFecha: cambiarFecha,
-            ),
-            const SizedBox(height: 20),
-            DropdownButton<String>(
-              value: fechaSeleccionada,
-              hint: const Text('Selecciona una fecha'),
-              onChanged: (value) {
-                seleccionarFecha(value!);
-              },
-              items: fechasDisponibles.map((fecha) {
-                return DropdownMenuItem(
-                  value: fecha,
-                  child: Text(fecha),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 20),
-            if (isLoading) const CircularProgressIndicator(),
-            if (!isLoading &&
-                fechaSeleccionada != null &&
-                clasesFiltradas.isNotEmpty)
-              Expanded(
-                child: ListView.builder(
-                  itemCount: clasesFiltradas.length,
-                  itemBuilder: (context, index) {
-                    final clase = clasesFiltradas[index];
-                    return Card(
-                      child: ListTile(
-                        title: Text(
-                            '${clase.hora} - Lugares disponibles: ${clase.lugaresDisponibles}'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.add),
-                              onPressed: () async {
-                                bool? respuesta =
-                                    await mostrarDialogoConfirmacion(
-                                        context,
-                                        "¿Quieres agregar un lugar disponible a esta clase?");
-                                if (respuesta == true) {
-                                  agregarLugar(clase.id);
-                                  ModificarLugarDisponibleManu()
-                                      .agregarLugarDisponibleManu(clase.id);
-                                }
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.remove),
-                              onPressed: () async {
-                                bool? respuesta =
-                                    await mostrarDialogoConfirmacion(
-                                        context,
-                                        "¿Quieres remover un lugar disponible a esta clase?");
-                                if (respuesta == true &&
-                                    clase.lugaresDisponibles > 0) {
-                                  quitarLugar(clase.id);
-                                  ModificarLugarDisponibleManu()
-                                      .removerLugarDisponibleManu(clase.id);
-                                }
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () async {
-                                bool? respuesta =
-                                    await mostrarDialogoConfirmacion(
-                                        context,
-                                        "¿Estás seguro/a que quieres eliminar esta clase?");
-                                if (respuesta == true) {
-                                  setState(() {
-                                    clasesFiltradas.removeAt(index);
-                                    EliminarClaseManu().eliminarClaseManu(clase.id);
-                                  });
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
+    return Scaffold(
+      appBar: ResponsiveAppBarManu(isTablet: size.width > 600),
+      body: Center(
+        child: ConstrainedBox(
+          constraints:
+              const BoxConstraints(maxWidth: 600), // Ancho máximo de 600
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+                child: BoxText(
+                    text:
+                        "En esta sección podrás gestionar las clases disponibles. Agregar o remover lugares, eliminar clases y agregar nuevas clases."),
               ),
-          ],
+              const SizedBox(height: 10),
+              MostrarDiaSegunFecha(
+                text: fechaSeleccionada ?? '-',
+                colors: colors,
+                color: color,
+                cambiarFecha: cambiarFecha,
+              ),
+              const SizedBox(height: 20),
+              DropdownButton<String>(
+                value: fechaSeleccionada,
+                hint: const Text('Selecciona una fecha'),
+                onChanged: (value) {
+                  seleccionarFecha(value!);
+                },
+                items: fechasDisponibles.map((fecha) {
+                  return DropdownMenuItem(
+                    value: fecha,
+                    child: Text(fecha),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              if (isLoading) const CircularProgressIndicator(),
+              if (!isLoading &&
+                  fechaSeleccionada != null &&
+                  clasesFiltradas.isNotEmpty)
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: clasesFiltradas.length,
+                    itemBuilder: (context, index) {
+                      final clase = clasesFiltradas[index];
+                      return Card(
+                        child: ListTile(
+                          title: Text(
+                              '${clase.hora} - Lugares disponibles: ${clase.lugaresDisponibles}'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () async {
+                                  bool? respuesta =
+                                      await mostrarDialogoConfirmacion(context,
+                                          "¿Quieres agregar un lugar disponible a esta clase?");
+                                  if (respuesta == true) {
+                                    agregarLugar(clase.id);
+                                    ModificarLugarDisponibleManu()
+                                        .agregarLugarDisponibleManu(clase.id);
+                                  }
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.remove),
+                                onPressed: () async {
+                                  bool? respuesta =
+                                      await mostrarDialogoConfirmacion(context,
+                                          "¿Quieres remover un lugar disponible a esta clase?");
+                                  if (respuesta == true &&
+                                      clase.lugaresDisponibles > 0) {
+                                    quitarLugar(clase.id);
+                                    ModificarLugarDisponibleManu()
+                                        .removerLugarDisponibleManu(clase.id);
+                                  }
+                                },
+                              ),
+                              IconButton(
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () async {
+                                  bool? respuesta =
+                                      await mostrarDialogoConfirmacion(context,
+                                          "¿Estás seguro/a que quieres eliminar esta clase?");
+                                  if (respuesta == true) {
+                                    setState(() {
+                                      clasesFiltradas.removeAt(index);
+                                      EliminarClaseManu()
+                                          .eliminarClaseManu(clase.id);
+                                    });
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
-    ),
-    floatingActionButton: SizedBox(
-      width: 200,
-      child: FloatingActionButton(
-        backgroundColor: colors.secondaryContainer,
-        onPressed: () {
-          if (fechaSeleccionada == null) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                    'Por favor, selecciona una fecha antes de agregar clases.'),
-              ),
-            );
-            return;
-          }
-          mostrarDialogoAgregarClase(
-              DiaConFecha().obtenerDiaDeLaSemana(fechaSeleccionada!));
-        },
-        child: const Text("Crear una clase nueva"),
+      floatingActionButton: SizedBox(
+        width: 200,
+        child: FloatingActionButton(
+          backgroundColor: colors.secondaryContainer,
+          onPressed: () {
+            if (fechaSeleccionada == null) {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                      'Por favor, selecciona una fecha antes de agregar clases.'),
+                ),
+              );
+              return;
+            }
+            mostrarDialogoAgregarClase(
+                DiaConFecha().obtenerDiaDeLaSemana(fechaSeleccionada!));
+          },
+          child: const Text("Crear una clase nueva"),
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 }

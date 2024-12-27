@@ -1,4 +1,3 @@
-
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
 
 class GenerarIdManu {

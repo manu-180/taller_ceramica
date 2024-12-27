@@ -6,9 +6,9 @@ import 'package:taller_ceramica/ivanna_taller/supabase/functions/remover_usuario
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
-import 'package:taller_ceramica/funciones_globales/utils/box_text.dart';
+import 'package:taller_ceramica/widget_globales/box_text.dart';
 import 'package:taller_ceramica/funciones_globales/utils/generar_fechas_del_mes.dart';
-import 'package:taller_ceramica/ivanna_taller/widgets/mostrar_dia_segun_fecha.dart';
+import 'package:taller_ceramica/widget_globales/mostrar_dia_segun_fecha.dart';
 
 class GestionHorariosScreen extends StatefulWidget {
   const GestionHorariosScreen({super.key});
@@ -253,7 +253,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: ResponsiveAppBar( isTablet: size.width > 600),
+      appBar: ResponsiveAppBar(isTablet: size.width > 600),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
@@ -300,7 +300,8 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Card(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       ListTile(
                                         title: Text(
@@ -313,27 +314,34 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
                                             SizedBox(
-                                              width: size.width > 600 ? size.width * 0.15 : size.width * 0.33,
+                                              width: size.width > 600
+                                                  ? size.width * 0.15
+                                                  : size.width * 0.33,
                                               child: ElevatedButton(
                                                 onPressed: () {
-                                                  mostrarDialogo(
-                                                      "insertar", clase, colors);
+                                                  mostrarDialogo("insertar",
+                                                      clase, colors);
                                                 },
                                                 child: const Text(
                                                   "Agregar Usuario",
-                                                  style: TextStyle(fontSize: 10),
+                                                  style:
+                                                      TextStyle(fontSize: 10),
                                                 ),
                                               ),
                                             ),
                                             SizedBox(
-                                              width: size.width > 600 ? size.width * 0.15 : size.width * 0.33,
+                                              width: size.width > 600
+                                                  ? size.width * 0.15
+                                                  : size.width * 0.33,
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   mostrarDialogo(
                                                       "remover", clase, colors);
                                                 },
-                                                child: const Text("Remover Usuario",
-                                                    style: TextStyle(fontSize: 10)),
+                                                child: const Text(
+                                                    "Remover Usuario",
+                                                    style: TextStyle(
+                                                        fontSize: 10)),
                                               ),
                                             ),
                                           ],

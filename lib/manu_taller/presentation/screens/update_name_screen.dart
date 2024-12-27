@@ -55,7 +55,8 @@ class UpdateNameScreenState extends State<UpdateNameScreenManu> {
           data: {'fullname': Capitalize().capitalize(_fullnameController.text)},
         ),
       );
-      await UpdateUserManu(supabase).updateUserManu(user.userMetadata?['fullname'],
+      await UpdateUserManu(supabase).updateUserManu(
+          user.userMetadata?['fullname'],
           Capitalize().capitalize(_fullnameController.text));
       await UpdateUserManu(supabase).updateTableUserManu(
           user.id, Capitalize().capitalize(_fullnameController.text));
@@ -83,7 +84,7 @@ class UpdateNameScreenState extends State<UpdateNameScreenManu> {
     final color = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: ResponsiveAppBarManu( isTablet: size.width > 600),
+      appBar: ResponsiveAppBarManu(isTablet: size.width > 600),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

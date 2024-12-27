@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/funciones_globales/utils/box_text.dart';
+import 'package:taller_ceramica/widget_globales/box_text.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/generar_id.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/funciones_globales/utils/capitalize.dart';
@@ -37,10 +37,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: ResponsiveAppBar( isTablet: size.width > 600),
+      appBar: ResponsiveAppBar(isTablet: size.width > 600),
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600 ),
+          constraints: const BoxConstraints(maxWidth: 600),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
@@ -130,14 +130,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       setState(() {
                         isLoading = true;
                       });
-          
+
                       FocusScope.of(context).unfocus();
                       final fullname = fullnameController.text.trim();
                       final email = emailController.text.trim();
                       final password = passwordController.text.trim();
                       final confirmPassword =
                           confirmPasswordController.text.trim();
-          
+
                       if (fullname.isEmpty ||
                           email.isEmpty ||
                           password.isEmpty ||
@@ -157,7 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         );
                         return;
                       }
-          
+
                       if (password.length < 6) {
                         setState(() {
                           isLoading = false;
@@ -174,7 +174,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         );
                         return;
                       }
-          
+
                       if (password != confirmPassword) {
                         setState(() {
                           isLoading = false;
@@ -191,17 +191,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         );
                         return;
                       }
-          
+
                       try {
                         final listausuarios =
                             await ObtenerTotalInfo().obtenerInfoUsuarios();
-          
+
                         final emailExiste = listausuarios
                             .any((usuario) => usuario.usuario == email);
                         final fullnameExiste = listausuarios.any((usuario) =>
                             usuario.fullname.toLowerCase() ==
                             fullname.toLowerCase());
-          
+
                         if (emailExiste) {
                           setState(() {
                             isLoading = false;
@@ -218,7 +218,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           );
                           return;
                         }
-          
+
                         if (fullnameExiste) {
                           setState(() {
                             isLoading = false;
@@ -235,13 +235,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           );
                           return;
                         }
-          
+
                         final AuthResponse res = await supabase.auth.signUp(
                           email: email,
                           password: password,
                           data: {'fullname': Capitalize().capitalize(fullname)},
                         );
-          
+
                         await supabase.from('usuarios').insert({
                           'id': await GenerarId().generarIdUsuario(),
                           'usuario': email,
@@ -252,19 +252,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'trigger_alert': 0,
                           'clases_canceladas': [],
                         });
-          
+
                         EnviarWpp().sendWhatsAppMessage(
                             "${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases",
                             'whatsapp:+5491132820164');
                         EnviarWpp().sendWhatsAppMessage(
                             "${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases",
                             'whatsapp:+5491134272488');
-          
+
                         setState(() {
                           isLoading = false;
                           showSuccessMessage = true;
                         });
-          
+
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -275,7 +275,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             backgroundColor: Colors.green,
                           ),
                         );
-          
+
                         Future.delayed(const Duration(seconds: 30), () {
                           setState(() {
                             showSuccessMessage = false;
