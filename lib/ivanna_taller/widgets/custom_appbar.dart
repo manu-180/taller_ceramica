@@ -122,7 +122,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                             height: size.height * 0.044,
                             child: ElevatedButton(
                               onPressed: () {
-                                context.push('/iniciar-sesionivanna');
+                                context.push('/');
                               },
                               child: Text(
                                 'Iniciar',

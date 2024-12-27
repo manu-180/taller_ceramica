@@ -2,12 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/models/usuario_models.dart';
-import 'package:taller_ceramica/widget_globales/box_text.dart';
+
+import '../funciones_globales/utils_barril.dart';
 
 class UsuariosScreen extends StatefulWidget {
   final Future<List<dynamic>> Function() obtenerUsuarios;
   final Future<bool> Function(String) agregarCredito;
   final Future<bool> Function(String) removerCredito;
+  final Future<void> Function(int) eliminarUsuarioTabla;
+  final Future<void> Function(String) eliminarUsuarioBD;
   final Future<List<String>> Function(String) alumnosEnClase;
   final PreferredSizeWidget appBar;
 
@@ -18,7 +21,9 @@ class UsuariosScreen extends StatefulWidget {
     required this.agregarCredito, 
     required this.removerCredito, 
     required this.appBar, 
-    required this.alumnosEnClase});
+    required this.alumnosEnClase, 
+    required this.eliminarUsuarioTabla, 
+    required this.eliminarUsuarioBD});
   
 
   @override
@@ -46,8 +51,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   }
 
   Future<void> eliminarUsuario(int userId, String userUid) async {
-    // await EliminarUsuario().eliminarDeBaseDatos(userId);
-    // await EliminarDeBD().deleteCurrentUser(userUid);
+    await widget.eliminarUsuarioTabla(userId);
+    await widget.eliminarUsuarioBD(userUid);
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Usuario eliminado exitosamente')),

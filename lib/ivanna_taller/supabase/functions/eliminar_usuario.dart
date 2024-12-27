@@ -1,4 +1,4 @@
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
+import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/main.dart';
 
 class EliminarUsuario {
@@ -19,9 +19,8 @@ class EliminarUsuario {
       if (clase.mails.contains(user)) {
         var alumnos = clase.mails;
         alumnos.remove(user);
-        await supabase
-            .from('total')
-            .update({'mails': alumnos}).eq('id', clase.id);
+        await supabase.from('total').update({'mails': alumnos}).eq('id', clase.id);
+        ModificarLugarDisponible().agregarLugarDisponible(clase.id);
       }
     }
   }

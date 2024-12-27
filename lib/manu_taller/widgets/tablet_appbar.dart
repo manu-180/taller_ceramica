@@ -116,26 +116,13 @@ class CustomAppBarState extends State<TabletAppBarManu> {
                 user == null
                     ? Row(
                         children: [
+                          
                           SizedBox(
                             height: size.width * 0.03,
                             width: size.width * 0.15,
                             child: ElevatedButton(
                               onPressed: () {
-                                context.push('/crear-usuarioivanna');
-                              },
-                              child: Text(
-                                'Crear usuario',
-                                style: TextStyle(fontSize: size.width * 0.015),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: size.width * 0.02),
-                          SizedBox(
-                            height: size.width * 0.03,
-                            width: size.width * 0.15,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                context.push('/iniciar-sesionivanna');
+                                context.push('/');
                               },
                               child: Text(
                                 'Iniciar sesión',
@@ -145,26 +132,45 @@ class CustomAppBarState extends State<TabletAppBarManu> {
                           ),
                         ],
                       )
-                    : SizedBox(
-                        height: size.width * 0.03,
-                        width: size.width * 0.15,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await Supabase.instance.client.auth.signOut();
+                    : Row(
 
-                            final prefs = await SharedPreferences.getInstance();
-                            await prefs.remove('session');
-                            if (context.mounted) {
-                              context.push('/homeivanna');
-                            }
-                            return;
-                          },
-                          child: Text(
-                            'Cerrar sesión',
-                            style: TextStyle(fontSize: size.width * 0.015),
+                      children: [
+                        SizedBox(
+                            height: size.width * 0.03,
+                            width: size.width * 0.15,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                context.push('/crear-usuariomanu');
+                              },
+                              child: Text(
+                                'Crear usuario',
+                                style: TextStyle(fontSize: size.width * 0.015),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                          SizedBox(width: size.width * 0.02),
+                        SizedBox(
+                            height: size.width * 0.03,
+                            width: size.width * 0.15,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                await Supabase.instance.client.auth.signOut();
+                        
+                                final prefs = await SharedPreferences.getInstance();
+                                await prefs.remove('session');
+                                if (context.mounted) {
+                                  context.push('/');
+                                }
+                                return;
+                              },
+                              child: Text(
+                                'Cerrar sesión',
+                                style: TextStyle(fontSize: size.width * 0.015),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
               ],
             ),
           );

@@ -39,7 +39,7 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
   GoRoute(
       path: "/usuariosivanna",
       // name: "usuarios",
-      builder: (context, state) => const UsuariosScreen()),
+      builder: (context, state) => const UsuariosScreenIvanna()),
   GoRoute(
       path: "/configuracionivanna",
       // name: "configuracion",
@@ -47,7 +47,7 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
   GoRoute(
       path: "/crear-usuarioivanna",
       // name: "crear usuario",
-      builder: (context, state) => const SignUpScreen()),
+      builder: (context, state) => const SignUpScreenIvanna()),
   GoRoute(path: "/prueba", builder: (context, state) => const Prueba()),
   GoRoute(
       path: "/gestionclasesivanna",

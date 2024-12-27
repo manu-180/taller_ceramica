@@ -1,8 +1,8 @@
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
 
-class EliminarUsuario {
-  Future<void> eliminarDeBaseDatos(int userId) async {
+class EliminarUsuarioManu {
+  Future<void> eliminarDeBaseDatosManu(int userId) async {
     final dataClases = await ObtenerTotalInfoManu().obtenerClaseManu();
     final dataUsuarios = await ObtenerTotalInfoManu().obtenerUsuariosManu();
 
@@ -19,9 +19,8 @@ class EliminarUsuario {
       if (clase.mails.contains(user)) {
         var alumnos = clase.mails;
         alumnos.remove(user);
-        await supabase
-            .from('clasesmanu')
-            .update({'mails': alumnos}).eq('id', clase.id);
+        await supabase.from('clasesmanu').update({'mails': alumnos}).eq('id', clase.id);
+        ModificarLugarDisponibleManu().agregarLugarDisponibleManu(clase.id);
       }
     }
   }
