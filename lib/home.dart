@@ -28,6 +28,7 @@ class HomeState extends State<Home> {
 
   @override
   void initState() {
+    _checkSession();
     super.initState();
 
     // Escuchar cambios de foco en los campos
@@ -48,6 +49,19 @@ class HomeState extends State<Home> {
     });
   }
 
+  Future<void> _checkSession() async {
+ 
+    // Recuperar la sesión desde SharedPreferences
+    final user = Supabase.instance.client.auth.currentUser;
+    
+
+        // Si la sesión es válida, redirigir al usuario
+        if (user != null) {
+          await RedirijirUsuarioAlTaller().redirigirUsuario(context);
+        }
+     
+}
+
   @override
   void dispose() {
     emailController.dispose();
@@ -63,7 +77,9 @@ class HomeState extends State<Home> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: ResponsiveAppBar( isTablet: size.width > 600),
+      appBar: AppBar(
+        title: const Text('Inicia sesion'),
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),

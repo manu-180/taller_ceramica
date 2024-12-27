@@ -118,6 +118,24 @@ class CustomAppBarState extends State<CustomAppBarManu> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
+                        width: size.width * 0.34,
+                        height: size.height * 0.044,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            context.push('/iniciar-sesionmanu');
+                          },
+                          child: Text(
+                            'Iniciar',
+                            style: TextStyle(fontSize: size.width * 0.034),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
                         width: size.width * 0.23,
                         height: size.height * 0.044,
                         child: ElevatedButton(
@@ -135,24 +153,6 @@ class CustomAppBarState extends State<CustomAppBarManu> {
                         width: size.width * 0.23,
                         height: size.height * 0.044,
                         child: ElevatedButton(
-                          onPressed: () {
-                            context.push('/iniciar-sesionmanu');
-                          },
-                          child: Text(
-                            'Iniciar',
-                            style: TextStyle(fontSize: size.width * 0.032),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                        width: size.width * 0.34,
-                        height: size.height * 0.044,
-                        child: ElevatedButton(
                           onPressed: () async {
                             await Supabase.instance.client.auth.signOut();
 
@@ -164,8 +164,8 @@ class CustomAppBarState extends State<CustomAppBarManu> {
                             return;
                           },
                           child: Text(
-                            'Cerrar sesión',
-                            style: TextStyle(fontSize: size.width * 0.034),
+                            'Cerrar',
+                            style: TextStyle(fontSize: size.width * 0.032),
                           ),
                         ),
                       ),
