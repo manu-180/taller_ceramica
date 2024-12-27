@@ -5,7 +5,7 @@ import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_i
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/remover_usuario.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
+import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/funciones_globales/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/mostrar_dia_segun_fecha.dart';

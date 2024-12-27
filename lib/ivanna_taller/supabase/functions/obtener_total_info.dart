@@ -1,6 +1,6 @@
 import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
-import 'package:taller_ceramica/ivanna_taller/models/usuario_models.dart'; // Asegúrate de tener esta ruta correcta.
+import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/models/usuario_models.dart'; // Asegúrate de tener esta ruta correcta.
 
 class ObtenerTotalInfo {
   Future<List<ClaseModels>> obtenerInfo() async {

@@ -1,9 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:taller_ceramica/manu_taller/models/usuario_models.dart';
 import 'package:taller_ceramica/manu_taller/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/models/usuario_models.dart';
 
 class UsuariosScreenManu extends StatefulWidget {
   const UsuariosScreenManu({super.key});

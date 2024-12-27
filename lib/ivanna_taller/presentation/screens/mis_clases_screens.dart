@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
-import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
+import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 
 class MisClasesScreen extends ConsumerStatefulWidget {

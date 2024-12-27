@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:taller_ceramica/funciones_globales/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
+import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 
 class ClasesTabletScreen extends StatefulWidget {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
+import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_clase.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/generar_id.dart';

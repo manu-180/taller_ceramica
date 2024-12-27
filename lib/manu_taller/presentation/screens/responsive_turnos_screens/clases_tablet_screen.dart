@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/calcular_24hs.dart';
 import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/manu_taller/models/clase_models.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/models/clase_models.dart';
 
 import '../../../../funciones_globales/utils/utils_barril.dart';
 
