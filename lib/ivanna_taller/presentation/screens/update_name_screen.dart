@@ -6,8 +6,8 @@ import 'package:taller_ceramica/main.dart';
 
 import '../../../screens_globales/update_name_screen.dart';
 
-class UpdateNameIvannaScreen extends StatelessWidget {
-  const UpdateNameIvannaScreen({super.key});
+class UpdateNameScreenIvanna extends StatelessWidget {
+  const UpdateNameScreenIvanna({super.key});
 
   @override
   Widget build(BuildContext context) {

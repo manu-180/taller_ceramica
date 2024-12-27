@@ -57,7 +57,7 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
       builder: (context, state) => const CambiarPassword()),
   GoRoute(
       path: "/cambiarfullnameivanna",
-      builder: (context, state) => const UpdateNameIvannaScreen()),
+      builder: (context, state) => const UpdateNameScreenIvanna()),
   GoRoute(
       path: "/homemanu", builder: (context, state) => const HomeScreenManu()),
   GoRoute(
