@@ -3,7 +3,7 @@ import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
-import 'package:taller_ceramica/funciones_globales/utils/enviar_wpp.dart';
+import 'package:taller_ceramica/utils/enviar_wpp.dart';
 
 class AgregarUsuario {
   final SupabaseClient supabaseClient;

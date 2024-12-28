@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/funciones_globales/utils/capitalize.dart';
+import 'package:taller_ceramica/utils/capitalize.dart';
 
 class UpdateNameScreen extends StatefulWidget {
   final Future<List<dynamic>> Function() obtenerUsuarios;

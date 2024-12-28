@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/screens_globales/usuarios_screen.dart';
 
-import '../../../funciones_globales/utils_barril.dart';
+import '../../../utils/utils_barril.dart';
 
 class UsuariosScreenManu extends StatelessWidget {
   const UsuariosScreenManu({super.key});

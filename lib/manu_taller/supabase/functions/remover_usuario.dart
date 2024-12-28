@@ -1,4 +1,4 @@
-import 'package:taller_ceramica/funciones_globales/utils_barril.dart';
+import 'package:taller_ceramica/utils/utils_barril.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 

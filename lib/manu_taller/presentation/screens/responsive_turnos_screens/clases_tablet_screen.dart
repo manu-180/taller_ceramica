@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/funciones_globales/utils/calcular_24hs.dart';
+import 'package:taller_ceramica/utils/calcular_24hs.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 
-import '../../../../funciones_globales/utils_barril.dart';
+import '../../../../utils/utils_barril.dart';
 
 class ClasesTabletScreenManu extends StatefulWidget {
   const ClasesTabletScreenManu({super.key});

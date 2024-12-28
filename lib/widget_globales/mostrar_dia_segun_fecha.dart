@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:taller_ceramica/funciones_globales/utils/dia_con_fecha.dart';
+import 'package:taller_ceramica/utils/dia_con_fecha.dart';
 import 'package:taller_ceramica/widget_globales/custom_box.dart';
 
 class MostrarDiaSegunFecha extends StatelessWidget {

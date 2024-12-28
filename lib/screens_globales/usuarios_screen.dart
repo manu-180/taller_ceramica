@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/models/usuario_models.dart';
 
-import '../funciones_globales/utils_barril.dart';
+import '../utils/utils_barril.dart';
 
 class UsuariosScreen extends StatefulWidget {
   final Future<List<dynamic>> Function() obtenerUsuarios;

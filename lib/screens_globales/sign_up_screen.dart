@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/main.dart';
-import '../../../funciones_globales/utils_barril.dart';
+import '../utils/utils_barril.dart';
 
 class SignUpScreen extends StatefulWidget {
   final PreferredSizeWidget appBar;
