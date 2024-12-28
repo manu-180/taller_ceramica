@@ -31,11 +31,11 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
   GoRoute(
       path: "/misclasesivanna",
       // name: "misclases",
-      builder: (context, state) => const MisClasesScreen()),
+      builder: (context, state) => const MisClasesScreenIvanna()),
   GoRoute(
       path: "/gestionhorariosivanna",
       // name: "gestionhorarios",
-      builder: (context, state) => const GestionHorariosScreen()),
+      builder: (context, state) => const GestionHorariosScreenIvanna()),
   GoRoute(
       path: "/usuariosivanna",
       // name: "usuarios",
@@ -51,7 +51,7 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
   GoRoute(path: "/prueba", builder: (context, state) => const Prueba()),
   GoRoute(
       path: "/gestionclasesivanna",
-      builder: (context, state) => const GestionDeClasesScreen()),
+      builder: (context, state) => const GestionClasesScreenIvanna()),
   GoRoute(
       path: "/cambiarpassword",
       builder: (context, state) => const CambiarPassword()),
@@ -91,7 +91,7 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
   GoRoute(path: "/prueba", builder: (context, state) => const Prueba()),
   GoRoute(
       path: "/gestionclasesmanu",
-      builder: (context, state) => const GestionDeClasesScreenManu()),
+      builder: (context, state) => const GestionClasesScreenManu()),
   GoRoute(
       path: "/cambiarfullnamemanu",
       builder: (context, state) => const UpdateNameScreenManu()),
