@@ -578,7 +578,8 @@ class _DiaSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentMonth = DateTime.now().month;
+    // final currentMonth = DateTime.now().month;
+    const currentMonth = 1;
 
     // Obtener las dimensiones de la pantalla
     final screenWidth = MediaQuery.of(context).size.width;
