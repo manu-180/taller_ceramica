@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
 
 class TabletAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override

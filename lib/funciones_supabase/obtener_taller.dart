@@ -1,4 +1,4 @@
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_total_info.dart';
 import 'package:taller_ceramica/main.dart';
 
 class ObtenerTaller {

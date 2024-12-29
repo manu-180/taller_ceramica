@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/screens_globales/mis_clases.dart';
 

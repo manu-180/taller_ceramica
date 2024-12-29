@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:intl/intl.dart';
-import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 
 import '../../../widget_globales/mostrar_dia_segun_fecha.dart';
@@ -15,8 +14,9 @@ class GestionDeClasesScreen extends StatefulWidget {
   final Future<int> Function() generarIdClase;
   final Future<bool> Function(int) agregarLugardisponible;
   final Future<bool> Function(int) removerLugardisponible;
+  final Future<void> Function(int) eliminarClase;
 
-  const GestionDeClasesScreen({super.key, required this.obtenerClases, required this.appBar, required this.generarIdClase, required this.agregarLugardisponible, required this.removerLugardisponible});
+  const GestionDeClasesScreen({super.key, required this.obtenerClases, required this.appBar, required this.generarIdClase, required this.agregarLugardisponible, required this.removerLugardisponible, required this.eliminarClase});
 
   @override
   State<GestionDeClasesScreen> createState() =>
@@ -377,8 +377,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                                   if (respuesta == true) {
                                     setState(() {
                                       clasesFiltradas.removeAt(index);
-                                      EliminarClaseManu()
-                                          .eliminarClaseManu(clase.id);
+                                     widget.eliminarClase(clase.id);
                                     });
                                   }
                                 },

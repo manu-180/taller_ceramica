@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:taller_ceramica/funciones_supabase/modificar_alert_trigger.dart';
+import 'package:taller_ceramica/funciones_supabase/modificar_credito.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_total_info.dart';
+import 'package:taller_ceramica/funciones_supabase/remover_usuario.dart';
 import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/manu_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/screens_globales/mis_clases.dart';
 
 class MisClasesScreenManu extends StatelessWidget {
@@ -10,11 +14,11 @@ class MisClasesScreenManu extends StatelessWidget {
   Widget build(BuildContext context) {
     return MisClasesScreen(
      
-      agregarCredito:(user) =>ModificarCreditoManu().agregarCreditoUsuarioManu(user), 
-      agregarAlertaTrigger:(user) =>ModificarAlertTriggerManu().agregarAlertTriggerManu(user),
-      obtenerClases: () => ObtenerTotalInfoManu().obtenerClaseManu(), 
+      agregarCredito:(user) =>ModificarCredito().agregarCreditoUsuario(user), 
+      agregarAlertaTrigger:(user) =>ModificarAlertTrigger().agregarAlertTrigger(user),
+      obtenerClases: () => ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'clasesmanu').obtenerClases(), 
       appBar: ResponsiveAppBarManu(isTablet: MediaQuery.of(context).size.width > 600), 
-      removerUsuarioDeClase: (idClase , user , parametro ) => RemoverUsuarioManu(supabase).removerUsuarioDeClaseManu(idClase , user , parametro ),
+      removerUsuarioDeClase: (idClase , user , parametro ) => RemoverUsuario(supabase).removerUsuarioDeClase(idClase , user , parametro ),
       );
   }
 }

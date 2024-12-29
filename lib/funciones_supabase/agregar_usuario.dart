@@ -1,9 +1,10 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_lugar_disponible.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_credito.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
+import 'package:taller_ceramica/funciones_supabase/modificar_lugar_disponible.dart';
+import 'package:taller_ceramica/funciones_supabase/modificar_credito.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_total_info.dart';
 import 'package:taller_ceramica/utils/enviar_wpp.dart';
 
 class AgregarUsuario {
@@ -14,11 +15,12 @@ class AgregarUsuario {
   Future<void> agregarUsuarioAClase(
       int idClase, String user, bool parametro, ClaseModels claseModels) async {
 
-        
-    final usuarios = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerUsuarios();
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+    final usuarios = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerUsuarios();
 
     final data =
-        await supabaseClient.from('total').select().eq('id', idClase).single();
+        await supabaseClient.from(taller).select().eq('id', idClase).single();
 
     final clase = ClaseModels.fromMap(data);
 
@@ -28,7 +30,7 @@ class AgregarUsuario {
           if (!clase.mails.contains(user)) {
             clase.mails.add(user);
             await supabaseClient
-                .from('total')
+                .from(taller)
                 .update(clase.toMap())
                 .eq('id', idClase);
             ModificarLugarDisponible().removerLugarDisponible(idClase);
@@ -56,7 +58,10 @@ class AgregarUsuario {
   }
 
  Future<void> agregarUsuarioEnCuatroClases(ClaseModels clase, String user) async {
-  final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerClases();
+  final usuarioActivo = Supabase.instance.client.auth.currentUser;
+  final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+
+  final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerClases();
 
   // Mapa para ordenar días de la semana en orden correcto
   final Map<String, int> diaToNumero = {
@@ -119,7 +124,7 @@ class AgregarUsuario {
 
             // Actualizar en Supabase
             await supabaseClient
-                .from('total')
+                .from(taller)
                 .update(item.toMap())
                 .eq('id', item.id);
 

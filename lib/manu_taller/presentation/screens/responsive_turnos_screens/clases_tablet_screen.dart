@@ -1,5 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/funciones_supabase/modificar_alert_trigger.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_alert_trigger.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_clases_disponibles.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_total_info.dart';
+import 'package:taller_ceramica/main.dart';
+import 'package:taller_ceramica/manu_taller/widgets/responsive_appbar.dart';
 import '../../../../screens_globales/responsive_turnos_screen/clases_tablet_screen.dart';
 
 class ClasesTabletScreenManu extends StatelessWidget {
@@ -8,10 +13,10 @@ class ClasesTabletScreenManu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClasesTabletScreen(
-      obtenerClases: () => ObtenerTotalInfoManu().obtenerClaseManu(), 
-      obtenerAlertTrigger: (user) => ObtenerAlertTriggerManu().alertTriggerManu(user), 
-      obtenerClasesDisponibles: (user) =>  ObtenerClasesDisponiblesManu().clasesDisponiblesManu(user), 
-      resetearAlertTrigger: (user) =>ModificarAlertTriggerManu().resetearAlertTriggerManu(user), 
+      obtenerClases: () => ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'clasesmanu').obtenerClases(), 
+      obtenerAlertTrigger: (user) => ObtenerAlertTrigger().alertTrigger(user), 
+      obtenerClasesDisponibles: (user) =>  ObtenerClasesDisponibles().clasesDisponibles(user), 
+      resetearAlertTrigger: (user) =>ModificarAlertTrigger().resetearAlertTrigger(user),
       appBar: ResponsiveAppBarManu(isTablet: MediaQuery.of(context).size.width > 600 ), 
       );
   }

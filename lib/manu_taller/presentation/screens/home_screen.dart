@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/is_mujer.dart';
+import 'package:taller_ceramica/funciones_supabase/is_mujer.dart';
 import 'package:taller_ceramica/manu_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
 

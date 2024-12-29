@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_total_info.dart';
+import 'package:taller_ceramica/funciones_supabase/update_user.dart';
 import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/manu_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/screens_globales/update_name_screen.dart';
 
 class UpdateNameScreenManu extends StatelessWidget {
@@ -10,11 +12,11 @@ class UpdateNameScreenManu extends StatelessWidget {
   Widget build(BuildContext context) {
     return UpdateNameScreen(
       appBar: ResponsiveAppBarManu(isTablet: MediaQuery.of(context).size.width > 600),
-      obtenerUsuarios: () => ObtenerTotalInfoManu().obtenerUsuariosManu(),
+            obtenerUsuarios: () => ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'clasesmanu').obtenerUsuarios(),
       updateUser: (oldName, newName) =>
-          UpdateUserManu(supabase).updateUserManu(oldName, newName),
+          UpdateUser(supabase).updateUser(oldName, newName),
       updateTableUser: (id, newName) =>
-          UpdateUserManu(supabase).updateTableUserManu(id, newName),
+          UpdateUser(supabase).updateTableUser(id, newName),
     );
   }
 }

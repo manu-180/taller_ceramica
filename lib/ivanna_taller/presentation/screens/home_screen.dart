@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/widget_globales/box_text.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/is_mujer.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/funciones_supabase/is_mujer.dart';
+import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 
 class HomeScreen extends StatelessWidget {

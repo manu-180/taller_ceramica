@@ -1,0 +1,20 @@
+export 'package:supabase_flutter/supabase_flutter.dart';
+
+export 'package:flutter_riverpod/flutter_riverpod.dart';
+export 'package:taller_ceramica/funciones_supabase/agregar_usuario.dart';
+export 'package:taller_ceramica/funciones_supabase/alumnos_en_clase.dart';
+export 'package:taller_ceramica/utils/calcular_24hs.dart';
+export 'package:taller_ceramica/funciones_supabase/eliminar_clase.dart';
+export 'package:taller_ceramica/utils/eliminar_de_bd.dart';
+export 'package:taller_ceramica/funciones_supabase/eliminar_usuario.dart';
+export 'package:taller_ceramica/funciones_supabase/generar_id.dart';
+export 'package:taller_ceramica/funciones_supabase/modificar_alert_trigger.dart';
+export 'package:taller_ceramica/funciones_supabase/modificar_credito.dart';
+export 'package:taller_ceramica/funciones_supabase/modificar_lugar_disponible.dart';
+export 'package:taller_ceramica/funciones_supabase/obtener_alert_trigger.dart';
+export 'package:taller_ceramica/funciones_supabase/obtener_clases_disponibles.dart';
+export 'package:taller_ceramica/funciones_supabase/obtener_id.dart';
+export 'package:taller_ceramica/funciones_supabase/obtener_lugares_de_clases.dart';
+export 'package:taller_ceramica/funciones_supabase/obtener_total_info.dart';
+export 'package:taller_ceramica/funciones_supabase/remover_usuario.dart';
+export 'package:taller_ceramica/funciones_supabase/update_user.dart';

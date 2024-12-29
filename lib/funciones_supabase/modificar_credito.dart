@@ -1,10 +1,14 @@
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_alert_trigger.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
+import 'package:taller_ceramica/funciones_supabase/modificar_alert_trigger.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_total_info.dart';
+import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
 import 'package:taller_ceramica/main.dart';
 
 class ModificarCredito {
   Future<bool> agregarCreditoUsuario(String user) async {
-    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerUsuarios();
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerUsuarios();
 
     for (final usuario in data) {
       if (usuario.fullname == user) {
@@ -20,7 +24,9 @@ class ModificarCredito {
   }
 
   Future<bool> removerCreditoUsuario(String user) async {
-    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerUsuarios();
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerUsuarios();
 
     for (final usuario in data) {
       if (usuario.fullname == user) {
