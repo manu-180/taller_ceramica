@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
@@ -12,13 +11,15 @@ class ClasesScreen extends StatefulWidget {
     final Future<int> Function(String) obtenerAlertTrigger;
     final Future<int> Function(String) obtenerClasesDisponibles;
     final Future<bool> Function(String) resetearAlertTrigger;
+    final PreferredSizeWidget appBar;
 
 
   const ClasesScreen({super.key, 
   required this.obtenerClases, 
   required this.obtenerAlertTrigger, 
   required this.obtenerClasesDisponibles, 
-  required this.resetearAlertTrigger});
+  required this.resetearAlertTrigger, 
+  required this.appBar});
   
 
   @override
@@ -254,7 +255,8 @@ class _ClasesScreenState extends State<ClasesScreen> {
 
   List<String> obtenerDiasConClasesDisponibles() {
     final diasConClases = <String>{};
-    final currentMonth = DateTime.now().month;
+    // final currentMonth = DateTime.now().month;
+
 
     horariosPorDia.forEach((dia, clases) {
       if (clases.any((clase) =>
@@ -263,7 +265,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
           clase.lugaresDisponibles > 0)) {
         final partesFecha = dia.split(' - ')[1].split('/');
         final diaMes = int.parse(partesFecha[1]);
-        if (diaMes == currentMonth) {
+        if (diaMes == 1) {
           final diaSolo =
               dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
           diasConClases.add(diaSolo);
@@ -279,7 +281,6 @@ class _ClasesScreenState extends State<ClasesScreen> {
     final color = Theme.of(context).primaryColor;
     final colors = Theme.of(context).colorScheme;
     final screenWidth = MediaQuery.of(context).size.width;
-    final size = MediaQuery.of(context).size;
 
     // Relativo a la pantalla
     double paddingSize = screenWidth * 0.05; // 5% del ancho de la pantalla
@@ -287,7 +288,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
     double fontSize = screenWidth * 0.04; // 4% del ancho de la pantalla
 
     return Scaffold(
-      appBar: ResponsiveAppBar(isTablet: size.width > 600),
+      appBar: widget.appBar,
       body: Column(
         children: [
           Padding(

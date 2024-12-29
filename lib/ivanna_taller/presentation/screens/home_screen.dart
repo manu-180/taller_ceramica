@@ -56,8 +56,8 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       _buildLoadingImage(
-                        imagePath: 'assets/images/creando.png',
-                        height: 500,
+                        imagePath: 'assets/images/ceramicamujer.gif',
+                        height: 300,
                       ),
                       const SizedBox(height: 20),
                       Text(
@@ -78,7 +78,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       _buildLoadingImage(
-                        imagePath: 'assets/images/bici.webp',
+                        imagePath: 'assets/images/ceramicagif.gif',
                         height: 300,
                       ),
                       const SizedBox(height: 20),

@@ -11,7 +11,8 @@ class ClasesTabletScreenManu extends StatelessWidget {
       obtenerClases: () => ObtenerTotalInfoManu().obtenerClaseManu(), 
       obtenerAlertTrigger: (user) => ObtenerAlertTriggerManu().alertTriggerManu(user), 
       obtenerClasesDisponibles: (user) =>  ObtenerClasesDisponiblesManu().clasesDisponiblesManu(user), 
-      resetearAlertTrigger: (user) =>ModificarAlertTriggerManu().resetearAlertTriggerManu(user)
+      resetearAlertTrigger: (user) =>ModificarAlertTriggerManu().resetearAlertTriggerManu(user), 
+      appBar: ResponsiveAppBarManu(isTablet: MediaQuery.of(context).size.width > 600 ), 
       );
   }
 }

@@ -12,6 +12,6 @@ class GestionClasesScreenManu extends StatelessWidget {
       appBar: ResponsiveAppBarManu(isTablet: MediaQuery.of(context).size.width > 600 ), 
       generarIdClase: () => GenerarIdManu().generarIdClaseManu(), 
       agregarLugardisponible: (id) => ModificarLugarDisponibleManu().agregarLugarDisponibleManu(id), 
-      removerLugardisponible: (id) => ModificarLugarDisponibleManu().agregarLugarDisponibleManu(id),);
+      removerLugardisponible: (id) => ModificarLugarDisponibleManu().removerLugarDisponibleManu(id),);
   }
 }

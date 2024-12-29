@@ -13,6 +13,6 @@ class GestionClasesScreenIvanna extends StatelessWidget {
       appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600 ), 
       generarIdClase: () => GenerarId().generarIdClase(), 
       agregarLugardisponible: (id) => ModificarLugarDisponible().agregarLugarDisponible(id), 
-      removerLugardisponible: (id) => ModificarLugarDisponible().agregarLugarDisponible(id),);
+      removerLugardisponible: (id) => ModificarLugarDisponible().removerLugarDisponible(id),);
   }
 }

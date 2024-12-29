@@ -12,12 +12,14 @@ class ClasesTabletScreen extends StatefulWidget {
     final Future<int> Function(String) obtenerAlertTrigger;
     final Future<int> Function(String) obtenerClasesDisponibles;
     final Future<bool> Function(String) resetearAlertTrigger;
+    final PreferredSizeWidget appBar;
 
   const ClasesTabletScreen({super.key,
    required this.obtenerClases, 
    required this.obtenerAlertTrigger, 
    required this.obtenerClasesDisponibles, 
-   required this.resetearAlertTrigger});
+   required this.resetearAlertTrigger, 
+   required this.appBar});
 
   @override
   State<ClasesTabletScreen> createState() => _ClasesScreenState();

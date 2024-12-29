@@ -27,7 +27,7 @@ class Prueba extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () async { 
           resultado.asMap().forEach((index, value) async {
-          await supabase.from('total').update({'lugar_disponible': 5}).eq('id', index +1 );
+          await supabase.from('clasesmanu').update({'fecha': value}).eq('id', index +1 );
   }
   );
         },
