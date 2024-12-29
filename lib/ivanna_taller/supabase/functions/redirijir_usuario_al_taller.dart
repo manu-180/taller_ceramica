@@ -1,10 +1,9 @@
-import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 
-import '../../../manu_taller/supabase/supabase_barril.dart';
-
-class RedirijirUsuarioAlTaller {
+class RedirigirUsuarioAlTaller {
   Future<void> redirigirUsuario(BuildContext context) async {
     try {
       final user = Supabase.instance.client.auth.currentUser;
@@ -12,36 +11,24 @@ class RedirijirUsuarioAlTaller {
         throw Exception("No hay usuario activo");
       }
 
-      final usuariosIvanna = await ObtenerTotalInfo().obtenerInfoUsuarios();
+      final taller  = await ObtenerTaller().retornarTaller(user.id);
 
-      for (var usuario in usuariosIvanna) {
-        if (usuario.userUid == user.id) {
-          if (context.mounted) {
-            context.go('/homeivanna');
-          }
-          return;
-        }
+      // 2. Redirigir según el valor de 'taller'
+      if (taller == "total") {
+        if (context.mounted) context.go('/homeivanna');
+      } else if (taller == "manu") {
+        if (context.mounted) context.go('/homemanu');
+      } else {
+        // Manejar otros casos
+        throw Exception("Taller desconocido: $taller");
       }
 
-      final usuariosManu = await ObtenerTotalInfoManu().obtenerUsuariosManu();
-
-      for (var usuario in usuariosManu) {
-        if (usuario.userUid == user.id) {
-          if (context.mounted) {
-            context.go('/homemanu');
-          }
-          return;
-        }
-      }
-
-      // Si no se encontró en ninguna lista, maneja el caso aquí
-      throw Exception("Usuario no encontrado en ninguna lista");
     } catch (e) {
-      // Manejo de errores
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error al redirigir: $e")),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error al redirigir: $e")),
+        );
+      }
     }
   }
 }

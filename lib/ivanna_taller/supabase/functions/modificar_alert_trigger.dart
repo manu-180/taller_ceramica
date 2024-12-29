@@ -3,7 +3,7 @@ import 'package:taller_ceramica/main.dart';
 
 class ModificarAlertTrigger {
   Future<bool> agregarAlertTrigger(String user) async {
-    final data = await ObtenerTotalInfo().obtenerInfoUsuarios();
+    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerUsuarios();
 
     for (final usuario in data) {
       if (usuario.fullname == user) {
@@ -16,7 +16,7 @@ class ModificarAlertTrigger {
   }
 
   Future<bool> resetearAlertTrigger(String user) async {
-    final data = await ObtenerTotalInfo().obtenerInfoUsuarios();
+    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerUsuarios();
 
     for (final item in data) {
       if (item.fullname == user) {

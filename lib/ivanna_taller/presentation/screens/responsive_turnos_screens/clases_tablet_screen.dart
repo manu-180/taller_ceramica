@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
+import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/screens_globales/responsive_turnos_screen/clases_tablet_screen.dart';
 
 class ClasesTabletScreenIvanna extends StatelessWidget {
@@ -9,7 +10,7 @@ class ClasesTabletScreenIvanna extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClasesTabletScreen(
-      obtenerClases: () => ObtenerTotalInfo().obtenerInfo(), 
+      obtenerClases: () => ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerClases(), 
       obtenerAlertTrigger: (user) => ObtenerAlertTrigger().alertTrigger(user), 
       obtenerClasesDisponibles: (user) =>  ObtenerClasesDisponibles().clasesDisponibles(user), 
       resetearAlertTrigger: (user) =>ModificarAlertTrigger().resetearAlertTrigger(user),

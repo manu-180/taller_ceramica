@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/manu_taller/supabase/supabase_barril.dart';
 
 class RedirijirUsuarioAlTaller {
@@ -10,7 +11,7 @@ class RedirijirUsuarioAlTaller {
       throw Exception("No hay usuario activo");
     }
 
-    final usuariosIvanna = await ObtenerTotalInfo().obtenerInfoUsuarios();
+    final usuariosIvanna = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerUsuarios();
 
     // Busca si el usuario está en la lista de Ivanna
     for (var usuario in usuariosIvanna) {

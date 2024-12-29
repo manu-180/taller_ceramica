@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
 import 'package:taller_ceramica/main.dart';
 import '../utils/utils_barril.dart';
 
@@ -36,6 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
+    final user = Supabase.instance.client.auth.currentUser;
 
     return Scaffold(
       appBar: widget.appBar,
@@ -243,7 +245,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           data: {'fullname': Capitalize().capitalize(fullname)},
                         );
 
-                        await supabase.from('usuariosmanu').insert({
+                        await supabase.from('usuarios').insert({
                           'id': await widget.generarIDd(),
                           'usuario': email,
                           'fullname': Capitalize().capitalize(fullname),
@@ -252,6 +254,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'clases_disponibles': 0,
                           'trigger_alert': 0,
                           'clases_canceladas': [],
+                          'taller': await ObtenerTaller().retornarTaller(user!.id),
                         });
 
                         EnviarWpp().sendWhatsAppMessage(

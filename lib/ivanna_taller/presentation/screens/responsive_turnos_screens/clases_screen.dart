@@ -4,6 +4,7 @@ import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_alert_t
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_clases_disponibles.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
+import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/screens_globales/responsive_turnos_screen/clases_screen.dart';
 
 class ClasesScreenIvanna extends StatelessWidget {
@@ -12,7 +13,7 @@ class ClasesScreenIvanna extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClasesScreen(
-      obtenerClases: () => ObtenerTotalInfo().obtenerInfo(), 
+      obtenerClases: () => ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerClases(), 
       obtenerAlertTrigger: (user) => ObtenerAlertTrigger().alertTrigger(user), 
       obtenerClasesDisponibles: (user) =>  ObtenerClasesDisponibles().clasesDisponibles(user), 
       resetearAlertTrigger: (user) =>ModificarAlertTrigger().resetearAlertTrigger(user), 

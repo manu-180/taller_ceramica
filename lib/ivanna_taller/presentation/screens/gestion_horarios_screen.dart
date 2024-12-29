@@ -10,8 +10,8 @@ class GestionHorariosScreenIvanna extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestionHorariosScreen(
-      obtenerUsuarios: () => ObtenerTotalInfo().obtenerInfoUsuarios(), 
-      obtenerClases: () => ObtenerTotalInfo().obtenerInfo(), 
+      obtenerUsuarios: () => ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerUsuarios(), 
+      obtenerClases: () => ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerClases(), 
       agregarUsuarioAClase: ( idClase, user, parametro, claseModels) => AgregarUsuario(supabase).agregarUsuarioAClase(idClase, user, parametro, claseModels), 
       agregarUsuarioEnCuatroClases: (clase, user) => AgregarUsuario(supabase).agregarUsuarioEnCuatroClases(clase, user),
       removerUsuarioDeUnaClase: ( idClase,  user,  parametro) => RemoverUsuario(supabase).removerUsuarioDeClase(idClase, user, parametro),

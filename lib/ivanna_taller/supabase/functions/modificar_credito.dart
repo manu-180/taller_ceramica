@@ -4,7 +4,7 @@ import 'package:taller_ceramica/main.dart';
 
 class ModificarCredito {
   Future<bool> agregarCreditoUsuario(String user) async {
-    final data = await ObtenerTotalInfo().obtenerInfoUsuarios();
+    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerUsuarios();
 
     for (final usuario in data) {
       if (usuario.fullname == user) {
@@ -20,7 +20,7 @@ class ModificarCredito {
   }
 
   Future<bool> removerCreditoUsuario(String user) async {
-    final data = await ObtenerTotalInfo().obtenerInfoUsuarios();
+    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerUsuarios();
 
     for (final usuario in data) {
       if (usuario.fullname == user) {

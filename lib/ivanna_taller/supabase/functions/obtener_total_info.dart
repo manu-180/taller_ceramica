@@ -1,16 +1,29 @@
-import 'package:taller_ceramica/main.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
-import 'package:taller_ceramica/models/usuario_models.dart'; // Asegúrate de tener esta ruta correcta.
+import 'package:taller_ceramica/models/usuario_models.dart';
+
 
 class ObtenerTotalInfo {
-  Future<List<ClaseModels>> obtenerInfo() async {
-    final data = await supabase.from('total').select();
-    return List<ClaseModels>.from(data.map((map) => ClaseModels.fromMap(map)));
+  final SupabaseClient supabase;
+  final String clasesTable;   
+  final String usuariosTable; 
+
+  ObtenerTotalInfo({
+    required this.supabase,
+    required this.clasesTable,
+    required this.usuariosTable,
+  });
+
+  // Obtiene las clases desde la tabla que se especificó (clasesTable)
+  Future<List<ClaseModels>> obtenerClases() async {
+    final response = await supabase.from(clasesTable).select();
+
+    return response.map((item) => ClaseModels.fromMap(item)).toList();
   }
 
-  Future<List<UsuarioModels>> obtenerInfoUsuarios() async {
-    final data = await supabase.from('usuarios').select();
-    return List<UsuarioModels>.from(
-        data.map((map) => UsuarioModels.fromMap(map)));
+  // Obtiene los usuarios desde la tabla que se especificó (usuariosTable)
+  Future<List<UsuarioModels>> obtenerUsuarios() async {
+    final response = await supabase.from(usuariosTable).select();
+    return response.map((item) => UsuarioModels.fromMap(item)).toList();
   }
 }

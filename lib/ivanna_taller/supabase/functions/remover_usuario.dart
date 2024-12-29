@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/utils/calcular_24hs.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_lugar_disponible.dart';
@@ -12,7 +13,7 @@ class RemoverUsuario {
 
   Future<void> removerUsuarioDeClase(
       int idClase, String user, bool parametro) async {
-    final data = await ObtenerTotalInfo().obtenerInfo();
+    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerClases();
 
     for (final item in data) {
       if (item.id == idClase) {
@@ -50,7 +51,7 @@ class RemoverUsuario {
 
   Future<void> removerUsuarioDeMuchasClase(
       ClaseModels clase, String user) async {
-    final data = await ObtenerTotalInfo().obtenerInfo();
+    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerClases();
 
     for (final item in data) {
       if (clase.hora == item.hora && clase.dia == item.dia) {

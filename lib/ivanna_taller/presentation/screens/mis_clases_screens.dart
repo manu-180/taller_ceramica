@@ -14,7 +14,7 @@ class MisClasesScreenIvanna extends StatelessWidget {
      
       agregarCredito:(user) =>ModificarCredito().agregarCreditoUsuario(user), 
       agregarAlertaTrigger:(user) =>ModificarAlertTrigger().agregarAlertTrigger(user),
-      obtenerClases: () => ObtenerTotalInfo().obtenerInfo(), 
+      obtenerClases: () => ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerClases(), 
       appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600), 
       removerUsuarioDeClase: (idClase , user , parametro ) => RemoverUsuario(supabase).removerUsuarioDeClase(idClase , user , parametro ),
       );

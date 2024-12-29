@@ -3,8 +3,8 @@ import 'package:taller_ceramica/main.dart';
 
 class EliminarUsuario {
   Future<void> eliminarDeBaseDatos(int userId) async {
-    final dataClases = await ObtenerTotalInfo().obtenerInfo();
-    final dataUsuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
+    final dataClases = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerClases();
+    final dataUsuarios = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerUsuarios();
 
     var user = "";
 

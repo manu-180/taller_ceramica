@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_credito.dart';
@@ -12,7 +13,9 @@ class AgregarUsuario {
 
   Future<void> agregarUsuarioAClase(
       int idClase, String user, bool parametro, ClaseModels claseModels) async {
-    final usuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
+
+        
+    final usuarios = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerUsuarios();
 
     final data =
         await supabaseClient.from('total').select().eq('id', idClase).single();
@@ -53,7 +56,7 @@ class AgregarUsuario {
   }
 
  Future<void> agregarUsuarioEnCuatroClases(ClaseModels clase, String user) async {
-  final data = await ObtenerTotalInfo().obtenerInfo();
+  final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerClases();
 
   // Mapa para ordenar días de la semana en orden correcto
   final Map<String, int> diaToNumero = {

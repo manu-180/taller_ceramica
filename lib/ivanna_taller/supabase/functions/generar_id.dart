@@ -1,8 +1,9 @@
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
+import 'package:taller_ceramica/main.dart';
 
 class GenerarId {
   Future<int> generarIdUsuario() async {
-    final listausuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
+    final listausuarios = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerUsuarios();
     listausuarios.sort((a, b) => a.id.compareTo(b.id));
 
     for (int i = 0; i < listausuarios.length - 1; i++) {
@@ -14,7 +15,7 @@ class GenerarId {
   }
 
   Future<int> generarIdClase() async {
-    final listclase = await ObtenerTotalInfo().obtenerInfo();
+    final listclase = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerClases();
 
     if (listclase.isEmpty) {
       return 1;

@@ -53,7 +53,7 @@ class HomeState extends State<Home> {
 
     // Si la sesión es válida, redirigir al usuario
     if (user != null) {
-      await RedirijirUsuarioAlTaller().redirigirUsuario(context);
+      await RedirigirUsuarioAlTaller().redirigirUsuario(context);
     }
   }
 
@@ -179,7 +179,7 @@ class HomeState extends State<Home> {
                             'session', jsonEncode(sessionData));
                       }
                       if (context.mounted) {
-                        RedirijirUsuarioAlTaller().redirigirUsuario(context);
+                        RedirigirUsuarioAlTaller().redirigirUsuario(context);
                       }
                       return;
                     } on AuthException catch (e) {

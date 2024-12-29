@@ -3,7 +3,7 @@ import 'package:taller_ceramica/main.dart';
 
 class ModificarLugarDisponible {
   Future<bool> agregarLugarDisponible(int id) async {
-    final data = await ObtenerTotalInfo().obtenerInfo();
+    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerClases();
 
     for (final clase in data) {
       if (clase.id == id) {
@@ -20,7 +20,7 @@ class ModificarLugarDisponible {
   }
 
   Future<bool> removerLugarDisponible(int id) async {
-    final data = await ObtenerTotalInfo().obtenerInfo();
+    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerClases();
 
     for (final clase in data) {
       if (clase.id == id) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
+import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/screens_globales/usuarios_screen.dart';
 
 class UsuariosScreenIvanna extends StatelessWidget {
@@ -9,7 +10,7 @@ class UsuariosScreenIvanna extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return UsuariosScreen(
-      obtenerUsuarios: () => ObtenerTotalInfo().obtenerInfoUsuarios(), 
+      obtenerUsuarios: () => ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerUsuarios(), 
       agregarCredito:(user) => ModificarCredito().agregarCreditoUsuario(user), 
       removerCredito: (user) => ModificarCredito().removerCreditoUsuario(user), 
       appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600), 

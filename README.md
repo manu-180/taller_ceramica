@@ -18,6 +18,10 @@ andriod AAB :
 flutter build appbundle
 ""
 
+user:
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+
 despliegue en web:
 *eliminar docs*
 flutter build web

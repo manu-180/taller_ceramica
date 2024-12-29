@@ -13,7 +13,7 @@ class UpdateNameScreenIvanna extends StatelessWidget {
   Widget build(BuildContext context) {
     return UpdateNameScreen(
       appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
-      obtenerUsuarios: () => ObtenerTotalInfo().obtenerInfoUsuarios(),
+      obtenerUsuarios: () => ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: 'total').obtenerClases(),
       updateUser: (oldName, newName) =>
           UpdateUser(supabase).updateUser(oldName, newName),
       updateTableUser: (id, newName) =>
