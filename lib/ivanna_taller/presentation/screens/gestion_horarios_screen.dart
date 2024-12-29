@@ -15,7 +15,7 @@ class GestionHorariosScreenIvanna extends StatelessWidget {
       agregarUsuarioAClase: ( idClase, user, parametro, claseModels) => AgregarUsuario(supabase).agregarUsuarioAClase(idClase, user, parametro, claseModels), 
       agregarUsuarioEnCuatroClases: (clase, user) => AgregarUsuario(supabase).agregarUsuarioEnCuatroClases(clase, user),
       removerUsuarioDeUnaClase: ( idClase,  user,  parametro) => RemoverUsuario(supabase).removerUsuarioDeClase(idClase, user, parametro),
-      removerUsuarioDeMuchasClases: (ClaseModels, user) => RemoverUsuario(supabase).removerUsuarioDeMuchasClase(ClaseModels, user),
+      removerUsuarioDeMuchasClases: (claseModels, user) => RemoverUsuario(supabase).removerUsuarioDeMuchasClase(claseModels, user),
       appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
       );
   }

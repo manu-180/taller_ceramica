@@ -19,9 +19,9 @@ class ResposiveClasesScreen extends StatelessWidget
     const double tabletThreshold = 600;
 
     if (size.width > tabletThreshold) {
-      return const ClasesTabletScreen();
+      return const ClasesTabletScreenIvanna();
     } else {
-      return const ClasesScreen();
+      return const ClasesScreenIvanna();
     }
   }
 }
