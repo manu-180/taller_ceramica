@@ -4,8 +4,10 @@ import 'package:taller_ceramica/funciones_supabase/is_mujer.dart';
 import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
-class HomeScreenManu extends StatelessWidget {
-  const HomeScreenManu({super.key});
+class HomeScreen extends StatelessWidget {
+  final String? taller;
+
+  const HomeScreen({super.key, this.taller});
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +40,8 @@ class HomeScreenManu extends StatelessWidget {
                       const SizedBox(height: 10),
                       Text(
                         isMujer
-                            ? '¡Bienvenida a taller de ceramica ricardo rojas!'
-                            : '¡Bienvenido a taller de ceramica ricardo rojas!',
+                            ? '¡Bienvenida a $taller!'
+                            : '¡Bienvenido a $taller!',
                         style: TextStyle(
                           fontSize: 33,
                           fontWeight: FontWeight.bold,

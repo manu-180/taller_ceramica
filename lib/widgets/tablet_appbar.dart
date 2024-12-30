@@ -131,7 +131,7 @@ class TabletAppBarState extends State<TabletAppBar> {
           {'value': '/configuracion${taller ?? ''}', 'label': 'Configuración'},
         ];
 
-        final menuItems = (userId == "dc326a14-214b-424c-845c-82396f2b73e3" ||
+        final menuItems = (userId == "56f74db7-61ed-418f-a047-b94224a639ed" ||
                 userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b")
             ? adminRoutes
             : userRoutes;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:taller_ceramica/screens_globales/responsive_turnos_screen/clases_screen.dart';
-import 'package:taller_ceramica/screens_globales/responsive_turnos_screen/clases_tablet_screen.dart';
+import 'package:taller_ceramica/screens/responsive_turnos_screen/clases_screen.dart';
+import 'package:taller_ceramica/screens/responsive_turnos_screen/clases_tablet_screen.dart';
 
 class ResposiveClasesScreen extends StatelessWidget
     implements PreferredSizeWidget {
