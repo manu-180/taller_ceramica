@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_total_info.dart';
+import 'package:taller_ceramica/funciones_supabase/update_user.dart';
+import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/utils/capitalize.dart';
+import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
 class UpdateNameScreen extends StatefulWidget {
-  final Future<List<dynamic>> Function() obtenerUsuarios;
-  final Future<void> Function(String, String) updateUser;
-  final Future<void> Function(String, String) updateTableUser;
-  final PreferredSizeWidget appBar;
+
 
   const UpdateNameScreen({
-    super.key,
-    required this.obtenerUsuarios,
-    required this.updateUser,
-    required this.updateTableUser,
-    required this.appBar,
-  });
+    super.key, String? taller});
 
   @override
   UpdateNameScreenState createState() => UpdateNameScreenState();
@@ -36,7 +33,12 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
 
     try {
       final user = Supabase.instance.client.auth.currentUser;
-      final listausuarios = await widget.obtenerUsuarios();
+      final taller = await ObtenerTaller().retornarTaller(user!.id);
+      final listausuarios = await ObtenerTotalInfo(
+        supabase: supabase,
+        usuariosTable: 'usuarios',
+        clasesTable: taller,
+      ).obtenerUsuarios();
       final fullnameExiste = listausuarios.any((usuario) =>
           usuario.fullname.toLowerCase() ==
           _fullnameController.text.toLowerCase());
@@ -60,12 +62,12 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
         ),
       );
 
-      await widget.updateUser(
+      await UpdateUser(supabase).updateUser(
         user.userMetadata?['fullname'] ?? '',
         Capitalize().capitalize(_fullnameController.text),
       );
 
-      await widget.updateTableUser(
+      await UpdateUser(supabase).updateTableUser(
         user.id,
         Capitalize().capitalize(_fullnameController.text),
       );
@@ -88,7 +90,7 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

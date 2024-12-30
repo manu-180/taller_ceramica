@@ -98,20 +98,20 @@ class CustomAppBarState extends State<CustomAppBar> {
     final userId = user?.id;
 
     final adminRoutes = [
-      {'value': '/turnos${taller ?? ''}', 'label': 'Clases'},
-      {'value': '/misclases${taller ?? ''}', 'label': 'Mis clases'},
-      {'value': '/gestionhorarios${taller ?? ''}', 'label': 'Gestión de horarios'},
-      {'value': '/gestionclases${taller ?? ''}', 'label': 'Gestión de clases'},
-      {'value': '/usuarios${taller ?? ''}', 'label': 'Alumnos/as'},
-      {'value': '/configuracion${taller ?? ''}', 'label': 'Configuración'},
-      {'value': '/prueba', 'label': 'prueba'},
-    ];
-
+  {'value': '/turnos/${taller ?? ''}', 'label': 'Clases'},
+  {'value': '/misclases/${taller ?? ''}', 'label': 'Mis clases'},
+  {'value': '/gestionhorarios/${taller ?? ''}', 'label': 'Gestión de horarios'},
+  {'value': '/gestionclases/${taller ?? ''}', 'label': 'Gestión de clases'},
+  {'value': '/usuarios/${taller ?? ''}', 'label': 'Alumnos/as'},
+  {'value': '/configuracion/${taller ?? ''}', 'label': 'Configuración'},
+  {'value': '/prueba', 'label': 'prueba'},
+];
     final userRoutes = [
-      {'value': '/turnos${taller ?? ''}', 'label': 'Clases'},
-      {'value': '/misclases${taller ?? ''}', 'label': 'Mis clases'},
-      {'value': '/configuracion${taller ?? ''}', 'label': 'Configuración'},
-    ];
+  {'value': '/turnos/${taller ?? ''}', 'label': 'Clases'},
+  {'value': '/misclases/${taller ?? ''}', 'label': 'Mis clases'},
+  {'value': '/configuracion/${taller ?? ''}', 'label': 'Configuración'},
+];
+
 
     final menuItems = (userId == "dc326a14-214b-424c-845c-82396f2b73e3" ||
             userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b")
@@ -126,7 +126,7 @@ class CustomAppBarState extends State<CustomAppBar> {
         children: [
           GestureDetector(
             onTap: () {
-              context.push("/home${taller ?? ''}");
+              context.push("/home/${taller ?? ''}");
             },
             child: 
             // Column(
@@ -215,7 +215,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                       height: size.height * 0.044,
                       child: ElevatedButton(
                         onPressed: () {
-                          context.push('/crear-usuario${taller ?? ''}');
+                          context.push('/crear-usuario/${taller ?? ''}');
                         },
                         child: Text(
                           'Crear',

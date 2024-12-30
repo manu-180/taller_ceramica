@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
+import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
 import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
+import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
 class MisClasesScreen extends ConsumerStatefulWidget {
-  final Future<bool> Function(String) agregarCredito;
-  final Future<bool> Function(String) agregarAlertaTrigger;
-  final Future<void> Function(int, String, bool) removerUsuarioDeClase;
-  final Future<List<dynamic>> Function() obtenerClases;
-  final PreferredSizeWidget appBar;
+
 
   const MisClasesScreen(
-      {super.key,
-      required this.agregarCredito,
-      required this.agregarAlertaTrigger,
-      required this.removerUsuarioDeClase,
-      required this.obtenerClases,
-      required this.appBar});
+      {super.key, String? taller});
 
   @override
   ConsumerState<MisClasesScreen> createState() => MisClasesScreenState();
@@ -52,9 +46,9 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
               onPressed: () {
                 cancelarClase(clase.id, user?.userMetadata?['fullname']);
                 if (Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)) {
-                  widget.agregarCredito(user?.userMetadata?['fullname']);
+                   ModificarCredito().agregarCreditoUsuario(user?.userMetadata?['fullname']);
                 } else {
-                  widget.agregarAlertaTrigger(user?.userMetadata?['fullname']);
+                  ModificarAlertTrigger().agregarAlertTrigger(user?.userMetadata?['fullname']);
                 }
                 Navigator.of(context).pop();
               },
@@ -67,7 +61,14 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
   }
 
   Future<void> cargarClasesOrdenadasPorProximidad(String fullname) async {
-    final datos = await widget.obtenerClases();
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+
+    final datos = await ObtenerTotalInfo(
+        supabase: supabase,
+        usuariosTable: 'usuarios',
+        clasesTable: taller,
+      ).obtenerClases();
 
     final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
 
@@ -109,7 +110,7 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
@@ -231,7 +232,7 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
           .where((clase) => clase.mails.contains(fullname))
           .toList();
     });
-    await widget.removerUsuarioDeClase(claseId, fullname, false);
+    await RemoverUsuario(supabase).removerUsuarioDeClase(claseId, fullname, false);
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     // ignore: use_build_context_synchronously

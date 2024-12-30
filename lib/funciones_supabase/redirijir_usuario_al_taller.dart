@@ -13,12 +13,14 @@ class RedirigirUsuarioAlTaller {
 
       final taller = await ObtenerTaller().retornarTaller(user.id);
 
-      if (taller == "ivanna") {
-        if (context.mounted) context.go('/homeivanna');
-      } else if (taller == "manu") {
-        if (context.mounted) context.go('/homemanu');
-      } else {
-        throw Exception("Taller desconocido: $taller");
+      // Si tu ruta es "/home/:taller", simplemente hacemos:
+      if (taller.isEmpty) {
+        throw Exception("Taller desconocido (está vacío)");
+      }
+
+      if (context.mounted) {
+        context.go('/home/$taller');
+        // O .push() si necesitas empujar la ruta en lugar de reemplazarla
       }
     } catch (e) {
       if (context.mounted) {

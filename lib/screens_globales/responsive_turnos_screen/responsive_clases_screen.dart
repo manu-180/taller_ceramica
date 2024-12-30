@@ -6,20 +6,11 @@ class ResposiveClasesScreen extends StatelessWidget
     implements PreferredSizeWidget {
   @override
   final Size preferredSize;
-  final Future<List<dynamic>> Function() obtenerClases;
-  final Future<int> Function(String) obtenerAlertTrigger;
-  final Future<int> Function(String) obtenerClasesDisponibles;
-  final Future<bool> Function(String) resetearAlertTrigger;
-  final PreferredSizeWidget appBar;
+
 
   ResposiveClasesScreen(
       {super.key,
-      required bool isTablet,
-      required this.obtenerClases,
-      required this.obtenerAlertTrigger,
-      required this.obtenerClasesDisponibles,
-      required this.resetearAlertTrigger,
-      required this.appBar})
+      required bool isTablet, String? taller})
       : preferredSize = Size.fromHeight(
           isTablet ? kToolbarHeight * 2.2 : kToolbarHeight * 1.25,
         );
@@ -32,23 +23,10 @@ class ResposiveClasesScreen extends StatelessWidget
     const double tabletThreshold = 600;
 
     if (size.width > tabletThreshold) {
-      // Renderiza el AppBar para tablets
-      return ClasesTabletScreen(
-        obtenerClases: obtenerClases,
-        obtenerAlertTrigger: obtenerAlertTrigger,
-        obtenerClasesDisponibles: obtenerClasesDisponibles,
-        resetearAlertTrigger: resetearAlertTrigger,
-        appBar: appBar,
-      );
+
+      return const ClasesTabletScreen();
     } else {
-      // Renderiza el AppBar para celulares
-      return ClasesScreen(
-        obtenerClases: obtenerClases,
-        obtenerAlertTrigger: obtenerAlertTrigger,
-        obtenerClasesDisponibles: obtenerClasesDisponibles,
-        resetearAlertTrigger: resetearAlertTrigger,
-        appBar: appBar,
-      );
+      return const ClasesScreen();
     }
   }
 }

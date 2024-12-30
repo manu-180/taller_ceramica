@@ -1,31 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/funciones_supabase/agregar_usuario.dart';
 import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_total_info.dart';
+import 'package:taller_ceramica/funciones_supabase/remover_usuario.dart';
+import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/widget_globales/box_text.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widget_globales/mostrar_dia_segun_fecha.dart';
+import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
 class GestionHorariosScreen extends StatefulWidget {
-  final Future<List<dynamic>> Function() obtenerUsuarios;
-  final Future<List<dynamic>> Function() obtenerClases;
-  final Future<void> Function(int, String, bool, ClaseModels)
-      agregarUsuarioAClase;
-  final Future<void> Function(ClaseModels, String) agregarUsuarioEnCuatroClases;
-  final Future<void> Function(int, String, bool) removerUsuarioDeUnaClase;
-  final Future<void> Function(ClaseModels, String) removerUsuarioDeMuchasClases;
-  final PreferredSizeWidget appBar;
+
 
   const GestionHorariosScreen(
-      {super.key,
-      required this.obtenerUsuarios,
-      required this.obtenerClases,
-      required this.agregarUsuarioAClase,
-      required this.agregarUsuarioEnCuatroClases,
-      required this.removerUsuarioDeUnaClase,
-      required this.removerUsuarioDeMuchasClases,
-      required this.appBar});
+      {super.key, String? taller});
 
   @override
   State<GestionHorariosScreen> createState() => _GestionHorariosScreenState();
@@ -54,8 +45,16 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
     try {
-      final datos = await widget.obtenerClases();
-      final usuarios = await widget.obtenerUsuarios();
+      final datos = await ObtenerTotalInfo(
+        supabase: supabase,
+        usuariosTable: 'usuarios',
+        clasesTable: taller,
+      ).obtenerClases();
+      final usuarios = await ObtenerTotalInfo(
+        supabase: supabase,
+        usuariosTable: 'usuarios',
+        clasesTable: taller,
+      ).obtenerUsuarios();
 
       final datosDiciembre = datos.where((clase) {
         final fecha = clase.fecha;
@@ -218,11 +217,13 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                             if (tipoAccion == "insertar") {
                               setState(() {
                                 if (insertarX4) {
-                                  widget.agregarUsuarioEnCuatroClases(
+                                  AgregarUsuario(supabase)
+          .agregarUsuarioEnCuatroClases(
                                       clase, usuarioSeleccionado);
                                   clase.mails.add(usuarioSeleccionado);
                                 } else {
-                                  widget.agregarUsuarioAClase(clase.id,
+                                  AgregarUsuario(supabase)
+              .agregarUsuarioAClase(clase.id,
                                       usuarioSeleccionado, true, clase);
                                   clase.mails.add(usuarioSeleccionado);
                                 }
@@ -230,11 +231,13 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                             } else if (tipoAccion == "remover") {
                               setState(() {
                                 if (insertarX4) {
-                                  widget.removerUsuarioDeMuchasClases(
+                                  RemoverUsuario(supabase)
+              .removerUsuarioDeMuchasClase(
                                       clase, usuarioSeleccionado);
                                   clase.mails.remove(usuarioSeleccionado);
                                 } else {
-                                  widget.removerUsuarioDeUnaClase(
+                                  RemoverUsuario(supabase)
+              .removerUsuarioDeClase(
                                       clase.id, usuarioSeleccionado, true);
                                   clase.mails.remove(usuarioSeleccionado);
                                 }
@@ -271,7 +274,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: ResponsiveAppBar(isTablet: size.width > 600),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),

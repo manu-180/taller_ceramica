@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
+import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
 class ClasesScreen extends StatefulWidget {
-  final Future<List<dynamic>> Function() obtenerClases;
-  final Future<int> Function(String) obtenerAlertTrigger;
-  final Future<int> Function(String) obtenerClasesDisponibles;
-  final Future<bool> Function(String) resetearAlertTrigger;
-  final PreferredSizeWidget appBar;
+
 
   const ClasesScreen(
       {super.key,
-      required this.obtenerClases,
-      required this.obtenerAlertTrigger,
-      required this.obtenerClasesDisponibles,
-      required this.resetearAlertTrigger,
-      required this.appBar});
+   });
 
   @override
   State<ClasesScreen> createState() => _ClasesScreenState();
@@ -42,33 +36,33 @@ class _ClasesScreenState extends State<ClasesScreen> {
   Map<String, List<ClaseModels>> horariosPorDia = {};
 
   Future<void> cargarDatos() async {
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
     setState(() {
-      isLoading = true; // Indicamos que se está cargando
+      isLoading = true; 
     });
 
-    final datos = await widget.obtenerClases() as List<ClaseModels>;
+    final datos = await ObtenerTotalInfo(
+        supabase: supabase,
+        usuariosTable: 'usuarios',
+        clasesTable: taller,
+      ).obtenerClases();
 
-    // Filtramos las clases por la semana seleccionada
     final datosSemana =
         datos.where((clase) => clase.semana == semanaSeleccionada).toList();
 
-    // Crea un objeto DateFormat para el formato "dd/MM/yyyy HH:mm"
     final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
 
-    // Ordenamos primero por la fecha (ascendente) y luego por la hora (ascendente)
     datosSemana.sort((a, b) {
-      // Concatenamos la hora al dato de fecha ya existente
       String fechaA = '${a.fecha} ${a.hora}';
       String fechaB = '${b.fecha} ${b.hora}';
 
-      // Convierte las fechas y horas a DateTime usando DateFormat
       DateTime parsedFechaA = dateFormat.parse(fechaA);
       DateTime parsedFechaB = dateFormat.parse(fechaB);
 
       return parsedFechaA.compareTo(parsedFechaB);
     });
 
-    // Extraemos días únicos basados en la fecha y día
     final diasSet = <String>{};
     diasUnicos = datosSemana.where((clase) {
       final diaFecha = '${clase.dia} - ${clase.fecha}';
@@ -119,9 +113,9 @@ class _ClasesScreenState extends State<ClasesScreen> {
 
     // Operaciones asincrónicas
     final triggerAlert =
-        await widget.obtenerAlertTrigger(user.userMetadata?['fullname']);
+        await ObtenerAlertTrigger().alertTrigger(user.userMetadata?['fullname']);
     final clasesDisponibles =
-        await widget.obtenerClasesDisponibles(user.userMetadata?['fullname']);
+        await ObtenerClasesDisponibles().clasesDisponibles(user.userMetadata?['fullname']);
 
     if (!context.mounted) return; // Verificar si el widget sigue montado
 
@@ -188,7 +182,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
                   if (clase != null && user != null) {
                     manejarSeleccionClase(
                         clase, user.userMetadata?['fullname'] ?? '');
-                    widget.resetearAlertTrigger(
+                    ModificarAlertTrigger().resetearAlertTrigger(
                         user.userMetadata?['fullname'] ?? '');
                   }
                   Navigator.of(context).pop(); // Cerrar el diálogo
@@ -287,7 +281,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
     double fontSize = screenWidth * 0.04; // 4% del ancho de la pantalla
 
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: ResponsiveAppBar(isTablet: screenWidth > 600),
       body: Column(
         children: [
           Padding(

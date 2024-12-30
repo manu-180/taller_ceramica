@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
@@ -7,19 +8,10 @@ import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
 
 class ClasesTabletScreen extends StatefulWidget {
-  final Future<List<dynamic>> Function() obtenerClases;
-  final Future<int> Function(String) obtenerAlertTrigger;
-  final Future<int> Function(String) obtenerClasesDisponibles;
-  final Future<bool> Function(String) resetearAlertTrigger;
-  final PreferredSizeWidget appBar;
+
 
   const ClasesTabletScreen(
-      {super.key,
-      required this.obtenerClases,
-      required this.obtenerAlertTrigger,
-      required this.obtenerClasesDisponibles,
-      required this.resetearAlertTrigger,
-      required this.appBar});
+      {super.key});
 
   @override
   State<ClasesTabletScreen> createState() => _ClasesScreenState();
@@ -43,33 +35,33 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
   Map<String, List<ClaseModels>> horariosPorDia = {};
 
   Future<void> cargarDatos() async {
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
     setState(() {
-      isLoading = true; // Indicamos que se está cargando
+      isLoading = true;
     });
 
-    final datos = (await widget.obtenerClases()) as List<ClaseModels>;
+    final datos = await ObtenerTotalInfo(
+        supabase: supabase,
+        usuariosTable: 'usuarios',
+        clasesTable: taller,
+      ).obtenerClases();
 
-    // Filtramos las clases por la semana seleccionada
     final datosSemana =
         datos.where((clase) => clase.semana == semanaSeleccionada).toList();
 
-    // Crea un objeto DateFormat para el formato "dd/MM/yyyy HH:mm"
     final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
 
-    // Ordenamos primero por la fecha (ascendente) y luego por la hora (ascendente)
     datosSemana.sort((a, b) {
-      // Concatenamos la hora al dato de fecha ya existente
       String fechaA = '${a.fecha} ${a.hora}';
       String fechaB = '${b.fecha} ${b.hora}';
 
-      // Convierte las fechas y horas a DateTime usando DateFormat
       DateTime parsedFechaA = dateFormat.parse(fechaA);
       DateTime parsedFechaB = dateFormat.parse(fechaB);
 
       return parsedFechaA.compareTo(parsedFechaB);
     });
 
-    // Extraemos días únicos basados en la fecha y día
     final diasSet = <String>{};
     diasUnicos = datosSemana.where((clase) {
       final diaFecha = '${clase.dia} - ${clase.fecha}';
@@ -89,7 +81,7 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
 
     if (mounted) {
       setState(() {
-        isLoading = false; // Desactivamos el indicador de carga
+        isLoading = false; 
       });
     }
   }
@@ -97,11 +89,9 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
   void mostrarConfirmacion(BuildContext context, ClaseModels clase) async {
     final user = Supabase.instance.client.auth.currentUser;
 
-    // Inicializar variables para el mensaje y el botón
     String mensaje;
     bool mostrarBotonAceptar = false;
 
-    // Verificar si el usuario está autenticado
     if (user == null) {
       mensaje = "Debes iniciar sesión para inscribirte a una clase";
       if (context.mounted) {
@@ -118,13 +108,12 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
       return;
     }
 
-    // Operaciones asincrónicas
     final triggerAlert =
-        await widget.obtenerAlertTrigger(user.userMetadata?['fullname']);
+        await ObtenerAlertTrigger().alertTrigger(user.userMetadata?['fullname']);
     final clasesDisponibles =
-        await widget.obtenerClasesDisponibles(user.userMetadata?['fullname']);
+        await ObtenerClasesDisponibles().clasesDisponibles(user.userMetadata?['fullname']);
 
-    if (!context.mounted) return; // Verificar si el widget sigue montado
+    if (!context.mounted) return; 
 
     if (triggerAlert > 0 && clasesDisponibles == 0) {
       mensaje =
@@ -189,7 +178,7 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
                   if (clase != null && user != null) {
                     manejarSeleccionClase(
                         clase, user.userMetadata?['fullname'] ?? '');
-                    widget.resetearAlertTrigger(
+                    ModificarAlertTrigger().resetearAlertTrigger(
                         user.userMetadata?['fullname'] ?? '');
                   }
                   Navigator.of(context).pop(); // Cerrar el diálogo

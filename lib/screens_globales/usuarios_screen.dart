@@ -1,28 +1,19 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
+import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
+import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/usuario_models.dart';
+import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
 import '../utils/utils_barril.dart';
 
 class UsuariosScreen extends StatefulWidget {
-  final Future<List<dynamic>> Function() obtenerUsuarios;
-  final Future<bool> Function(String) agregarCredito;
-  final Future<bool> Function(String) removerCredito;
-  final Future<void> Function(int) eliminarUsuarioTabla;
-  final Future<void> Function(String) eliminarUsuarioBD;
-  final Future<List<String>> Function(String) alumnosEnClase;
-  final PreferredSizeWidget appBar;
+  
 
   const UsuariosScreen(
-      {super.key,
-      required this.obtenerUsuarios,
-      required this.agregarCredito,
-      required this.removerCredito,
-      required this.appBar,
-      required this.alumnosEnClase,
-      required this.eliminarUsuarioTabla,
-      required this.eliminarUsuarioBD});
+      {super.key, String? taller});
 
   @override
   State<UsuariosScreen> createState() => _UsuariosScreenState();
@@ -33,11 +24,18 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   List<UsuarioModels> usuarios = [];
 
   Future<void> cargarUsuarios() async {
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+    
     setState(() {
       isLoading = true;
     });
 
-    final datos = await widget.obtenerUsuarios();
+    final datos = await ObtenerTotalInfo(
+        supabase: supabase,
+        usuariosTable: 'usuarios',
+        clasesTable: taller,
+      ).obtenerUsuarios();
     if (mounted) {
       setState(() {
         usuarios = List<UsuarioModels>.from(datos);
@@ -49,8 +47,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   }
 
   Future<void> eliminarUsuario(int userId, String userUid) async {
-    await widget.eliminarUsuarioTabla(userId);
-    await widget.eliminarUsuarioBD(userUid);
+    await EliminarUsuario().eliminarDeBaseDatos(userId);
+    await EliminarDeBD().deleteCurrentUser(userUid);
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Usuario eliminado exitosamente')),
@@ -59,7 +57,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   }
 
   Future<void> agregarCredito(String user) async {
-    final resultado = await widget.agregarCredito(user);
+    final resultado = await ModificarCredito().agregarCreditoUsuario(user);
     if (resultado) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -75,7 +73,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   }
 
   Future<void> removerCredito(String user) async {
-    final resultado = await widget.removerCredito(user);
+    final resultado = await ModificarCredito().removerCreditoUsuario(user);
     if (resultado) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -209,7 +207,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Center(
@@ -241,8 +239,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                     ? "(${usuario.clasesDisponibles} crédito)"
                                     : "(${usuario.clasesDisponibles} créditos)"),
                                 onTap: () async {
-                                  final lista = await widget
-                                      .alumnosEnClase(usuario.fullname);
+                                  final lista = await AlumnosEnClase().clasesAlumno(usuario.fullname);
                                   ScaffoldMessenger.of(context)
                                       .hideCurrentSnackBar();
                                   ScaffoldMessenger.of(context).showSnackBar(

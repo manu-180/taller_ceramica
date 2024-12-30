@@ -2,20 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/funciones_supabase/generar_id.dart';
 import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_total_info.dart';
 import 'package:taller_ceramica/main.dart';
+import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import '../utils/utils_barril.dart';
 
 class SignUpScreen extends StatefulWidget {
-  final PreferredSizeWidget appBar;
-  final Future<List<dynamic>> Function() obtenerUsuarios;
-  final Future<int> Function() generarIDd;
+
 
   const SignUpScreen(
-      {super.key,
-      required this.appBar,
-      required this.obtenerUsuarios,
-      required this.generarIDd});
+      {super.key, String? taller});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -41,7 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final user = Supabase.instance.client.auth.currentUser;
 
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),  
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
@@ -197,7 +195,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       }
 
                       try {
-                        final listausuarios = await widget.obtenerUsuarios();
+                        final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+                        final listausuarios = await ObtenerTotalInfo(
+        supabase: supabase,
+        usuariosTable: 'usuarios',
+        clasesTable: taller ,
+      ).obtenerUsuarios();
 
                         final emailExiste = listausuarios
                             .any((usuario) => usuario.usuario == email);
@@ -246,7 +250,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         );
 
                         await supabase.from('usuarios').insert({
-                          'id': await widget.generarIDd(),
+                          'id': await GenerarId().generarIdUsuario(),
                           'usuario': email,
                           'fullname': Capitalize().capitalize(fullname),
                           'user_uid': res.user?.id,

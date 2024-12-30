@@ -2,30 +2,23 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/funciones_supabase/eliminar_clase.dart';
+import 'package:taller_ceramica/funciones_supabase/generar_id.dart';
+import 'package:taller_ceramica/funciones_supabase/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_total_info.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
 import '../../../widget_globales/mostrar_dia_segun_fecha.dart';
 
 class GestionDeClasesScreen extends StatefulWidget {
-  final Future<List<dynamic>> Function() obtenerClases;
-  final PreferredSizeWidget appBar;
-  final Future<int> Function() generarIdClase;
-  final Future<bool> Function(int) agregarLugardisponible;
-  final Future<bool> Function(int) removerLugardisponible;
-  final Future<void> Function(int) eliminarClase;
 
   const GestionDeClasesScreen(
-      {super.key,
-      required this.obtenerClases,
-      required this.appBar,
-      required this.generarIdClase,
-      required this.agregarLugardisponible,
-      required this.removerLugardisponible,
-      required this.eliminarClase});
+      {super.key, String? taller});
 
   @override
   State<GestionDeClasesScreen> createState() => _GestionDeClasesScreenState();
@@ -62,8 +55,14 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   }
 
   Future<void> cargarDatos() async {
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
     try {
-      final datos = await widget.obtenerClases();
+      final datos = await ObtenerTotalInfo(
+        supabase: supabase,
+        usuariosTable: 'usuarios',
+        clasesTable: taller,
+      ).obtenerClases();
 
       setState(() {
         clasesDisponibles = List<ClaseModels>.from(datos);
@@ -263,7 +262,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
 
                     try {
                       await supabase.from(taller).insert({
-                        'id': await widget.generarIdClase(),
+                        'id': await GenerarId().generarIdClase(),
                         'semana': "semana${i + 1}",
                         'dia': diaSemana,
                         'fecha': fechaStr,
@@ -328,7 +327,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
       body: Center(
         child: ConstrainedBox(
           constraints:
@@ -387,7 +386,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                                           "¿Quieres agregar un lugar disponible a esta clase?");
                                   if (respuesta == true) {
                                     agregarLugar(clase.id);
-                                    widget.agregarLugardisponible(clase.id);
+                                    ModificarLugarDisponible().agregarLugarDisponible(clase.id);
                                   }
                                 },
                               ),
@@ -400,7 +399,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                                   if (respuesta == true &&
                                       clase.lugaresDisponibles > 0) {
                                     quitarLugar(clase.id);
-                                    widget.removerLugardisponible(clase.id);
+                                    ModificarLugarDisponible().removerLugarDisponible(clase.id);
                                   }
                                 },
                               ),
@@ -414,7 +413,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                                   if (respuesta == true) {
                                     setState(() {
                                       clasesFiltradas.removeAt(index);
-                                      widget.eliminarClase(clase.id);
+                                      EliminarClase().eliminarClase(clase.id);
                                     });
                                   }
                                 },
