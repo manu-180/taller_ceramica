@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
-import 'package:taller_ceramica/funciones_supabase/obtener_total_info.dart';
-import 'package:taller_ceramica/funciones_supabase/update_user.dart';
+import 'package:taller_ceramica/supabase/obtener_taller.dart';
+import 'package:taller_ceramica/supabase/obtener_total_info.dart';
+import 'package:taller_ceramica/supabase/update_user.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/utils/capitalize.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/funciones_supabase/agregar_usuario.dart';
-import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
-import 'package:taller_ceramica/funciones_supabase/obtener_total_info.dart';
-import 'package:taller_ceramica/funciones_supabase/remover_usuario.dart';
+import 'package:taller_ceramica/supabase/agregar_usuario.dart';
+import 'package:taller_ceramica/supabase/obtener_taller.dart';
+import 'package:taller_ceramica/supabase/obtener_total_info.dart';
+import 'package:taller_ceramica/supabase/remover_usuario.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/widget_globales/box_text.dart';

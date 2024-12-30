@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/funciones_supabase/redirijir_usuario_al_taller.dart';
+import 'package:taller_ceramica/supabase/redirijir_usuario_al_taller.dart';
 import 'dart:convert';
 
 class Home extends StatefulWidget {
