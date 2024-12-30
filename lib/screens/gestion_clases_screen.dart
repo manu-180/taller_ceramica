@@ -13,7 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
-import '../../../widget_globales/mostrar_dia_segun_fecha.dart';
+import '../widgets/mostrar_dia_segun_fecha.dart';
 
 class GestionDeClasesScreen extends StatefulWidget {
 

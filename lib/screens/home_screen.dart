@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:taller_ceramica/widget_globales/box_text.dart';
+import 'package:taller_ceramica/widgets/box_text.dart';
 import 'package:taller_ceramica/supabase/is_mujer.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
