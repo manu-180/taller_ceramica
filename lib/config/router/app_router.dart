@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:taller_ceramica/screens/crear_taller.dart';
 import 'package:taller_ceramica/screens/home.dart';
 import 'package:taller_ceramica/screens/home_screen.dart';
 import 'package:taller_ceramica/screens/mis_clases.dart';
@@ -97,6 +98,10 @@ final appRouter = GoRouter(
         final tallerParam = state.pathParameters['taller'];
         return UpdateNameScreen(taller: tallerParam);
       },
+    ),
+    GoRoute(
+      path: "/creartaller",
+      builder: (context, state) => const CrearTaller(),
     ),
   ],
 );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/supabase/redirijir_usuario_al_taller.dart';
@@ -133,81 +134,94 @@ class HomeState extends State<Home> {
                   },
                 ),
                 const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () async {
-                    final email = emailController.text.trim();
-                    final password = passwordController.text.trim();
-
-                    if (!emailRegex.hasMatch(email)) {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('El correo no es válido'),
-                          backgroundColor: Colors.red,
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          context.push("/creartaller");
+                        }, child: const Text("Crear Taller")
                         ),
-                      );
-                      return;
-                    }
-
-                    if (password.length < 6) {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                              'La contraseña debe tener al menos 6 caracteres'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                      return;
-                    }
-
-                    try {
-                      // Iniciar sesión
-                      final response = await Supabase.instance.client.auth
-                          .signInWithPassword(
-                        email: email,
-                        password: password,
-                      );
-
-                      // Guardar sesión manualmente (SharedPreferences)
-                      if (response.session != null) {
-                        final prefs = await SharedPreferences.getInstance();
-                        final sessionData = response.session!.toJson();
-
-                        // Convertir sessionData en una cadena JSON antes de guardarlo
-                        await prefs.setString(
-                            'session', jsonEncode(sessionData));
-                      }
-                      if (context.mounted) {
-                        RedirigirUsuarioAlTaller().redirigirUsuario(context);
-                      }
-                      return;
-                    } on AuthException catch (e) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content:
-                                Text('Error de inicio de sesión: ${e.message}'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
-                      return;
-                    } catch (e) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Ocurrió un error inesperado'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
-                      return;
-                    }
-                  },
-                  child: const Text('Iniciar Sesión'),
+                        const SizedBox(width: 20),
+                      FilledButton(
+                        onPressed: () async {
+                          final email = emailController.text.trim();
+                          final password = passwordController.text.trim();
+                      
+                          if (!emailRegex.hasMatch(email)) {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('El correo no es válido'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+                      
+                          if (password.length < 6) {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'La contraseña debe tener al menos 6 caracteres'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+                      
+                          try {
+                            // Iniciar sesión
+                            final response = await Supabase.instance.client.auth
+                                .signInWithPassword(
+                              email: email,
+                              password: password,
+                            );
+                      
+                            // Guardar sesión manualmente (SharedPreferences)
+                            if (response.session != null) {
+                              final prefs = await SharedPreferences.getInstance();
+                              final sessionData = response.session!.toJson();
+                      
+                              // Convertir sessionData en una cadena JSON antes de guardarlo
+                              await prefs.setString(
+                                  'session', jsonEncode(sessionData));
+                            }
+                            if (context.mounted) {
+                              RedirigirUsuarioAlTaller().redirigirUsuario(context);
+                            }
+                            return;
+                          } on AuthException catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text('Error de inicio de sesión: ${e.message}'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                            return;
+                          } catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Ocurrió un error inesperado'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                            return;
+                          }
+                        },
+                        child: const Text('Iniciar Sesión'),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

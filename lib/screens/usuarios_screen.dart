@@ -37,13 +37,15 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
         clasesTable: taller,
       ).obtenerUsuarios();
     if (mounted) {
-      setState(() {
-        usuarios = List<UsuarioModels>.from(datos);
-        // Ordenar usuarios alfabéticamente por el nombre completo (fullname)
-        usuarios.sort((a, b) => a.fullname.compareTo(b.fullname));
-        isLoading = false;
-      });
-    }
+  setState(() {
+    usuarios = List<UsuarioModels>.from(
+      datos.where((usuario) => usuario.taller == taller),
+    );
+    // Ordenar usuarios alfabéticamente por el nombre completo (fullname)
+    usuarios.sort((a, b) => a.fullname.compareTo(b.fullname));
+    isLoading = false;
+  });
+}
   }
 
   Future<void> eliminarUsuario(int userId, String userUid) async {
