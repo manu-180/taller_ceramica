@@ -235,7 +235,7 @@ class TabletAppBarState extends State<TabletAppBar> {
                           final prefs = await SharedPreferences.getInstance();
                           await prefs.remove('session');
                           if (context.mounted) {
-                            context.push('/home${taller ?? ''}');
+                            context.push('/');
                           }
                         },
                         child: Text(

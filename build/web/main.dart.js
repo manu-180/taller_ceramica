@@ -28217,8 +28217,7 @@ aoi:function aoi(a,b){this.a=a
 this.b=b},
 aoj:function aoj(a,b){this.a=a
 this.b=b},
-aok:function aok(a,b){this.a=a
-this.b=b},
+aok:function aok(a){this.a=a},
 n5:function n5(){},
 WN:function WN(){},
 Fd:function Fd(a,b){this.a=a
@@ -96276,7 +96275,7 @@ s=A.aMb(A.aJ8(A.kP(B.qv,c.k2,h,p),B.O,i),new A.aoe(j),new A.j(-q*0.03,r.b*0.1),n
 r=q*0.03
 i=q*0.15
 q*=0.015
-return A.lO(h,!1,c.b,A.dh(A.a([n,m,s,B.a7q,f?A.dh(A.a([A.bZ(A.dk(A.aM("Crear usuario",h,h,h,A.cM(h,h,h,h,h,h,h,h,h,h,h,q,h,h,h,h,h,!0,h,h,h,h,h,h,h,h),h,h),new A.aoi(d,a),h),r,i),A.bZ(h,h,p),A.bZ(A.dk(A.aM("Iniciar sesi\xf3n",h,h,h,A.cM(h,h,h,h,h,h,h,h,h,h,h,q,h,h,h,h,h,!0,h,h,h,h,h,h,h,h),h,h),new A.aoj(d,a),h),r,i)],o),B.w,B.C,B.G):A.bZ(A.dk(A.aM("Cerrar sesi\xf3n",h,h,h,A.cM(h,h,h,h,h,h,h,h,h,h,h,q,h,h,h,h,h,!0,h,h,h,h,h,h,h,h),h,h),new A.aok(d,a),h),r,i)],o),B.w,B.C,B.G),123.20000000000002)},
+return A.lO(h,!1,c.b,A.dh(A.a([n,m,s,B.a7q,f?A.dh(A.a([A.bZ(A.dk(A.aM("Crear usuario",h,h,h,A.cM(h,h,h,h,h,h,h,h,h,h,h,q,h,h,h,h,h,!0,h,h,h,h,h,h,h,h),h,h),new A.aoi(d,a),h),r,i),A.bZ(h,h,p),A.bZ(A.dk(A.aM("Iniciar sesi\xf3n",h,h,h,A.cM(h,h,h,h,h,h,h,h,h,h,h,q,h,h,h,h,h,!0,h,h,h,h,h,h,h,h),h,h),new A.aoj(d,a),h),r,i)],o),B.w,B.C,B.G):A.bZ(A.dk(A.aM("Cerrar sesi\xf3n",h,h,h,A.cM(h,h,h,h,h,h,h,h,h,h,h,q,h,h,h,h,h,!0,h,h,h,h,h,h,h,h),h,h),new A.aok(a),h),r,i)],o),B.w,B.C,B.G),123.20000000000002)},
 $S:633}
 A.aod.prototype={
 $0(){var s=this.a.e
@@ -96321,19 +96320,19 @@ if(s==null)s=""
 A.jK(this.b,"/iniciar-sesion"+s,t.X)},
 $S:0}
 A.aok.prototype={
-$0(){var s=0,r=A.w(t.H),q=this,p,o
+$0(){var s=0,r=A.w(t.H),q=this,p
 var $async$$0=A.x(function(a,b){if(a===1)return A.t(b,r)
-while(true)switch(s){case 0:o=$.bi().b
-o===$&&A.b()
+while(true)switch(s){case 0:p=$.bi().b
+p===$&&A.b()
 s=2
-return A.n(o.gb4().lq(),$async$$0)
+return A.n(p.gb4().lq(),$async$$0)
 case 2:s=4
 return A.n(A.pa(),$async$$0)
 case 4:s=3
 return A.n(b.D(0,"session"),$async$$0)
-case 3:o=q.b
-if(o.e!=null){p=q.a.e
-A.jK(o,"/home"+(p==null?"":p),t.X)}return A.u(null,r)}})
+case 3:p=q.a
+if(p.e!=null)A.jK(p,"/",t.X)
+return A.u(null,r)}})
 return A.v($async$$0,r)},
 $S:9}
 A.n5.prototype={
