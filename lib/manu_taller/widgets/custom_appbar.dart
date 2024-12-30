@@ -45,7 +45,7 @@ class CustomAppBarState extends State<CustomAppBarManu> {
             {'value': '/configuracionmanu', 'label': 'Configuración'},
           ];
 
-          final menuItems = (userId == "e2446a58-b391-4f22-ab76-17648442acb6" ||
+          final menuItems = (userId == "dc326a14-214b-424c-845c-82396f2b73e3" ||
                   userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b")
               ? adminRoutes
               : userRoutes;
@@ -137,7 +137,7 @@ class CustomAppBarState extends State<CustomAppBarManu> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (userId ==
-                                  "e2446a58-b391-4f22-ab76-17648442acb6" ||
+                                  "dc326a14-214b-424c-845c-82396f2b73e3" ||
                               userId ==
                                   "939d2e1a-13b3-4af0-be54-1a0205581f3b") ...[
                             SizedBox(
@@ -158,7 +158,7 @@ class CustomAppBarState extends State<CustomAppBarManu> {
                           SizedBox(width: size.width * 0.02),
                           SizedBox(
                             width: userId ==
-                                        "e2446a58-b391-4f22-ab76-17648442acb6" ||
+                                        "dc326a14-214b-424c-845c-82396f2b73e3" ||
                                     userId ==
                                         "939d2e1a-13b3-4af0-be54-1a0205581f3b"
                                 ? size.width * 0.23

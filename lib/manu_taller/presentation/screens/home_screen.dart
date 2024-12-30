@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/widget_globales/box_text.dart';
 import 'package:taller_ceramica/funciones_supabase/is_mujer.dart';
-import 'package:taller_ceramica/manu_taller/widgets/responsive_appbar.dart';
-import 'package:taller_ceramica/utils/utils_barril.dart';
+import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
+import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 
-class HomeScreenManu extends StatelessWidget {
-  const HomeScreenManu({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class HomeScreenManu extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: ResponsiveAppBarManu(isTablet: size.width > 600),
+      appBar: ResponsiveAppBar(isTablet: size.width > 600),
       body: FutureBuilder<bool>(
         future: IsMujer().mujer(fullName),
         builder: (context, snapshot) {
@@ -37,7 +37,9 @@ class HomeScreenManu extends StatelessWidget {
                     children: [
                       const SizedBox(height: 10),
                       Text(
-                        isMujer ? '¡Bienvenida Manu!' : '¡Bienvenido Manu!',
+                        isMujer
+                            ? '¡Bienvenida a taller de ceramica ricardo rojas!'
+                            : '¡Bienvenido a taller de ceramica ricardo rojas!',
                         style: TextStyle(
                           fontSize: 33,
                           fontWeight: FontWeight.bold,
@@ -54,8 +56,8 @@ class HomeScreenManu extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       _buildLoadingImage(
-                        imagePath: 'assets/images/creando.png',
-                        height: 500,
+                        imagePath: 'assets/images/ceramicamujer.gif',
+                        height: 300,
                       ),
                       const SizedBox(height: 20),
                       Text(
@@ -76,7 +78,7 @@ class HomeScreenManu extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       _buildLoadingImage(
-                        imagePath: 'assets/images/bici.webp',
+                        imagePath: 'assets/images/ceramicagif.gif',
                         height: 300,
                       ),
                       const SizedBox(height: 20),

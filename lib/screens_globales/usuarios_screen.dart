@@ -14,17 +14,15 @@ class UsuariosScreen extends StatefulWidget {
   final Future<List<String>> Function(String) alumnosEnClase;
   final PreferredSizeWidget appBar;
 
-  
-  const UsuariosScreen({
-    super.key, 
-    required this.obtenerUsuarios, 
-    required this.agregarCredito, 
-    required this.removerCredito, 
-    required this.appBar, 
-    required this.alumnosEnClase, 
-    required this.eliminarUsuarioTabla, 
-    required this.eliminarUsuarioBD});
-  
+  const UsuariosScreen(
+      {super.key,
+      required this.obtenerUsuarios,
+      required this.agregarCredito,
+      required this.removerCredito,
+      required this.appBar,
+      required this.alumnosEnClase,
+      required this.eliminarUsuarioTabla,
+      required this.eliminarUsuarioBD});
 
   @override
   State<UsuariosScreen> createState() => _UsuariosScreenState();
@@ -243,7 +241,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                     ? "(${usuario.clasesDisponibles} crédito)"
                                     : "(${usuario.clasesDisponibles} créditos)"),
                                 onTap: () async {
-                                  final lista = await widget.alumnosEnClase(usuario.fullname);
+                                  final lista = await widget
+                                      .alumnosEnClase(usuario.fullname);
                                   ScaffoldMessenger.of(context)
                                       .hideCurrentSnackBar();
                                   ScaffoldMessenger.of(context).showSnackBar(

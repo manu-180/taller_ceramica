@@ -6,7 +6,9 @@ class AlumnosEnClase {
   Future<List<String>> clasesAlumno(String alumno) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    final clases = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerClases();
+    final clases = await ObtenerTotalInfo(
+            supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
+        .obtenerClases();
     final List<String> listAlumnos = [];
 
     for (final clase in clases) {

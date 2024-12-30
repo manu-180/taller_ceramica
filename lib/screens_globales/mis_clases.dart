@@ -12,16 +12,13 @@ class MisClasesScreen extends ConsumerStatefulWidget {
   final Future<List<dynamic>> Function() obtenerClases;
   final PreferredSizeWidget appBar;
 
-
   const MisClasesScreen(
-    {super.key,
-    required this.agregarCredito, 
-    required this.agregarAlertaTrigger, 
-    required this.removerUsuarioDeClase, 
-    required this.obtenerClases, 
-    required this.appBar
-    }
-    );
+      {super.key,
+      required this.agregarCredito,
+      required this.agregarAlertaTrigger,
+      required this.removerUsuarioDeClase,
+      required this.obtenerClases,
+      required this.appBar});
 
   @override
   ConsumerState<MisClasesScreen> createState() => MisClasesScreenState();
@@ -55,8 +52,7 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
               onPressed: () {
                 cancelarClase(clase.id, user?.userMetadata?['fullname']);
                 if (Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)) {
-                  widget.agregarCredito(
-                      user?.userMetadata?['fullname']);
+                  widget.agregarCredito(user?.userMetadata?['fullname']);
                 } else {
                   widget.agregarAlertaTrigger(user?.userMetadata?['fullname']);
                 }
@@ -76,8 +72,7 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
     final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
 
     final clasesUsuario = datos.where((clase) {
-      return clase.mails
-          .contains(fullname);
+      return clase.mails.contains(fullname);
     }).toList();
 
     clasesUsuario.sort((a, b) {
@@ -102,16 +97,15 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
   @override
   void initState() {
     super.initState();
-    final user = ref.read(authProvider); 
+    final user = ref.read(authProvider);
     if (user != null) {
-      cargarClasesOrdenadasPorProximidad(
-          user.userMetadata?['fullname']); 
+      cargarClasesOrdenadasPorProximidad(user.userMetadata?['fullname']);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(authProvider); 
+    final user = ref.watch(authProvider);
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -200,9 +194,8 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
                                         ),
                                         trailing: ElevatedButton(
                                           onPressed: () {
-                                                  mostrarCancelacion(
-                                                      context, clase);
-                                                },
+                                            mostrarCancelacion(context, clase);
+                                          },
                                           style: TextButton.styleFrom(
                                             backgroundColor:
                                                 const Color.fromARGB(

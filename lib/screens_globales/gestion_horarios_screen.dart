@@ -1,23 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/funciones_supabase/obtener_taller.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/widget_globales/box_text.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widget_globales/mostrar_dia_segun_fecha.dart';
 
 class GestionHorariosScreen extends StatefulWidget {
-
   final Future<List<dynamic>> Function() obtenerUsuarios;
   final Future<List<dynamic>> Function() obtenerClases;
-  final Future<void> Function(int, String, bool, ClaseModels) agregarUsuarioAClase;
+  final Future<void> Function(int, String, bool, ClaseModels)
+      agregarUsuarioAClase;
   final Future<void> Function(ClaseModels, String) agregarUsuarioEnCuatroClases;
   final Future<void> Function(int, String, bool) removerUsuarioDeUnaClase;
   final Future<void> Function(ClaseModels, String) removerUsuarioDeMuchasClases;
   final PreferredSizeWidget appBar;
 
-
-
-  const GestionHorariosScreen({super.key, required this.obtenerUsuarios, required this.obtenerClases, required this.agregarUsuarioAClase, required this.agregarUsuarioEnCuatroClases, required this.removerUsuarioDeUnaClase, required this.removerUsuarioDeMuchasClases, required this.appBar});
+  const GestionHorariosScreen(
+      {super.key,
+      required this.obtenerUsuarios,
+      required this.obtenerClases,
+      required this.agregarUsuarioAClase,
+      required this.agregarUsuarioEnCuatroClases,
+      required this.removerUsuarioDeUnaClase,
+      required this.removerUsuarioDeMuchasClases,
+      required this.appBar});
 
   @override
   State<GestionHorariosScreen> createState() => _GestionHorariosScreenState();
@@ -43,6 +51,8 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   }
 
   Future<void> cargarDatos() async {
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
     try {
       final datos = await widget.obtenerClases();
       final usuarios = await widget.obtenerUsuarios();
@@ -52,12 +62,20 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
         return fecha.endsWith('/2025');
       }).toList();
 
+      final usuariosFiltrados = usuarios.where((usuario) {
+        return usuario.taller == taller;
+      }).toList();
+
+      final nombresFiltrados =
+          usuariosFiltrados.map((usuario) => usuario.fullname).toList();
+
       setState(() {
         horariosDisponibles = datosDiciembre.cast<ClaseModels>();
         horariosFiltrados = datosDiciembre.cast<ClaseModels>();
-        usuariosDisponibles =
-            usuarios.map((usuario) => usuario.fullname as String).toList();
-        usuariosDisponiblesOriginal = List.from(usuariosDisponibles);
+
+        usuariosDisponibles = nombresFiltrados.cast<String>();
+        usuariosDisponiblesOriginal = List.from(nombresFiltrados);
+
         isLoading = false;
       });
     } catch (e) {
@@ -201,14 +219,11 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                               setState(() {
                                 if (insertarX4) {
                                   widget.agregarUsuarioEnCuatroClases(
-                                          clase, usuarioSeleccionado);
+                                      clase, usuarioSeleccionado);
                                   clase.mails.add(usuarioSeleccionado);
                                 } else {
-                                  widget.agregarUsuarioAClase(
-                                      clase.id,
-                                      usuarioSeleccionado,
-                                      true,
-                                      clase);
+                                  widget.agregarUsuarioAClase(clase.id,
+                                      usuarioSeleccionado, true, clase);
                                   clase.mails.add(usuarioSeleccionado);
                                 }
                               });
@@ -216,11 +231,11 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                               setState(() {
                                 if (insertarX4) {
                                   widget.removerUsuarioDeMuchasClases(
-                                          clase, usuarioSeleccionado);
+                                      clase, usuarioSeleccionado);
                                   clase.mails.remove(usuarioSeleccionado);
                                 } else {
                                   widget.removerUsuarioDeUnaClase(
-                                          clase.id, usuarioSeleccionado, true);
+                                      clase.id, usuarioSeleccionado, true);
                                   clase.mails.remove(usuarioSeleccionado);
                                 }
                               });

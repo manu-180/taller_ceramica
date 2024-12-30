@@ -10,9 +10,11 @@ class Prueba extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final DateTime fechaInicio = DateTime(2024, 12, 30); // 2 de diciembre de 2024
+    final DateTime fechaInicio =
+        DateTime(2024, 12, 30); // 2 de diciembre de 2024
     final DateTime fechaFin = DateTime(2025, 01, 31);
-    final List<String> resultado = GenerarFechas().generarFechas(fechaInicio, fechaFin);
+    final List<String> resultado =
+        GenerarFechas().generarFechas(fechaInicio, fechaFin);
 
     return Scaffold(
       appBar: ResponsiveAppBar(isTablet: size.width > 600),
@@ -25,11 +27,12 @@ class Prueba extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async { 
+        onPressed: () async {
           resultado.asMap().forEach((index, value) async {
-          await supabase.from('clasesmanu').update({'fecha': value}).eq('id', index +1 );
-  }
-  );
+            await supabase
+                .from('clasesmanu')
+                .update({'fecha': value}).eq('id', index + 1);
+          });
         },
         child: const Icon(Icons.print),
       ),

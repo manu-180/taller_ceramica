@@ -11,10 +11,11 @@ class SignUpScreen extends StatefulWidget {
   final Future<List<dynamic>> Function() obtenerUsuarios;
   final Future<int> Function() generarIDd;
 
-  const SignUpScreen({super.key, 
-  required this.appBar, 
-  required this.obtenerUsuarios, 
-  required this.generarIDd});
+  const SignUpScreen(
+      {super.key,
+      required this.appBar,
+      required this.obtenerUsuarios,
+      required this.generarIDd});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -196,8 +197,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       }
 
                       try {
-                        final listausuarios =
-                            await widget.obtenerUsuarios();
+                        final listausuarios = await widget.obtenerUsuarios();
 
                         final emailExiste = listausuarios
                             .any((usuario) => usuario.usuario == email);
@@ -254,7 +254,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'clases_disponibles': 0,
                           'trigger_alert': 0,
                           'clases_canceladas': [],
-                          'taller': await ObtenerTaller().retornarTaller(user!.id),
+                          'taller':
+                              await ObtenerTaller().retornarTaller(user!.id),
                         });
 
                         EnviarWpp().sendWhatsAppMessage(
@@ -320,7 +321,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   // Aquí mostramos el mensaje de éxito
                   if (showSuccessMessage) ...[
                     const SizedBox(height: 30),
-                    BoxText(text: "¡Registro exitoso! Notificarle a ${fullnameController.text} que para iniciar sesion debe hacer click en el link de confirmación que se mando a su mail ${emailController.text} ."),
+                    BoxText(
+                        text:
+                            "¡Registro exitoso! Notificarle a ${fullnameController.text} que para iniciar sesion debe hacer click en el link de confirmación que se mando a su mail ${emailController.text} ."),
                   ],
                   if (isLoading) ...[
                     const SizedBox(height: 30),

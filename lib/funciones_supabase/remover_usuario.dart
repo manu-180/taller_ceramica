@@ -14,9 +14,11 @@ class RemoverUsuario {
 
   Future<void> removerUsuarioDeClase(
       int idClase, String user, bool parametro) async {
-        final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerClases();
+    final data = await ObtenerTotalInfo(
+            supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
+        .obtenerClases();
 
     for (final item in data) {
       if (item.id == idClase) {
@@ -54,9 +56,11 @@ class RemoverUsuario {
 
   Future<void> removerUsuarioDeMuchasClase(
       ClaseModels clase, String user) async {
-         final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerClases();
+    final data = await ObtenerTotalInfo(
+            supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
+        .obtenerClases();
 
     for (final item in data) {
       if (clase.hora == item.hora && clase.dia == item.dia) {

@@ -116,7 +116,6 @@ class CustomAppBarState extends State<TabletAppBarManu> {
                 user == null
                     ? Row(
                         children: [
-                          
                           SizedBox(
                             height: size.width * 0.03,
                             width: size.width * 0.15,
@@ -133,9 +132,8 @@ class CustomAppBarState extends State<TabletAppBarManu> {
                         ],
                       )
                     : Row(
-
-                      children: [
-                        SizedBox(
+                        children: [
+                          SizedBox(
                             height: size.width * 0.03,
                             width: size.width * 0.15,
                             child: ElevatedButton(
@@ -149,14 +147,15 @@ class CustomAppBarState extends State<TabletAppBarManu> {
                             ),
                           ),
                           SizedBox(width: size.width * 0.02),
-                        SizedBox(
+                          SizedBox(
                             height: size.width * 0.03,
                             width: size.width * 0.15,
                             child: ElevatedButton(
                               onPressed: () async {
                                 await Supabase.instance.client.auth.signOut();
-                        
-                                final prefs = await SharedPreferences.getInstance();
+
+                                final prefs =
+                                    await SharedPreferences.getInstance();
                                 await prefs.remove('session');
                                 if (context.mounted) {
                                   context.push('/');
@@ -169,8 +168,8 @@ class CustomAppBarState extends State<TabletAppBarManu> {
                               ),
                             ),
                           ),
-                      ],
-                    ),
+                        ],
+                      ),
               ],
             ),
           );

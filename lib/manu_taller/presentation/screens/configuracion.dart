@@ -41,7 +41,7 @@ class _ConfiguracionState extends ConsumerState<ConfiguracionManu> {
       },
       {
         'title': 'Cambiar nombre de usuario',
-        'route': '/cambiarfullnamemanu',
+        'route': '/cambiarfullnameivanna',
       },
     ];
 

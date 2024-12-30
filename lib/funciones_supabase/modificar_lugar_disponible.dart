@@ -7,7 +7,9 @@ class ModificarLugarDisponible {
   Future<bool> agregarLugarDisponible(int id) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerClases();
+    final data = await ObtenerTotalInfo(
+            supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
+        .obtenerClases();
 
     for (final clase in data) {
       if (clase.id == id) {
@@ -26,7 +28,9 @@ class ModificarLugarDisponible {
   Future<bool> removerLugarDisponible(int id) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerClases();
+    final data = await ObtenerTotalInfo(
+            supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
+        .obtenerClases();
 
     for (final clase in data) {
       if (clase.id == id) {

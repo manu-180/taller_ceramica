@@ -7,19 +7,19 @@ import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
 
 class ClasesTabletScreen extends StatefulWidget {
-
   final Future<List<dynamic>> Function() obtenerClases;
-    final Future<int> Function(String) obtenerAlertTrigger;
-    final Future<int> Function(String) obtenerClasesDisponibles;
-    final Future<bool> Function(String) resetearAlertTrigger;
-    final PreferredSizeWidget appBar;
+  final Future<int> Function(String) obtenerAlertTrigger;
+  final Future<int> Function(String) obtenerClasesDisponibles;
+  final Future<bool> Function(String) resetearAlertTrigger;
+  final PreferredSizeWidget appBar;
 
-  const ClasesTabletScreen({super.key,
-   required this.obtenerClases, 
-   required this.obtenerAlertTrigger, 
-   required this.obtenerClasesDisponibles, 
-   required this.resetearAlertTrigger, 
-   required this.appBar});
+  const ClasesTabletScreen(
+      {super.key,
+      required this.obtenerClases,
+      required this.obtenerAlertTrigger,
+      required this.obtenerClasesDisponibles,
+      required this.resetearAlertTrigger,
+      required this.appBar});
 
   @override
   State<ClasesTabletScreen> createState() => _ClasesScreenState();
@@ -119,8 +119,10 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
     }
 
     // Operaciones asincrónicas
-    final triggerAlert = await widget.obtenerAlertTrigger(user.userMetadata?['fullname']);
-    final clasesDisponibles = await widget.obtenerClasesDisponibles(user.userMetadata?['fullname']);
+    final triggerAlert =
+        await widget.obtenerAlertTrigger(user.userMetadata?['fullname']);
+    final clasesDisponibles =
+        await widget.obtenerClasesDisponibles(user.userMetadata?['fullname']);
 
     if (!context.mounted) return; // Verificar si el widget sigue montado
 

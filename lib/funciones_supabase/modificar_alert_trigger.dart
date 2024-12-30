@@ -7,7 +7,9 @@ class ModificarAlertTrigger {
   Future<bool> agregarAlertTrigger(String user) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerUsuarios();
+    final data = await ObtenerTotalInfo(
+            supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
+        .obtenerUsuarios();
 
     for (final usuario in data) {
       if (usuario.fullname == user) {
@@ -22,7 +24,9 @@ class ModificarAlertTrigger {
   Future<bool> resetearAlertTrigger(String user) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    final data = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerUsuarios();
+    final data = await ObtenerTotalInfo(
+            supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
+        .obtenerUsuarios();
 
     for (final item in data) {
       if (item.fullname == user) {

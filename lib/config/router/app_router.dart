@@ -83,7 +83,6 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
       path: "/configuracionmanu",
       // name: "usuarios",
       builder: (context, state) => const ConfiguracionManu()),
-  
   GoRoute(
       path: "/crear-usuariomanu",
       // name: "crear usuario",
@@ -95,5 +94,4 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
   GoRoute(
       path: "/cambiarfullnamemanu",
       builder: (context, state) => const UpdateNameScreenManu()),
-  
 ]);

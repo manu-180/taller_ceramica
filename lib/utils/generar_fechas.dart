@@ -1,12 +1,19 @@
 class GenerarFechas {
   List<String> generarFechas(DateTime fechaInicio, DateTime fechaFin) {
     // Días hábiles permitidos: lunes a viernes
-    List<int> diasHabiles = [1, 2, 3, 4, 5]; // Lunes, Martes, Miércoles, Jueves, Viernes
+    List<int> diasHabiles = [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]; // Lunes, Martes, Miércoles, Jueves, Viernes
     List<String> listaFechas = [];
 
     // Iterar desde la fecha inicial hasta la fecha final
     DateTime fechaActual = fechaInicio;
-    while (fechaActual.isBefore(fechaFin) || fechaActual.isAtSameMomentAs(fechaFin)) {
+    while (fechaActual.isBefore(fechaFin) ||
+        fechaActual.isAtSameMomentAs(fechaFin)) {
       if (diasHabiles.contains(fechaActual.weekday)) {
         String dia = fechaActual.day.toString().padLeft(2, '0');
         String mes = fechaActual.month.toString().padLeft(2, '0');

@@ -6,21 +6,19 @@ import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 
 class ClasesScreen extends StatefulWidget {
+  final Future<List<dynamic>> Function() obtenerClases;
+  final Future<int> Function(String) obtenerAlertTrigger;
+  final Future<int> Function(String) obtenerClasesDisponibles;
+  final Future<bool> Function(String) resetearAlertTrigger;
+  final PreferredSizeWidget appBar;
 
-    final Future<List<dynamic>> Function() obtenerClases;
-    final Future<int> Function(String) obtenerAlertTrigger;
-    final Future<int> Function(String) obtenerClasesDisponibles;
-    final Future<bool> Function(String) resetearAlertTrigger;
-    final PreferredSizeWidget appBar;
-
-
-  const ClasesScreen({super.key, 
-  required this.obtenerClases, 
-  required this.obtenerAlertTrigger, 
-  required this.obtenerClasesDisponibles, 
-  required this.resetearAlertTrigger, 
-  required this.appBar});
-  
+  const ClasesScreen(
+      {super.key,
+      required this.obtenerClases,
+      required this.obtenerAlertTrigger,
+      required this.obtenerClasesDisponibles,
+      required this.resetearAlertTrigger,
+      required this.appBar});
 
   @override
   State<ClasesScreen> createState() => _ClasesScreenState();
@@ -120,8 +118,10 @@ class _ClasesScreenState extends State<ClasesScreen> {
     }
 
     // Operaciones asincrónicas
-    final triggerAlert = await widget.obtenerAlertTrigger(user.userMetadata?['fullname']);
-    final clasesDisponibles = await widget.obtenerClasesDisponibles(user.userMetadata?['fullname']);
+    final triggerAlert =
+        await widget.obtenerAlertTrigger(user.userMetadata?['fullname']);
+    final clasesDisponibles =
+        await widget.obtenerClasesDisponibles(user.userMetadata?['fullname']);
 
     if (!context.mounted) return; // Verificar si el widget sigue montado
 
@@ -256,7 +256,6 @@ class _ClasesScreenState extends State<ClasesScreen> {
   List<String> obtenerDiasConClasesDisponibles() {
     final diasConClases = <String>{};
     // final currentMonth = DateTime.now().month;
-
 
     horariosPorDia.forEach((dia, clases) {
       if (clases.any((clase) =>

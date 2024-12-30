@@ -8,7 +8,9 @@ class GenerarId {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
 
-    final listausuarios = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerUsuarios();
+    final listausuarios = await ObtenerTotalInfo(
+            supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
+        .obtenerUsuarios();
     listausuarios.sort((a, b) => a.id.compareTo(b.id));
 
     for (int i = 0; i < listausuarios.length - 1; i++) {
@@ -22,7 +24,9 @@ class GenerarId {
   Future<int> generarIdClase() async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    final listclase = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerClases();
+    final listclase = await ObtenerTotalInfo(
+            supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
+        .obtenerClases();
 
     if (listclase.isEmpty) {
       return 1;

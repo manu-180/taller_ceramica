@@ -5,23 +5,21 @@ import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
 
 class RedirigirUsuarioAlTaller {
   Future<void> redirigirUsuario(BuildContext context) async {
-
     try {
       final user = Supabase.instance.client.auth.currentUser;
       if (user == null) {
         throw Exception("No hay usuario activo");
       }
 
-      final taller  = await ObtenerTaller().retornarTaller(user.id);
+      final taller = await ObtenerTaller().retornarTaller(user.id);
 
-      if (taller == "total") {
+      if (taller == "ivanna") {
         if (context.mounted) context.go('/homeivanna');
-      } else if (taller == "clasesmanu") {
+      } else if (taller == "manu") {
         if (context.mounted) context.go('/homemanu');
       } else {
         throw Exception("Taller desconocido: $taller");
       }
-
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

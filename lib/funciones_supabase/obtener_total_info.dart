@@ -2,11 +2,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/models/usuario_models.dart';
 
-
 class ObtenerTotalInfo {
   final SupabaseClient supabase;
-  final String clasesTable;   
-  final String usuariosTable; 
+  final String clasesTable;
+  final String usuariosTable;
 
   ObtenerTotalInfo({
     required this.supabase,

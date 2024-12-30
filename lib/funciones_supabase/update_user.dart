@@ -11,7 +11,9 @@ class UpdateUser {
   Future<void> updateUser(String user, String updateUser) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    final clases = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerClases();
+    final clases = await ObtenerTotalInfo(
+            supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
+        .obtenerClases();
 
     for (final clase in clases) {
       if (clase.mails.contains(user)) {
@@ -28,7 +30,9 @@ class UpdateUser {
   Future<void> updateTableUser(String userUid, String updateUser) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    final users = await ObtenerTotalInfo(supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller).obtenerUsuarios();
+    final users = await ObtenerTotalInfo(
+            supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
+        .obtenerUsuarios();
 
     for (final user in users) {
       if (user.userUid == userUid) {
