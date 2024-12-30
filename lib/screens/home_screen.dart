@@ -40,8 +40,8 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(height: 10),
                       Text(
                         isMujer
-                            ? '¡Bienvenida a $taller!'
-                            : '¡Bienvenido a $taller!',
+                            ? '¡Bienvenida al taller de $taller!'
+                            : '¡Bienvenido al taller de $taller!',
                         style: TextStyle(
                           fontSize: 33,
                           fontWeight: FontWeight.bold,
