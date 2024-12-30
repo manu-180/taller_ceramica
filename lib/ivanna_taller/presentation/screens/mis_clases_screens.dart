@@ -4,7 +4,7 @@ import 'package:taller_ceramica/funciones_supabase/supabase_barril.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/screens_globales/mis_clases.dart';
 
-import '../../widgets/responsive_appbar.dart';
+import '../../../widgets/responsive_appbar.dart';
 
 class MisClasesScreenIvanna extends StatefulWidget {
   const MisClasesScreenIvanna({super.key});

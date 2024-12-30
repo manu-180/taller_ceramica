@@ -2,7 +2,7 @@
 // funciona
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
+import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
 class CambiarPassword extends StatefulWidget {
   const CambiarPassword({super.key});
