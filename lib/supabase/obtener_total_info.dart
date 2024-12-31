@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/models/usuario_models.dart';
@@ -13,16 +14,29 @@ class ObtenerTotalInfo {
     required this.usuariosTable,
   });
 
-  // Obtiene las clases desde la tabla que se especificó (clasesTable)
   Future<List<ClaseModels>> obtenerClases() async {
-    final response = await supabase.from(clasesTable).select();
+    try {
+      final response = await supabase.from(clasesTable).select();
 
-    return response.map((item) => ClaseModels.fromMap(item)).toList();
+      return (response as List<dynamic>)
+          .map((item) => ClaseModels.fromMap(item))
+          .toList();
+    } catch (e) {
+      debugPrint('Error al obtener clases: $e');
+      throw Exception('No se pudieron obtener las clases: $e');
+    }
   }
 
-  // Obtiene los usuarios desde la tabla que se especificó (usuariosTable)
   Future<List<UsuarioModels>> obtenerUsuarios() async {
-    final response = await supabase.from(usuariosTable).select();
-    return response.map((item) => UsuarioModels.fromMap(item)).toList();
+    try {
+      final response = await supabase.from(usuariosTable).select();
+
+      return (response as List<dynamic>)
+          .map((item) => UsuarioModels.fromMap(item))
+          .toList();
+    } catch (e) {
+      debugPrint('Error al obtener usuarios: $e');
+      throw Exception('No se pudieron obtener los usuarios: $e');
+    }
   }
 }

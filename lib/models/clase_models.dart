@@ -1,14 +1,12 @@
 class ClaseModels {
   final int id;
-  final String semana; // Semana de la clase
-  final String dia; // Día de la semana
-  final String fecha; // Fecha específica (formato: dd/mm)
-  final String hora; // Hora de la clase
-  final List<String>
-      mails; // Lista de correos electrónicos de los alumnos inscritos
-  int lugaresDisponibles = 0; // Lugares disponibles en la clase
+  final String semana; 
+  final String dia; 
+  final String fecha; 
+  final String hora; 
+  final List<String>mails; 
+  int lugaresDisponibles = 0;
 
-  // Constructor actualizado
   ClaseModels({
     required this.id,
     required this.semana,

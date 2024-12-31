@@ -101,7 +101,7 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: "/creartaller",
-      builder: (context, state) => const CrearTaller(),
+      builder: (context, state) => const CrearTallerScreen(),
     ),
   ],
 );

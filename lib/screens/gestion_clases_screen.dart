@@ -30,6 +30,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   List<ClaseModels> clasesDisponibles = [];
   List<ClaseModels> clasesFiltradas = [];
   bool isLoading = true;
+  bool isProcessing = false;
 
   @override
   void initState() {
@@ -156,147 +157,152 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   }
 
   Future<void> mostrarDialogoAgregarClase(String dia) async {
-    final usuarioActivo = Supabase.instance.client.auth.currentUser;
-    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+    final size = MediaQuery.of(context).size;
+  final usuarioActivo = Supabase.instance.client.auth.currentUser;
+  final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
 
-    TextEditingController horaController = TextEditingController();
+  TextEditingController horaController = TextEditingController();
 
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Agregar nueva clase todos los $dia"),
-          content: TextField(
-            controller: horaController,
-            decoration: const InputDecoration(
-              hintText: 'Ingrese la hora de la clase (HH:mm)',
-            ),
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () async {
-                final hora = horaController.text.trim();
-                if (hora.isNotEmpty && fechaSeleccionada != null) {
-                  final horaFormatoValido =
-                      RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
-                  if (!horaFormatoValido) {
-                    // Si ni siquiera cumple el patrón HH:mm
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                            'Formato de hora inválido. Usa HH:mm (por ej. 14:30).'),
-                      ),
-                    );
-                    return;
-                  } else {
-                    // Si cumple el patrón, validamos valores
-                    final partesHora = hora.split(':');
-                    final hh =
-                        int.tryParse(partesHora[0]) ?? -1; // si falla, -1
-                    final mm = int.tryParse(partesHora[1]) ?? -1;
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setStateDialog) {
+          return AlertDialog(
+            title: Text("Agregar nueva clase todos los $dia"),
+            content: isProcessing
+                ? null 
+                : TextField(
+                    controller: horaController,
+                    decoration: const InputDecoration(
+                      hintText: 'Ingrese la hora de la clase (HH:mm)',
+                    ),
+                  ),
+            actions: [
+              if (isProcessing)
+                ElevatedButton.icon(
+                  onPressed: null, // El botón está deshabilitado
+                  icon: SizedBox(
+                    width: size.width * 0.05,
+                    height: size.width * 0.05,
+                    child: CircularProgressIndicator(strokeWidth: size.width * 0.006,)
+                    ),
+                  label: const Text("Cargando clases"),
+                )
+              else ...[
+                ElevatedButton(
+                  onPressed: () async {
+                    setStateDialog(() {
+                      isProcessing = true;
+                    });
 
-                    // Validar rangos
-                    if (hh < 0 || hh > 23 || mm < 0 || mm > 59) {
+                    try {
+                      final hora = horaController.text.trim();
+                      if (hora.isEmpty || fechaSeleccionada == null) {
+                        throw Exception("Debe ingresar una hora y fecha válida.");
+                      }
+
+                      final horaFormatoValido =
+                          RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
+                      if (!horaFormatoValido) {
+                        throw Exception(
+                            "Formato de hora inválido. Usa HH:mm (ejemplo: 14:30).");
+                      }
+
+                      final partesHora = hora.split(':');
+                      final hh = int.tryParse(partesHora[0]) ?? -1;
+                      final mm = int.tryParse(partesHora[1]) ?? -1;
+
+                      if (hh < 0 || hh > 23 || mm < 0 || mm > 59) {
+                        throw Exception("La hora debe estar entre 00:00 y 23:59.");
+                      }
+
+                      DateTime fechaBase =
+                          DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
+                      DateTime firstDayOfMonth =
+                          DateTime(fechaBase.year, fechaBase.month, 1);
+                      int dayOfWeekSelected = fechaBase.weekday;
+                      int difference =
+                          (7 + dayOfWeekSelected - firstDayOfMonth.weekday) % 7;
+
+                      DateTime firstTargetDate =
+                          firstDayOfMonth.add(Duration(days: difference));
+
+                      for (int i = 0; i < 5; i++) {
+                        final fechaSemana =
+                            firstTargetDate.add(Duration(days: 7 * i));
+                        final fechaStr =
+                            DateFormat('dd/MM/yyyy').format(fechaSemana);
+                        final diaSemana = obtenerDia(fechaSemana);
+
+                        final existingClass = await supabase
+                            .from(taller)
+                            .select()
+                            .eq('fecha', fechaStr)
+                            .eq('hora', hora)
+                            .maybeSingle();
+
+                        if (existingClass != null) {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'La clase del $fechaStr a las $hora ya existe.',
+                              ),
+                            ),
+                          );
+                          continue;
+                        }
+
+                        await supabase.from(taller).insert({
+                          'id': await GenerarId().generarIdClase(),
+                          'semana': "semana${i + 1}",
+                          'dia': diaSemana,
+                          'fecha': fechaStr,
+                          'hora': hora,
+                          'mails': [],
+                          'lugar_disponible': 5,
+                        });
+                      }
+
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content:
-                              Text('La hora debe estar entre 00:00 y 23:59.'),
+                          content: Text('Clases agregadas con éxito.'),
                         ),
                       );
-                      return;
-                    }
-                  }
-
-                  DateTime fechaBase;
-                  try {
-                    fechaBase =
-                        DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content:
-                            Text('Formato de fecha inválido. Usa dd/MM/yyyy.'),
-                      ),
-                    );
-                    return;
-                  }
-
-                  DateTime firstDayOfMonth =
-                      DateTime(fechaBase.year, fechaBase.month, 1);
-                  int dayOfWeekSelected = fechaBase.weekday;
-
-                  int difference =
-                      (7 + dayOfWeekSelected - firstDayOfMonth.weekday) % 7;
-
-                  DateTime firstTargetDate =
-                      firstDayOfMonth.add(Duration(days: difference));
-
-                  for (int i = 0; i < 5; i++) {
-                    final fechaSemana =
-                        firstTargetDate.add(Duration(days: 7 * i));
-                    final fechaStr =
-                        DateFormat('dd/MM/yyyy').format(fechaSemana);
-                    final diaSemana = obtenerDia(fechaSemana);
-
-                    final existingClass = await supabase
-                        .from(taller)
-                        .select()
-                        .eq('fecha', fechaStr)
-                        .eq('hora', hora)
-                        .maybeSingle();
-
-                    if (existingClass != null) {
+                      Navigator.of(context).pop();
+                    } catch (e) {
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(
-                            'La clase del $fechaStr a las $hora ya existe.',
-                          ),
+                          content: Text(e.toString()),
                         ),
                       );
-                      continue;
-                    }
-
-                    try {
-                      await supabase.from(taller).insert({
-                        'id': await GenerarId().generarIdClase(),
-                        'semana': "semana${i + 1}",
-                        'dia': diaSemana,
-                        'fecha': fechaStr,
-                        'hora': hora,
-                        'mails': [],
-                        'lugar_disponible': 5,
+                    } finally {
+                      setStateDialog(() {
+                        isProcessing = false;
                       });
-                    } catch (error) {
-                      debugPrint('Error al insertar clase: $error');
                     }
-                  }
+                  },
+                  child: const Text("Agregar"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Cancelar"),
+                ),
+              ],
+            ],
+          );
+        },
+      );
+    },
+  );
+}
 
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Clases agregadas con éxito.'),
-                    ),
-                  );
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text("Agregar"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Cancelar"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+
 
   void cambiarFecha(bool siguiente) {
     setState(() {

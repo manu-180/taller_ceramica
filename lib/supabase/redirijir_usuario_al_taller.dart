@@ -18,7 +18,7 @@ class RedirigirUsuarioAlTaller {
       }
 
       if (context.mounted) {
-        context.go('/home/$taller');
+        context.go("/home/$taller");
       }
     } catch (e) {
       if (context.mounted) {

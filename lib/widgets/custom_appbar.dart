@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/supabase/is_admin.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -21,6 +22,9 @@ class CustomAppBarState extends State<CustomAppBar> {
   bool isLoading = true;   
   bool showLoader = false;  
   String? errorMessage;
+  bool isAdmin = false;
+
+  
 
   @override
   void initState() {
@@ -35,6 +39,7 @@ class CustomAppBarState extends State<CustomAppBar> {
     });
 
     _cargarTaller();
+    _checkAdminStatus();
   }
 
   Future<void> _cargarTaller() async {
@@ -66,6 +71,21 @@ class CustomAppBarState extends State<CustomAppBar> {
     }
   }
 
+  Future<void> _checkAdminStatus() async {
+    try {
+      final adminStatus = await IsAdmin().admin();
+      setState(() {
+        isAdmin = adminStatus;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Error al verificar el estado de administrador';
+      });
+    }
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
@@ -89,7 +109,7 @@ class CustomAppBarState extends State<CustomAppBar> {
     if (errorMessage != null) {
       return AppBar(
         title: Text('Error: $errorMessage'),
-        backgroundColor: Colors.red,
+        backgroundColor: color.primary,
       );
     }
 
@@ -113,10 +133,11 @@ class CustomAppBarState extends State<CustomAppBar> {
 ];
 
 
-    final menuItems = (userId == "56f74db7-61ed-418f-a047-b94224a639ed" ||
-            userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b")
+    final menuItems = (isAdmin)
         ? adminRoutes
         : userRoutes;
+
+    
 
     return AppBar(
       automaticallyImplyLeading: false,
@@ -205,10 +226,7 @@ class CustomAppBarState extends State<CustomAppBar> {
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (userId ==
-                          "56f74db7-61ed-418f-a047-b94224a639ed" ||
-                      userId ==
-                          "939d2e1a-13b3-4af0-be54-1a0205581f3b") ...[
+                  if (isAdmin) ...[
                     SizedBox(
                       width: size.width * 0.23,
                       height: size.height * 0.044,
@@ -225,10 +243,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                   ],
                   SizedBox(width: size.width * 0.02),
                   SizedBox(
-                    width: (userId ==
-                                "56f74db7-61ed-418f-a047-b94224a639ed" ||
-                            userId ==
-                                "939d2e1a-13b3-4af0-be54-1a0205581f3b")
+                    width: (isAdmin)
                         ? size.width * 0.23
                         : size.width * 0.34,
                     height: size.height * 0.044,

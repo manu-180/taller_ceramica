@@ -325,9 +325,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   // Aquí mostramos el mensaje de éxito
                   if (showSuccessMessage) ...[
                     const SizedBox(height: 30),
-                    BoxText(
+                    const BoxText(
                         text:
-                            "¡Registro exitoso! Notificarle a ${fullnameController.text} que para iniciar sesion debe hacer click en el link de confirmación que se mando a su mail ${emailController.text} ."),
+                            "¡Registro exitoso! Viejita no te olvides de que tenes que cerrar la sesion para poder volver a loguear tu cuenta ."),
                   ],
                   if (isLoading) ...[
                     const SizedBox(height: 30),

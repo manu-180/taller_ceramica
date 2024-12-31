@@ -233,6 +233,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                             child: Card(
+                              surfaceTintColor: usuario.admin? Colors.amber : Colors.white,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               child: ListTile(

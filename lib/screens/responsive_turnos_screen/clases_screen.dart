@@ -330,12 +330,12 @@ class _ClasesScreenState extends State<ClasesScreen> {
                                                 BorderRadius.circular(10),
                                           ),
                                         ),
-                                        child: const Center(
+                                        child: Center(
                                           child: SizedBox(
                                             width: 20,
                                             height: 20,
                                             child: CircularProgressIndicator(
-                                                strokeWidth: 3),
+                                                strokeWidth: screenWidth * 0.006),
                                           ),
                                         ),
                                       ),
