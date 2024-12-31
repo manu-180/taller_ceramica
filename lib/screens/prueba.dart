@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:taller_ceramica/utils/actualizar_fechas_database.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
 
@@ -27,12 +28,8 @@ class Prueba extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          resultado.asMap().forEach((index, value) async {
-            await supabase
-                .from('clasesmanu')
-                .update({'fecha': value}).eq('id', index + 1);
-          });
+        onPressed: () {
+          ActualizarFechasDatabase().actualizarClasesAlNuevoMes("Lana's Taller", 1, 2025);
         },
         child: const Icon(Icons.print),
       ),

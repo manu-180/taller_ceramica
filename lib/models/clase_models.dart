@@ -4,8 +4,8 @@ class ClaseModels {
   final String dia; 
   final String fecha; 
   final String hora; 
-  final List<String>mails; 
-  int lugaresDisponibles = 0;
+  final List<String> mails; 
+  int lugaresDisponibles;
 
   ClaseModels({
     required this.id,
@@ -19,7 +19,7 @@ class ClaseModels {
 
   @override
   String toString() {
-    return 'ClaseModels(id: $id, semana: $semana, lugaresDisponibles: $lugaresDisponibles,dia: $dia, fecha: $fecha, hora: $hora, mails: $mails)';
+    return 'ClaseModels(id: $id, semana: $semana, lugaresDisponibles: $lugaresDisponibles, dia: $dia, fecha: $fecha, hora: $hora, mails: $mails)';
   }
 
   // Método para actualizar el estado de la clase
@@ -51,5 +51,26 @@ class ClaseModels {
       'mails': mails,
       'lugar_disponible': lugaresDisponibles,
     };
+  }
+
+  // Método copyWith para copiar y modificar instancias
+  ClaseModels copyWith({
+    int? id,
+    String? semana,
+    String? dia,
+    String? fecha,
+    String? hora,
+    List<String>? mails,
+    int? lugaresDisponibles,
+  }) {
+    return ClaseModels(
+      id: id ?? this.id,
+      semana: semana ?? this.semana,
+      dia: dia ?? this.dia,
+      fecha: fecha ?? this.fecha,
+      hora: hora ?? this.hora,
+      mails: mails ?? List.from(this.mails),
+      lugaresDisponibles: lugaresDisponibles ?? this.lugaresDisponibles,
+    );
   }
 }
