@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:taller_ceramica/supabase/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
@@ -20,6 +21,7 @@ class MisClasesScreen extends ConsumerStatefulWidget {
 
 class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
   List<ClaseModels> clasesDelUsuario = [];
+  int mesActual = 1;
 
   void mostrarCancelacion(BuildContext context, ClaseModels clase) {
     final user = Supabase.instance.client.auth.currentUser;
@@ -96,13 +98,28 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    final user = ref.read(authProvider);
-    if (user != null) {
-      cargarClasesOrdenadasPorProximidad(user.userMetadata?['fullname']);
-    }
+void initState() {
+  super.initState();
+  cargarMesActual(); // Llama al método para cargar el mes actual
+  final user = ref.read(authProvider);
+  if (user != null) {
+    cargarClasesOrdenadasPorProximidad(user.userMetadata?['fullname']);
   }
+}
+
+Future<void> cargarMesActual() async {
+  try {
+    final int mes = await ObtenerMes().obtenerMes(); // Obtiene el mes actual del taller
+    if (mounted) {
+      setState(() {
+        mesActual = mes; 
+      });
+    }
+  } catch (e) {
+    debugPrint('Error al obtener el mes actual: $e');
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +192,7 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
                                 final claseInfo = '$diaMesAnio - ${clase.hora}';
 
                                 final bool claseYaPaso = Calcular24hs()
-                                    .esMenorA0Horas(clase.fecha, clase.hora);
+                                    .esMenorA0Horas(clase.fecha, clase.hora, mesActual);
 
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(

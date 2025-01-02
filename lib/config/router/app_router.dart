@@ -9,6 +9,7 @@ import 'package:taller_ceramica/screens/gestion_horarios_screen.dart';
 import 'package:taller_ceramica/screens/prueba.dart';
 import 'package:taller_ceramica/screens/responsive_turnos_screen/responsive_clases_screen.dart';
 import 'package:taller_ceramica/screens/sign_up_screen.dart';
+import 'package:taller_ceramica/screens/subscription_screen.dart';
 import 'package:taller_ceramica/screens/usuarios_screen.dart';
 import 'package:taller_ceramica/screens/configuracion.dart';
 import 'package:taller_ceramica/screens/cambiar_password.dart';
@@ -103,5 +104,10 @@ final appRouter = GoRouter(
       path: "/creartaller",
       builder: (context, state) => const CrearTallerScreen(),
     ),
+    GoRoute(
+      path: "/subscription",
+      builder: (context, state) => SubscriptionScreen(),
+    ),
+    
   ],
 );

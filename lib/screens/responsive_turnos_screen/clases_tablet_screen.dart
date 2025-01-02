@@ -1,6 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:taller_ceramica/supabase/is_admin.dart';
+import 'package:taller_ceramica/supabase/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
+import 'package:taller_ceramica/utils/actualizar_fechas_database.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
@@ -28,6 +33,7 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
     'semana4',
     'semana5'
   ];
+  int mesActual = 1;
   bool isLoading = true;
 
   List<ClaseModels> todasLasClases = [];
@@ -132,7 +138,7 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
       return;
     }
 
-    if (Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)) {
+    if (Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual)) {
       mensaje = 'No puedes inscribirte a esta clase';
       if (context.mounted) {
         _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
@@ -237,20 +243,33 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    fechasDisponibles = GenerarFechasDelMes().generarFechasLunesAViernes();
-    cargarDatos();
-  }
+void initState() {
+  super.initState();
+  inicializarDatos();
+}
 
-  List<String> obtenerDiasConClasesDisponibles() {
+Future<void> inicializarDatos() async {
+  try {
+    final mes = await ObtenerMes().obtenerMes();
+    setState(() {
+      fechasDisponibles = GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
+      mesActual = mes;
+    });
+
+    await cargarDatos();
+  } catch (e) {
+    debugPrint('Error al inicializar los datos: $e');
+  }
+}
+
+  List<String> obtenerDiasConClasesDisponibles()  {
     final diasConClases = <String>{};
     final currentMonth = DateTime.now().month;
 
     horariosPorDia.forEach((dia, clases) {
       if (clases.any((clase) =>
           clase.mails.length < 5 &&
-          !Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora) &&
+           !Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora,mesActual) &&
           clase.lugaresDisponibles > 0)) {
         final partesFecha = dia.split(' - ')[1].split('/');
         final diaMes = int.parse(partesFecha[1]);
@@ -322,6 +341,7 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
                                     diasUnicos: diasUnicos,
                                     seleccionarDia: seleccionarDia,
                                     fechasDisponibles: fechasDisponibles,
+                                    mesActual: mesActual,
                                   ),
                           ),
                           Expanded(
@@ -383,7 +403,6 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
     final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
     final estaLlena = clase.mails.length >= 5;
     final screenWidth = MediaQuery.of(context).size.width;
-    final user = Supabase.instance.client.auth.currentUser;
 
     return Column(
       children: [
@@ -393,12 +412,11 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
           child: ElevatedButton(
             onPressed: ((estaLlena ||
                         Calcular24hs()
-                            .esMenorA0Horas(clase.fecha, clase.hora) ||
-                        clase.lugaresDisponibles == 0) &&
-                    user?.id != "939d2e1a-13b3-4af0-be54-1a0205581f3b")
+                            .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
+                        clase.lugaresDisponibles == 0))
                 ? null
-                : () {
-                    if (user?.id != "939d2e1a-13b3-4af0-be54-1a0205581f3b") {
+                : () async {
+                    if (! await IsAdmin().admin()) {
                       mostrarConfirmacion(context, clase);
                     } else {
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -418,7 +436,7 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
               backgroundColor: WidgetStateProperty.all(
                 estaLlena ||
                         Calcular24hs()
-                            .esMenorA0Horas(clase.fecha, clase.hora) ||
+                            .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
                         clase.lugaresDisponibles == 0
                     ? Colors.grey.shade400
                     : Colors.green,
@@ -458,12 +476,11 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Obtener dimensiones de la pantalla
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
-      height: screenHeight * 0.12, // 10% del alto de la pantalla
+      height: screenHeight * 0.12, 
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -474,23 +491,23 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(
-            screenWidth * 0.03), // 3% del ancho para el borde redondeado
+            screenWidth * 0.03),
       ),
       child: Row(
         children: [
-          SizedBox(width: screenWidth * 0.02), // 5% del ancho para el espaciado
+          SizedBox(width: screenWidth * 0.02),
           Icon(
             Icons.info,
             color: color,
-            size: screenWidth * 0.03, // 8% del ancho para el tamaño del ícono
+            size: screenWidth * 0.03, 
           ),
-          SizedBox(width: screenWidth * 0.02), // 3% del ancho para el espaciado
+          SizedBox(width: screenWidth * 0.02),
           Expanded(
             child: Text(
               text,
               style: TextStyle(
                 fontSize: screenWidth *
-                    0.015, // 4% del ancho para el tamaño de fuente
+                    0.015, 
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -570,17 +587,18 @@ class _DiaSelection extends StatelessWidget {
   final List<ClaseModels> diasUnicos;
   final Function(String) seleccionarDia;
   final List<String> fechasDisponibles;
+  final int mesActual;
 
   const _DiaSelection({
     required this.diasUnicos,
     required this.seleccionarDia,
-    required this.fechasDisponibles,
+    required this.fechasDisponibles, 
+    required this.mesActual,
   });
 
   @override
   Widget build(BuildContext context) {
-    // final currentMonth = DateTime.now().month;
-    const currentMonth = 1;
+
 
     // Obtener las dimensiones de la pantalla
     final screenWidth = MediaQuery.of(context).size.width;
@@ -608,7 +626,7 @@ class _DiaSelection extends StatelessWidget {
           );
 
           // Compara solo el mes
-          return fecha.month == currentMonth;
+          return fecha.month == mesActual;
         }).toList();
 
         // Si la fecha está en el mes actual, mostrar el botón

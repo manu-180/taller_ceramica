@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/supabase/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
@@ -104,7 +105,7 @@ class AgregarUsuario {
 
     // 2. Variables para identificar el mes y año actual
     final now = DateTime.now();
-    final currentMonth = now.month;
+  
     final currentYear = now.year;
 
     // 3. Insertar al usuario en hasta 4 clases
@@ -114,12 +115,11 @@ class AgregarUsuario {
       // Parseamos la fecha de la clase para ver si es de este mes/año
       final partes = item.fecha.split('/');
       if (partes.length == 3) {
-        final dd = int.tryParse(partes[0]) ?? 0;
         final mm = int.tryParse(partes[1]) ?? 0;
         final yyyy = int.tryParse(partes[2]) ?? 0;
 
         // Filtramos SOLO las clases del mes y año actuales
-        if (mm == 1 && yyyy == 2025) {
+        if (mm == await ObtenerMes().obtenerMes() && yyyy == 2025) {
           // Verificamos que sea la misma combinación de (dia + hora)
           if (item.dia == clase.dia && item.hora == clase.hora) {
             // Inserta solo si el usuario no está, y si no excedimos 4

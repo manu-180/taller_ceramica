@@ -5,8 +5,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/supabase/eliminar_clase.dart';
 import 'package:taller_ceramica/supabase/generar_id.dart';
 import 'package:taller_ceramica/supabase/modificar_lugar_disponible.dart';
+import 'package:taller_ceramica/supabase/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
 import 'package:taller_ceramica/supabase/obtener_total_info.dart';
+import 'package:taller_ceramica/utils/actualizar_fechas_database.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:intl/intl.dart';
@@ -32,52 +34,68 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   bool isLoading = true;
   bool isProcessing = false;
 
+
   @override
-  void initState() {
-    super.initState();
-    fechasDisponibles = GenerarFechasDelMes().generarFechasLunesAViernes();
-    cargarDatos();
-  }
+void initState() {
+  super.initState();
+  inicializarDatos(); // Llamada a la función que maneja la lógica asíncrona
+}
 
-  void ordenarClasesPorFechaYHora() {
-    clasesFiltradas.sort((a, b) {
-      final formatoFecha = DateFormat('dd/MM');
-      final fechaA = formatoFecha.parse(a.fecha);
-      final fechaB = formatoFecha.parse(b.fecha);
-
-      if (fechaA == fechaB) {
-        final formatoHora = DateFormat('HH:mm');
-        final horaA = formatoHora.parse(a.hora);
-        final horaB = formatoHora.parse(b.hora);
-        return horaA.compareTo(horaB);
-      }
-      return fechaA.compareTo(fechaB);
+Future<void> inicializarDatos() async {
+  try {
+    // Obtener el mes de forma asíncrona
+    final mes = await ObtenerMes().obtenerMes();
+    setState(() {
+      fechasDisponibles = GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
     });
+
+    await cargarDatos();
+  } catch (e) {
+    debugPrint('Error al inicializar los datos: $e');
   }
+}
 
-  Future<void> cargarDatos() async {
-    final usuarioActivo = Supabase.instance.client.auth.currentUser;
-    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    try {
-      final datos = await ObtenerTotalInfo(
-        supabase: supabase,
-        usuariosTable: 'usuarios',
-        clasesTable: taller,
-      ).obtenerClases();
+void ordenarClasesPorFechaYHora() {
+  clasesFiltradas.sort((a, b) {
+    final formatoFecha = DateFormat('dd/MM');
+    final fechaA = formatoFecha.parse(a.fecha);
+    final fechaB = formatoFecha.parse(b.fecha);
 
-      setState(() {
-        clasesDisponibles = List<ClaseModels>.from(datos);
-        clasesFiltradas = List.from(datos); // Copia de datos para filtrar
-        ordenarClasesPorFechaYHora(); // Ordenar antes de mostrar
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      debugPrint('Error cargando datos: $e');
+    if (fechaA == fechaB) {
+      final formatoHora = DateFormat('HH:mm');
+      final horaA = formatoHora.parse(a.hora);
+      final horaB = formatoHora.parse(b.hora);
+      return horaA.compareTo(horaB);
     }
+    return fechaA.compareTo(fechaB);
+  });
+}
+
+Future<void> cargarDatos() async {
+  final usuarioActivo = Supabase.instance.client.auth.currentUser;
+  final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+
+  try {
+    final datos = await ObtenerTotalInfo(
+      supabase: supabase,
+      usuariosTable: 'usuarios',
+      clasesTable: taller,
+    ).obtenerClases();
+
+    setState(() {
+      clasesDisponibles = List<ClaseModels>.from(datos);
+      clasesFiltradas = List.from(datos); // Copia de datos para filtrar
+      ordenarClasesPorFechaYHora(); // Ordenar antes de mostrar
+      isLoading = false;
+    });
+  } catch (e) {
+    setState(() {
+      isLoading = false;
+    });
+    debugPrint('Error cargando datos: $e');
   }
+}
+
 
   void seleccionarFecha(String fecha) {
     setState(() {

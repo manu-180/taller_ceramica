@@ -6,5 +6,4 @@ export 'package:taller_ceramica/utils/capitalize.dart';
 export 'package:taller_ceramica/utils/dia_con_fecha.dart';
 export 'package:taller_ceramica/utils/encontrar_semana.dart';
 export 'package:taller_ceramica/utils/enviar_wpp.dart';
-export 'package:taller_ceramica/utils/generar_fechas.dart';
 export 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';

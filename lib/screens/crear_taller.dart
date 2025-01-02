@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/supabase/obtener_taller.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/utils/capitalize.dart';
 import 'package:taller_ceramica/utils/enviar_wpp.dart';
@@ -40,7 +39,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
       fecha TEXT NOT NULL,
       hora TEXT NOT NULL,
       mails JSONB DEFAULT '[]',
-      lugar_disponible INTEGER NOT NULL DEFAULT 0
+      lugar_disponible INTEGER NOT NULL DEFAULT 0,
+      mes INTEGER NOT NULL DEFAULT 1
     );
   '''
 });

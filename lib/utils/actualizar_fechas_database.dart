@@ -2,10 +2,17 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/supabase/actualizar_el_mes.dart';
+import 'package:taller_ceramica/supabase/obtener_mes.dart';
 
 class ActualizarFechasDatabase {
-  Future<void> actualizarClasesAlNuevoMes(String taller, int mes, int year) async {
+  int mesActual = 1; 
+
+  Future<void> actualizarClasesAlNuevoMes(String taller, int year) async {
     try {
+      mesActual = await ObtenerMes().obtenerMes();
+      mesActual = (mesActual % 12) + 1;
+
       // Obtener todas las clases actuales del taller
       final clasesResponse = await supabase.from(taller).select();
       final clases = (clasesResponse as List<dynamic>)
@@ -33,7 +40,7 @@ class ActualizarFechasDatabase {
         // Calcular nuevas fechas
         for (var i = 0; i < clasesDiaHora.length; i++) {
           final clase = clasesDiaHora[i];
-          final nuevaFecha = calcularNuevaFechaPorSemana(clase.fecha, mes, year, i);
+          final nuevaFecha = calcularNuevaFechaPorSemana(clase.fecha, mesActual, year, i);
 
           // Convertir la nueva fecha a String
           final nuevaFechaStr = DateFormat('dd/MM/yyyy').format(nuevaFecha);
@@ -49,6 +56,7 @@ class ActualizarFechasDatabase {
               hora: '',
               mails: [],
               lugaresDisponibles: 0,
+              mes: 0,
             ),
           );
 
@@ -60,34 +68,36 @@ class ActualizarFechasDatabase {
             claseExistente.mails.addAll(clase.mails);
           }
         }
+        
       }
 
-      // Limpiar la tabla del taller y reinsertar las clases actualizadas
-      await supabase.from(taller).delete().neq('id', 0); // Eliminar todas las clases
+      await supabase.from(taller).delete().neq('id', 0);
       final batchInsert = clasesNuevas.map((clase) => clase.toMap()).toList();
       await supabase.from(taller).insert(batchInsert);
+      await ActualizarElMes().actualizarMes(mesActual);
 
       debugPrint('Clases actualizadas correctamente para el nuevo mes.');
     } catch (e) {
       debugPrint('Error al actualizar las clases: $e');
       throw Exception('No se pudieron actualizar las clases: $e');
     }
+
+
   }
 
   // Función para calcular la nueva fecha para cada semana del mes siguiente
   DateTime calcularNuevaFechaPorSemana(String fechaActualStr, int mes, int year, int semanaIndex) {
     final fechaActual = DateFormat('dd/MM/yyyy').parse(fechaActualStr);
 
-    // Calcular el primer día del mes siguiente
-    final nuevoMes = mes + 1;
-    final firstDayOfNextMonth = DateTime(year, nuevoMes, 1);
+    // Calcular el primer día del mes actual
+    final firstDayOfMonth = DateTime(year, mes, 1);
 
     // Encontrar el día objetivo (mismo día de la semana que la clase actual)
     final weekday = fechaActual.weekday;
-    final difference = (weekday - firstDayOfNextMonth.weekday + 7) % 7;
+    final difference = (weekday - firstDayOfMonth.weekday + 7) % 7;
 
     // Calcular la fecha específica para la semana actual
-    final nuevaFechaBase = firstDayOfNextMonth.add(Duration(days: difference));
+    final nuevaFechaBase = firstDayOfMonth.add(Duration(days: difference));
     final nuevaFechaSemana = nuevaFechaBase.add(Duration(days: 7 * semanaIndex));
     return nuevaFechaSemana;
   }

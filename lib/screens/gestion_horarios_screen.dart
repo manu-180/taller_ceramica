@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/supabase/agregar_usuario.dart';
+import 'package:taller_ceramica/supabase/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
 import 'package:taller_ceramica/supabase/obtener_total_info.dart';
 import 'package:taller_ceramica/supabase/remover_usuario.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/utils/actualizar_fechas_database.dart';
 import 'package:taller_ceramica/widgets/box_text.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/mostrar_dia_segun_fecha.dart';
@@ -33,13 +35,26 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   TextEditingController usuarioController = TextEditingController();
   List<String> usuariosDisponiblesOriginal = [];
   bool insertarX4 = false; // Variable para activar/desactivar insertar x4
+  final actualizarFechasDatabase = ActualizarFechasDatabase();
 
   @override
-  void initState() {
-    super.initState();
-    fechasDisponibles = GenerarFechasDelMes().generarFechasLunesAViernes();
-    cargarDatos();
+void initState() {
+  super.initState();
+  inicializarDatos();
+}
+
+Future<void> inicializarDatos() async {
+  try {
+    final mes = await ObtenerMes().obtenerMes();
+    setState(() {
+      fechasDisponibles = GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
+    });
+
+    await cargarDatos();
+  } catch (e) {
+    debugPrint('Error al inicializar los datos: $e');
   }
+}
 
   Future<void> cargarDatos() async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;

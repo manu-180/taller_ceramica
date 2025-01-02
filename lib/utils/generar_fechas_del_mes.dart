@@ -1,17 +1,19 @@
 import 'package:intl/intl.dart';
 
 class GenerarFechasDelMes {
-  List<String> generarFechasLunesAViernes() {
+  List<String> generarFechasDelMes(int mes, int year) {
     final DateFormat formato = DateFormat('dd/MM/yyyy');
     final List<String> fechas = [];
-    final DateTime inicio = DateTime(2025, 1, 1);
-    final DateTime fin = DateTime(2025, 1, 31);
+    
+    // Calcular el primer y último día del mes especificado
+    final DateTime inicio = DateTime(year, mes, 1);
+    final DateTime fin = DateTime(year, mes + 1, 0); // Último día del mes actual
 
     for (DateTime fecha = inicio;
         fecha.isBefore(fin) || fecha.isAtSameMomentAs(fin);
         fecha = fecha.add(const Duration(days: 1))) {
-      if (fecha.weekday >= DateTime.monday &&
-          fecha.weekday <= DateTime.friday) {
+      // Verificar si la fecha es de lunes a viernes
+      if (fecha.weekday >= DateTime.monday && fecha.weekday <= DateTime.friday) {
         fechas.add(formato.format(fecha));
       }
     }

@@ -6,6 +6,7 @@ class ClaseModels {
   final String hora; 
   final List<String> mails; 
   int lugaresDisponibles;
+  int mes;
 
   ClaseModels({
     required this.id,
@@ -15,6 +16,7 @@ class ClaseModels {
     required this.hora,
     required this.mails,
     required this.lugaresDisponibles,
+    required this.mes,
   });
 
   @override
@@ -37,6 +39,7 @@ class ClaseModels {
       hora: map['hora'],
       mails: List<String>.from(map['mails'] ?? []),
       lugaresDisponibles: map['lugar_disponible'],
+      mes: map['mes'],
     );
   }
 
@@ -50,6 +53,7 @@ class ClaseModels {
       'hora': hora,
       'mails': mails,
       'lugar_disponible': lugaresDisponibles,
+      'mes': mes,
     };
   }
 
@@ -62,6 +66,7 @@ class ClaseModels {
     String? hora,
     List<String>? mails,
     int? lugaresDisponibles,
+    int? mes,
   }) {
     return ClaseModels(
       id: id ?? this.id,
@@ -71,6 +76,7 @@ class ClaseModels {
       hora: hora ?? this.hora,
       mails: mails ?? List.from(this.mails),
       lugaresDisponibles: lugaresDisponibles ?? this.lugaresDisponibles,
+      mes: mes ?? this.mes,
     );
   }
 }

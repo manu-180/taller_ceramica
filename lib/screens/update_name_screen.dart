@@ -52,10 +52,6 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
         throw 'El nombre ingresado ya está en uso.';
       }
 
-      if (user == null) {
-        throw 'No hay ningún usuario autenticado.';
-      }
-
       await Supabase.instance.client.auth.updateUser(
         UserAttributes(
           data: {'fullname': Capitalize().capitalize(_fullnameController.text)},

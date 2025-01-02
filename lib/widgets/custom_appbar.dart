@@ -115,7 +115,6 @@ class CustomAppBarState extends State<CustomAppBar> {
 
     final size = MediaQuery.of(context).size;
     final user = Supabase.instance.client.auth.currentUser;
-    final userId = user?.id;
 
     final adminRoutes = [
   {'value': '/turnos/${taller ?? ''}', 'label': 'Clases'},

@@ -1,5 +1,4 @@
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
-import 'package:taller_ceramica/supabase/obtener_total_info.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/main.dart';
 
