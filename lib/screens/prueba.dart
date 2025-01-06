@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:taller_ceramica/utils/actualizar_fechas_database.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
-
 class Prueba extends StatelessWidget {
   const Prueba({super.key});
 
@@ -22,7 +21,8 @@ class Prueba extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ActualizarFechasDatabase().actualizarClasesAlNuevoMes("Lana's Taller", 2025);
+          ActualizarFechasDatabase()
+              .actualizarClasesAlNuevoMes("Lana's Taller", 2025);
         },
         child: const Icon(Icons.print),
       ),

@@ -15,10 +15,7 @@ import 'package:taller_ceramica/widgets/mostrar_dia_segun_fecha.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
 class GestionHorariosScreen extends StatefulWidget {
-
-
-  const GestionHorariosScreen(
-      {super.key, String? taller});
+  const GestionHorariosScreen({super.key, String? taller});
 
   @override
   State<GestionHorariosScreen> createState() => _GestionHorariosScreenState();
@@ -38,23 +35,24 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   final actualizarFechasDatabase = ActualizarFechasDatabase();
 
   @override
-void initState() {
-  super.initState();
-  inicializarDatos();
-}
-
-Future<void> inicializarDatos() async {
-  try {
-    final mes = await ObtenerMes().obtenerMes();
-    setState(() {
-      fechasDisponibles = GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
-    });
-
-    await cargarDatos();
-  } catch (e) {
-    debugPrint('Error al inicializar los datos: $e');
+  void initState() {
+    super.initState();
+    inicializarDatos();
   }
-}
+
+  Future<void> inicializarDatos() async {
+    try {
+      final mes = await ObtenerMes().obtenerMes();
+      setState(() {
+        fechasDisponibles =
+            GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
+      });
+
+      await cargarDatos();
+    } catch (e) {
+      debugPrint('Error al inicializar los datos: $e');
+    }
+  }
 
   Future<void> cargarDatos() async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
@@ -233,13 +231,15 @@ Future<void> inicializarDatos() async {
                               setState(() {
                                 if (insertarX4) {
                                   AgregarUsuario(supabase)
-          .agregarUsuarioEnCuatroClases(
-                                      clase, usuarioSeleccionado);
+                                      .agregarUsuarioEnCuatroClases(
+                                          clase, usuarioSeleccionado);
                                   clase.mails.add(usuarioSeleccionado);
                                 } else {
-                                  AgregarUsuario(supabase)
-              .agregarUsuarioAClase(clase.id,
-                                      usuarioSeleccionado, true, clase);
+                                  AgregarUsuario(supabase).agregarUsuarioAClase(
+                                      clase.id,
+                                      usuarioSeleccionado,
+                                      true,
+                                      clase);
                                   clase.mails.add(usuarioSeleccionado);
                                 }
                               });
@@ -247,13 +247,13 @@ Future<void> inicializarDatos() async {
                               setState(() {
                                 if (insertarX4) {
                                   RemoverUsuario(supabase)
-              .removerUsuarioDeMuchasClase(
-                                      clase, usuarioSeleccionado);
+                                      .removerUsuarioDeMuchasClase(
+                                          clase, usuarioSeleccionado);
                                   clase.mails.remove(usuarioSeleccionado);
                                 } else {
                                   RemoverUsuario(supabase)
-              .removerUsuarioDeClase(
-                                      clase.id, usuarioSeleccionado, true);
+                                      .removerUsuarioDeClase(
+                                          clase.id, usuarioSeleccionado, true);
                                   clase.mails.remove(usuarioSeleccionado);
                                 }
                               });

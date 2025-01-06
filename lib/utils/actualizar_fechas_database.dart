@@ -6,7 +6,7 @@ import 'package:taller_ceramica/supabase/actualizar_el_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_mes.dart';
 
 class ActualizarFechasDatabase {
-  int mesActual = 1; 
+  int mesActual = 1;
 
   Future<void> actualizarClasesAlNuevoMes(String taller, int year) async {
     try {
@@ -40,14 +40,18 @@ class ActualizarFechasDatabase {
         // Calcular nuevas fechas
         for (var i = 0; i < clasesDiaHora.length; i++) {
           final clase = clasesDiaHora[i];
-          final nuevaFecha = calcularNuevaFechaPorSemana(clase.fecha, mesActual, year, i);
+          final nuevaFecha =
+              calcularNuevaFechaPorSemana(clase.fecha, mesActual, year, i);
 
           // Convertir la nueva fecha a String
           final nuevaFechaStr = DateFormat('dd/MM/yyyy').format(nuevaFecha);
 
           // Si ya existe una clase con la misma fecha y hora, combinar alumnos
           final ClaseModels claseExistente = clasesNuevas.firstWhere(
-            (c) => c.fecha == nuevaFechaStr && c.hora == clase.hora && c.dia == clase.dia,
+            (c) =>
+                c.fecha == nuevaFechaStr &&
+                c.hora == clase.hora &&
+                c.dia == clase.dia,
             orElse: () => ClaseModels(
               id: -1,
               semana: '',
@@ -68,7 +72,6 @@ class ActualizarFechasDatabase {
             claseExistente.mails.addAll(clase.mails);
           }
         }
-        
       }
 
       await supabase.from(taller).delete().neq('id', 0);
@@ -81,12 +84,11 @@ class ActualizarFechasDatabase {
       debugPrint('Error al actualizar las clases: $e');
       throw Exception('No se pudieron actualizar las clases: $e');
     }
-
-
   }
 
   // Función para calcular la nueva fecha para cada semana del mes siguiente
-  DateTime calcularNuevaFechaPorSemana(String fechaActualStr, int mes, int year, int semanaIndex) {
+  DateTime calcularNuevaFechaPorSemana(
+      String fechaActualStr, int mes, int year, int semanaIndex) {
     final fechaActual = DateFormat('dd/MM/yyyy').parse(fechaActualStr);
 
     // Calcular el primer día del mes actual
@@ -98,7 +100,8 @@ class ActualizarFechasDatabase {
 
     // Calcular la fecha específica para la semana actual
     final nuevaFechaBase = firstDayOfMonth.add(Duration(days: difference));
-    final nuevaFechaSemana = nuevaFechaBase.add(Duration(days: 7 * semanaIndex));
+    final nuevaFechaSemana =
+        nuevaFechaBase.add(Duration(days: 7 * semanaIndex));
     return nuevaFechaSemana;
   }
 }

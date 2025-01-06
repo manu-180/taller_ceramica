@@ -105,7 +105,7 @@ class AgregarUsuario {
 
     // 2. Variables para identificar el mes y año actual
     final now = DateTime.now();
-  
+
     final currentYear = now.year;
 
     // 3. Insertar al usuario en hasta 4 clases

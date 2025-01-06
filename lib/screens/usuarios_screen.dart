@@ -10,10 +10,7 @@ import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import '../utils/utils_barril.dart';
 
 class UsuariosScreen extends StatefulWidget {
-  
-
-  const UsuariosScreen(
-      {super.key, String? taller});
+  const UsuariosScreen({super.key, String? taller});
 
   @override
   State<UsuariosScreen> createState() => _UsuariosScreenState();
@@ -26,26 +23,26 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   Future<void> cargarUsuarios() async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    
+
     setState(() {
       isLoading = true;
     });
 
     final datos = await ObtenerTotalInfo(
-        supabase: supabase,
-        usuariosTable: 'usuarios',
-        clasesTable: taller,
-      ).obtenerUsuarios();
+      supabase: supabase,
+      usuariosTable: 'usuarios',
+      clasesTable: taller,
+    ).obtenerUsuarios();
     if (mounted) {
-  setState(() {
-    usuarios = List<UsuarioModels>.from(
-      datos.where((usuario) => usuario.taller == taller),
-    );
-    // Ordenar usuarios alfabéticamente por el nombre completo (fullname)
-    usuarios.sort((a, b) => a.fullname.compareTo(b.fullname));
-    isLoading = false;
-  });
-}
+      setState(() {
+        usuarios = List<UsuarioModels>.from(
+          datos.where((usuario) => usuario.taller == taller),
+        );
+        // Ordenar usuarios alfabéticamente por el nombre completo (fullname)
+        usuarios.sort((a, b) => a.fullname.compareTo(b.fullname));
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> eliminarUsuario(int userId, String userUid) async {
@@ -209,7 +206,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
+      appBar:
+          ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Center(
@@ -233,7 +231,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                             child: Card(
-                              surfaceTintColor: usuario.admin? Colors.amber : Colors.white,
+                              surfaceTintColor:
+                                  usuario.admin ? Colors.amber : Colors.white,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               child: ListTile(
@@ -242,7 +241,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                     ? "(${usuario.clasesDisponibles} crédito)"
                                     : "(${usuario.clasesDisponibles} créditos)"),
                                 onTap: () async {
-                                  final lista = await AlumnosEnClase().clasesAlumno(usuario.fullname);
+                                  final lista = await AlumnosEnClase()
+                                      .clasesAlumno(usuario.fullname);
                                   ScaffoldMessenger.of(context)
                                       .hideCurrentSnackBar();
                                   ScaffoldMessenger.of(context).showSnackBar(

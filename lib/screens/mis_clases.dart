@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:taller_ceramica/subscription/is_suscribed.dart';
+import 'package:taller_ceramica/subscription/subscription_manager.dart';
 import 'package:taller_ceramica/supabase/is_admin.dart';
+import 'package:taller_ceramica/supabase/is_subscripto.dart';
 import 'package:taller_ceramica/supabase/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
 import 'package:taller_ceramica/main.dart';
@@ -35,10 +36,9 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
   }
 
   Future<void> verificarAdminYSuscripcion() async {
-    
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     if (usuarioActivo == null) {
-      return; 
+      return;
     }
 
     if (usuarioActivo.id == '939d2e1a-13b3-4af0-be54-1a0205581f3b') {
@@ -47,14 +47,14 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
 
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo.id);
     final isAdmin = await IsAdmin().admin();
-    final isSubscribed = IsSuscribed().isUserSubscribed();
+    final isSubscribed = await IsSubscripto().subscripto();
     print("el usuario activo esta suscripto? : $isSubscribed");
 
     if (isAdmin && !isSubscribed) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
           context: context,
-          barrierDismissible: false, 
+          barrierDismissible: false,
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('El periodo de prueba ha concluido'),
@@ -80,8 +80,7 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
         );
       });
     }
-}
-
+  }
 
   void mostrarCancelacion(BuildContext context, ClaseModels clase) {
     final user = Supabase.instance.client.auth.currentUser;
@@ -100,7 +99,7 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); 
+                Navigator.of(context).pop();
               },
               child: const Text('Cancelar'),
             ),
@@ -108,9 +107,11 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
               onPressed: () {
                 cancelarClase(clase.id, user?.userMetadata?['fullname']);
                 if (Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)) {
-                   ModificarCredito().agregarCreditoUsuario(user?.userMetadata?['fullname']);
+                  ModificarCredito()
+                      .agregarCreditoUsuario(user?.userMetadata?['fullname']);
                 } else {
-                  ModificarAlertTrigger().agregarAlertTrigger(user?.userMetadata?['fullname']);
+                  ModificarAlertTrigger()
+                      .agregarAlertTrigger(user?.userMetadata?['fullname']);
                 }
                 Navigator.of(context).pop();
               },
@@ -130,7 +131,8 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
           .where((clase) => clase.mails.contains(fullname))
           .toList();
     });
-    await RemoverUsuario(supabase).removerUsuarioDeClase(claseId, fullname, false);
+    await RemoverUsuario(supabase)
+        .removerUsuarioDeClase(claseId, fullname, false);
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     // ignore: use_build_context_synchronously
@@ -195,7 +197,8 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
+      appBar:
+          ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
@@ -260,7 +263,8 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
                                 final claseInfo = '$diaMesAnio - ${clase.hora}';
 
                                 final bool claseYaPaso = Calcular24hs()
-                                    .esMenorA0Horas(clase.fecha, clase.hora, mesActual);
+                                    .esMenorA0Horas(
+                                        clase.fecha, clase.hora, mesActual);
 
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(

@@ -3,6 +3,10 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'dart:async';
 
 import 'package:taller_ceramica/api_suscripcion/api_suscripcion.dart';
+import 'package:taller_ceramica/main.dart';
+import 'package:taller_ceramica/subscription/subscription_manager.dart';
+import 'package:taller_ceramica/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/supabase/suscribir_usuario.dart';
 
 class SubscriptionScreen extends StatefulWidget {
   @override
@@ -19,6 +23,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   @override
   void initState() {
     super.initState();
+
+    // Llama a la función para verificar las suscripciones
+    SubscriptionManager().checkAndUpdateSubscription();
+
     _initializeStore();
 
     final Stream<List<PurchaseDetails>> purchaseUpdated =
@@ -40,13 +48,15 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
   // Función para limpiar el título
   String cleanTitle(String title) {
-    return title.replaceAll(RegExp(r' *\(.*?\)'), ''); // Elimina texto entre paréntesis
+    return title.replaceAll(
+        RegExp(r' *\(.*?\)'), ''); // Elimina texto entre paréntesis
   }
 
   Future<void> _initializeStore() async {
     final bool isAvailable = await _inAppPurchase.isAvailable();
     if (isAvailable) {
-      final ProductDetailsResponse response = await _inAppPurchase.queryProductDetails(
+      final ProductDetailsResponse response =
+          await _inAppPurchase.queryProductDetails(
         {"monthlysubscription", "annualsubscription", "cero"}.toSet(),
       );
 
@@ -54,7 +64,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         _isAvailable = isAvailable;
         _products = response.productDetails;
 
-        print('Productos disponibles: ${_products.map((p) => p.title).toList()}');
+        print(
+            'Productos disponibles: ${_products.map((p) => p.title).toList()}');
 
         // Ordenar productos: primero el mensual, luego el anual y finalmente "cero"
         _products.sort((a, b) => a.price.compareTo(b.price));
@@ -68,9 +79,11 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
   void _subscribe(ProductDetails productDetails) {
     try {
-      final PurchaseParam purchaseParam = PurchaseParam(productDetails: productDetails);
+      final PurchaseParam purchaseParam =
+          PurchaseParam(productDetails: productDetails);
       debugPrint('Intentando comprar: ${productDetails.id}');
-      _inAppPurchase.buyConsumable(purchaseParam: purchaseParam, autoConsume: false);
+      _inAppPurchase.buyConsumable(
+          purchaseParam: purchaseParam, autoConsume: false);
     } catch (e) {
       debugPrint('Error al iniciar la compra: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -80,34 +93,48 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   }
 
   void _handlePurchaseUpdates(List<PurchaseDetails> purchases) async {
-  for (var purchase in purchases) {
-    if (purchase.status == PurchaseStatus.purchased) {
-      debugPrint('Compra exitosa: ${purchase.productID}');
+    for (var purchase in purchases) {
+      if (purchase.status == PurchaseStatus.purchased) {
+        debugPrint('Compra exitosa: ${purchase.productID}');
 
-      // Obtén el purchaseToken del objeto PurchaseDetails
-      final purchaseToken = purchase.verificationData.serverVerificationData;
+        final usuarioActivo = Supabase.instance.client.auth.currentUser;
+        final purchaseToken = purchase.verificationData.serverVerificationData;
+        final productId = purchase.productID;
 
-      // Llama a la API para verificar la suscripción, pasando el productID como subscriptionId
-      await ApiSuscripcion().verificarSuscripcion(purchaseToken, purchase.productID);
+        final DateTime startDate = DateTime.now();
+        late DateTime endDate;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Compra realizada: ${purchase.productID}')),
-      );
-    } else if (purchase.status == PurchaseStatus.error) {
-      debugPrint('Error en la compra: ${purchase.error}');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error en la compra: ${purchase.error?.message}')),
-      );
-    } else if (purchase.status == PurchaseStatus.restored) {
-      debugPrint('Compra restaurada: ${purchase.productID}');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Compra restaurada: ${purchase.productID}')),
-      );
+        final bool isActive = true;
+
+        // Llama a la API para verificar la suscripción
+        await ApiSuscripcion().verificarSuscripcion(purchaseToken, productId);
+
+        // Inserta la suscripción en Supabase
+        await SuscribirUsuario(supabaseClient: supabase).insertSubscription(
+          userId: usuarioActivo!.id,
+          productId: productId,
+          purchaseToken: purchaseToken,
+          startDate: startDate,
+          isActive: isActive,
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Compra realizada: ${purchase.productID}')),
+        );
+      } else if (purchase.status == PurchaseStatus.error) {
+        debugPrint('Error en la compra: ${purchase.error}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Error en la compra: ${purchase.error?.message}')),
+        );
+      } else if (purchase.status == PurchaseStatus.restored) {
+        debugPrint('Compra restaurada: ${purchase.productID}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Compra restaurada: ${purchase.productID}')),
+        );
+      }
     }
   }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +142,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     final size = MediaQuery.of(context).size;
 
     // Definir tamaños relativos de fuente
-    final double fontSizeTitle = size.width * 0.065; // 6.5% del ancho de la pantalla
+    final double fontSizeTitle =
+        size.width * 0.065; // 6.5% del ancho de la pantalla
     final double fontSizeDescription = size.width * 0.03; // 3% del ancho
     final double fontSizePrice = size.width * 0.05; // 5% del ancho
 
@@ -160,12 +188,14 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    cleanTitle(product.title), // Aplica la limpieza del título
+                                    cleanTitle(product
+                                        .title), // Aplica la limpieza del título
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: theme.colorScheme.onPrimary,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: fontSizeTitle, // Tamaño relativo
+                                      fontSize:
+                                          fontSizeTitle, // Tamaño relativo
                                     ),
                                   ),
                                   const SizedBox(height: 10),
@@ -174,7 +204,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: theme.colorScheme.onPrimary,
-                                      fontSize: fontSizeDescription, // Tamaño relativo
+                                      fontSize:
+                                          fontSizeDescription, // Tamaño relativo
                                     ),
                                   ),
                                   const SizedBox(height: 20),
@@ -183,7 +214,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                     style: TextStyle(
                                       color: theme.colorScheme.onPrimary,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: fontSizePrice, // Tamaño relativo
+                                      fontSize:
+                                          fontSizePrice, // Tamaño relativo
                                     ),
                                   ),
                                 ],

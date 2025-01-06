@@ -19,12 +19,10 @@ class CustomAppBarState extends State<CustomAppBar> {
   bool _isMenuOpen = false;
 
   String? taller;
-  bool isLoading = true;   
-  bool showLoader = false;  
+  bool isLoading = true;
+  bool showLoader = false;
   String? errorMessage;
   bool isAdmin = false;
-
-  
 
   @override
   void initState() {
@@ -84,8 +82,6 @@ class CustomAppBarState extends State<CustomAppBar> {
     }
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
@@ -95,7 +91,6 @@ class CustomAppBarState extends State<CustomAppBar> {
         automaticallyImplyLeading: false,
         backgroundColor: color.primary,
         title: const SizedBox(),
-      
       );
     }
 
@@ -117,26 +112,24 @@ class CustomAppBarState extends State<CustomAppBar> {
     final user = Supabase.instance.client.auth.currentUser;
 
     final adminRoutes = [
-  {'value': '/turnos/${taller ?? ''}', 'label': 'Clases'},
-  {'value': '/misclases/${taller ?? ''}', 'label': 'Mis clases'},
-  {'value': '/gestionhorarios/${taller ?? ''}', 'label': 'Gestión de horarios'},
-  {'value': '/gestionclases/${taller ?? ''}', 'label': 'Gestión de clases'},
-  {'value': '/usuarios/${taller ?? ''}', 'label': 'Alumnos/as'},
-  {'value': '/configuracion/${taller ?? ''}', 'label': 'Configuración'},
-  {'value': '/prueba', 'label': 'prueba'},
-];
+      {'value': '/turnos/${taller ?? ''}', 'label': 'Clases'},
+      {'value': '/misclases/${taller ?? ''}', 'label': 'Mis clases'},
+      {
+        'value': '/gestionhorarios/${taller ?? ''}',
+        'label': 'Gestión de horarios'
+      },
+      {'value': '/gestionclases/${taller ?? ''}', 'label': 'Gestión de clases'},
+      {'value': '/usuarios/${taller ?? ''}', 'label': 'Alumnos/as'},
+      {'value': '/configuracion/${taller ?? ''}', 'label': 'Configuración'},
+      {'value': '/prueba', 'label': 'prueba'},
+    ];
     final userRoutes = [
-  {'value': '/turnos/${taller ?? ''}', 'label': 'Clases'},
-  {'value': '/misclases/${taller ?? ''}', 'label': 'Mis clases'},
-  {'value': '/configuracion/${taller ?? ''}', 'label': 'Configuración'},
-];
+      {'value': '/turnos/${taller ?? ''}', 'label': 'Clases'},
+      {'value': '/misclases/${taller ?? ''}', 'label': 'Mis clases'},
+      {'value': '/configuracion/${taller ?? ''}', 'label': 'Configuración'},
+    ];
 
-
-    final menuItems = (isAdmin)
-        ? adminRoutes
-        : userRoutes;
-
-    
+    final menuItems = (isAdmin) ? adminRoutes : userRoutes;
 
     return AppBar(
       automaticallyImplyLeading: false,
@@ -148,8 +141,7 @@ class CustomAppBarState extends State<CustomAppBar> {
             onTap: () {
               context.push("/home/${taller ?? ''}");
             },
-            child: 
-            Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -242,9 +234,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                   ],
                   SizedBox(width: size.width * 0.02),
                   SizedBox(
-                    width: (isAdmin)
-                        ? size.width * 0.23
-                        : size.width * 0.34,
+                    width: (isAdmin) ? size.width * 0.23 : size.width * 0.34,
                     height: size.height * 0.044,
                     child: ElevatedButton(
                       onPressed: () async {

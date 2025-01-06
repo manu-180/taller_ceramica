@@ -139,16 +139,16 @@ class HomeState extends State<Home> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
-                          context.push("/creartaller");
-                        }, child: const Text("Crear Taller")
-                        ),
-                        const SizedBox(width: 20),
+                          onPressed: () {
+                            context.push("/creartaller");
+                          },
+                          child: const Text("Crear Taller")),
+                      const SizedBox(width: 20),
                       FilledButton(
                         onPressed: () async {
                           final email = emailController.text.trim();
                           final password = passwordController.text.trim();
-                      
+
                           if (!emailRegex.hasMatch(email)) {
                             ScaffoldMessenger.of(context).hideCurrentSnackBar();
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -159,7 +159,7 @@ class HomeState extends State<Home> {
                             );
                             return;
                           }
-                      
+
                           if (password.length < 6) {
                             ScaffoldMessenger.of(context).hideCurrentSnackBar();
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -171,7 +171,7 @@ class HomeState extends State<Home> {
                             );
                             return;
                           }
-                      
+
                           try {
                             // Iniciar sesión
                             final response = await Supabase.instance.client.auth
@@ -179,27 +179,30 @@ class HomeState extends State<Home> {
                               email: email,
                               password: password,
                             );
-                      
+
                             // Guardar sesión manualmente (SharedPreferences)
                             if (response.session != null) {
-                              final prefs = await SharedPreferences.getInstance();
+                              final prefs =
+                                  await SharedPreferences.getInstance();
                               final sessionData = response.session!.toJson();
-                      
+
                               // Convertir sessionData en una cadena JSON antes de guardarlo
                               await prefs.setString(
                                   'session', jsonEncode(sessionData));
                             }
                             if (context.mounted) {
-                              RedirigirUsuarioAlTaller().redirigirUsuario(context);
+                              RedirigirUsuarioAlTaller()
+                                  .redirigirUsuario(context);
                             }
                             return;
                           } on AuthException catch (e) {
                             if (context.mounted) {
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content:
-                                      Text('Error de inicio de sesión: ${e.message}'),
+                                  content: Text(
+                                      'Error de inicio de sesión: ${e.message}'),
                                   backgroundColor: Colors.red,
                                 ),
                               );
@@ -207,7 +210,8 @@ class HomeState extends State<Home> {
                             return;
                           } catch (e) {
                             if (context.mounted) {
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('Ocurrió un error inesperado'),
@@ -224,8 +228,9 @@ class HomeState extends State<Home> {
                   ),
                 ),
                 ElevatedButton(
-                    child: const Text("Ir a pagar"),
-                    onPressed: () => context.push("/subscription"),)
+                  child: const Text("Ir a pagar"),
+                  onPressed: () => context.push("/subscription"),
+                )
               ],
             ),
           ),

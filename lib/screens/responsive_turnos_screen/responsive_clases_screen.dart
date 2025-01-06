@@ -7,10 +7,7 @@ class ResposiveClasesScreen extends StatelessWidget
   @override
   final Size preferredSize;
 
-
-  ResposiveClasesScreen(
-      {super.key,
-      required bool isTablet, String? taller})
+  ResposiveClasesScreen({super.key, required bool isTablet, String? taller})
       : preferredSize = Size.fromHeight(
           isTablet ? kToolbarHeight * 2.2 : kToolbarHeight * 1.25,
         );
@@ -23,7 +20,6 @@ class ResposiveClasesScreen extends StatelessWidget
     const double tabletThreshold = 600;
 
     if (size.width > tabletThreshold) {
-
       return const ClasesTabletScreen();
     } else {
       return const ClasesScreen();

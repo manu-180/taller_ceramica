@@ -13,11 +13,9 @@ import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
 class ClasesScreen extends StatefulWidget {
-
-
-  const ClasesScreen(
-      {super.key,
-   });
+  const ClasesScreen({
+    super.key,
+  });
 
   @override
   State<ClasesScreen> createState() => _ClasesScreenState();
@@ -43,17 +41,16 @@ class _ClasesScreenState extends State<ClasesScreen> {
   Future<void> cargarDatos() async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-   
 
     setState(() {
-      isLoading = true; 
+      isLoading = true;
     });
 
     final datos = await ObtenerTotalInfo(
-        supabase: supabase,
-        usuariosTable: 'usuarios',
-        clasesTable: taller,
-      ).obtenerClases();
+      supabase: supabase,
+      usuariosTable: 'usuarios',
+      clasesTable: taller,
+    ).obtenerClases();
 
     final datosSemana =
         datos.where((clase) => clase.semana == semanaSeleccionada).toList();
@@ -119,10 +116,10 @@ class _ClasesScreenState extends State<ClasesScreen> {
     }
 
     // Operaciones asincrónicas
-    final triggerAlert =
-        await ObtenerAlertTrigger().alertTrigger(user.userMetadata?['fullname']);
-    final clasesDisponibles =
-        await ObtenerClasesDisponibles().clasesDisponibles(user.userMetadata?['fullname']);
+    final triggerAlert = await ObtenerAlertTrigger()
+        .alertTrigger(user.userMetadata?['fullname']);
+    final clasesDisponibles = await ObtenerClasesDisponibles()
+        .clasesDisponibles(user.userMetadata?['fullname']);
 
     if (!context.mounted) return; // Verificar si el widget sigue montado
 
@@ -219,8 +216,6 @@ class _ClasesScreenState extends State<ClasesScreen> {
   }
 
   void manejarSeleccionClase(ClaseModels clase, String user) async {
-    
-
     await AgregarUsuario(supabase)
         .agregarUsuarioAClase(clase.id, user, false, clase);
 
@@ -249,29 +244,30 @@ class _ClasesScreenState extends State<ClasesScreen> {
     });
   }
 
- @override
-void initState() {
-  super.initState();
-  inicializarDatos();
-}
-
-Future<void> inicializarDatos() async {
-  try {
-    final mes = await ObtenerMes().obtenerMes();
-    setState(() {
-      fechasDisponibles = GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
-      mesActual = mes;
-    });
-
-    await cargarDatos();
-  } catch (e) {
-    debugPrint('Error al inicializar los datos: $e');
+  @override
+  void initState() {
+    super.initState();
+    inicializarDatos();
   }
-}
+
+  Future<void> inicializarDatos() async {
+    try {
+      final mes = await ObtenerMes().obtenerMes();
+      setState(() {
+        fechasDisponibles =
+            GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
+        mesActual = mes;
+      });
+
+      await cargarDatos();
+    } catch (e) {
+      debugPrint('Error al inicializar los datos: $e');
+    }
+  }
 
   List<String> obtenerDiasConClasesDisponibles() {
     final diasConClases = <String>{};
-    
+
     // final currentMonth = DateTime.now().month;
 
     horariosPorDia.forEach((dia, clases) {
@@ -358,7 +354,8 @@ Future<void> inicializarDatos() async {
                                             width: 20,
                                             height: 20,
                                             child: CircularProgressIndicator(
-                                                strokeWidth: screenWidth * 0.006),
+                                                strokeWidth:
+                                                    screenWidth * 0.006),
                                           ),
                                         ),
                                       ),
@@ -390,12 +387,14 @@ Future<void> inicializarDatos() async {
                                   return FutureBuilder<Widget>(
                                     future: construirBotonHorario(clase),
                                     builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
                                         return const CircularProgressIndicator();
                                       } else if (snapshot.hasError) {
                                         return Text('Error: ${snapshot.error}');
                                       } else {
-                                        return snapshot.data ?? const SizedBox();
+                                        return snapshot.data ??
+                                            const SizedBox();
                                       }
                                     },
                                   );
@@ -455,36 +454,34 @@ Future<void> inicializarDatos() async {
           height: screenWidth * 0.12,
           child: ElevatedButton(
             onPressed: ((estaLlena ||
-                        Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
-                        clase.lugaresDisponibles == 0 &&
-                        !await IsAdmin().admin()
-                        )
-                    )
+                    Calcular24hs()
+                        .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
+                    clase.lugaresDisponibles == 0 && !await IsAdmin().admin()))
                 ? null
                 : () async {
-                  if(context.mounted){
-                    if ( !await IsAdmin().admin()) {
-                      mostrarConfirmacion(context, clase);
-                    } else {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
+                    if (context.mounted) {
+                      if (!await IsAdmin().admin()) {
+                        mostrarConfirmacion(context, clase);
+                      } else {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
+                            ),
+                            duration: const Duration(seconds: 5),
+                            behavior: SnackBarBehavior.floating,
+                            margin: const EdgeInsets.all(10),
                           ),
-                          duration: const Duration(seconds: 5),
-                          behavior: SnackBarBehavior.floating,
-                          margin: const EdgeInsets.all(10),
-                        ),
-                      );
+                        );
+                      }
                     }
-                  }
                   },
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all(
                 estaLlena ||
-                        Calcular24hs()
-                            .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
+                        Calcular24hs().esMenorA0Horas(
+                            clase.fecha, clase.hora, mesActual) ||
                         clase.lugaresDisponibles == 0
                     ? Colors.grey.shade400
                     : Colors.green,
@@ -595,14 +592,13 @@ class _SemanaNavigation extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal:
-            screenWidth * 0.04,
+        horizontal: screenWidth * 0.04,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            width: screenWidth * 0.12, 
+            width: screenWidth * 0.12,
             height: screenWidth * 0.12,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -611,8 +607,7 @@ class _SemanaNavigation extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withAlpha(25),
                   blurRadius: screenWidth * 0.01,
-                  offset: Offset(
-                      0, screenHeight * 0.005),
+                  offset: Offset(0, screenHeight * 0.005),
                 ),
               ],
             ),
@@ -620,8 +615,7 @@ class _SemanaNavigation extends StatelessWidget {
               onPressed: cambiarSemanaAtras,
               icon: Icon(
                 Icons.arrow_left,
-                size:
-                    screenWidth * 0.07,
+                size: screenWidth * 0.07,
               ),
               color: Colors.black,
             ),
@@ -656,7 +650,6 @@ class _SemanaNavigation extends StatelessWidget {
   }
 }
 
-
 class _DiaSelection extends StatelessWidget {
   final List<ClaseModels> diasUnicos;
   final Function(String) seleccionarDia;
@@ -666,14 +659,12 @@ class _DiaSelection extends StatelessWidget {
   const _DiaSelection({
     required this.diasUnicos,
     required this.seleccionarDia,
-    required this.fechasDisponibles, 
+    required this.fechasDisponibles,
     required this.mesActual,
   });
 
   @override
   Widget build(BuildContext context) {
- 
-
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -693,9 +684,9 @@ class _DiaSelection extends StatelessWidget {
         final filteredFechas = fechasDisponibles.where((dateString) {
           final partes = dateString.split('/');
           final fecha = DateTime(
-            int.parse(partes[2]), 
-            int.parse(partes[1]), 
-            int.parse(partes[0]), 
+            int.parse(partes[2]),
+            int.parse(partes[1]),
+            int.parse(partes[0]),
           );
 
           return fecha.month == mesActual;
@@ -705,21 +696,18 @@ class _DiaSelection extends StatelessWidget {
           return Column(
             children: [
               SizedBox(
-                width: screenWidth * 0.8, 
-                height: screenHeight * 0.053, 
+                width: screenWidth * 0.8,
+                height: screenHeight * 0.053,
                 child: ElevatedButton(
                   onPressed: () => seleccionarDia(diaMesAnio),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          screenWidth * 0.03), 
+                      borderRadius: BorderRadius.circular(screenWidth * 0.03),
                     ),
                   ),
                   child: Text(
                     diaFecha,
-                    style: TextStyle(
-                        fontSize: screenWidth *
-                            0.033), 
+                    style: TextStyle(fontSize: screenWidth * 0.033),
                   ),
                 ),
               ),
@@ -729,8 +717,7 @@ class _DiaSelection extends StatelessWidget {
             ],
           );
         } else {
-          return const SizedBox
-              .shrink(); 
+          return const SizedBox.shrink();
         }
       },
     );

@@ -22,7 +22,6 @@ final appRouter = GoRouter(
       path: "/",
       builder: (context, state) => const Home(),
     ),
-
     GoRoute(
       path: "/home/:taller",
       builder: (context, state) {
@@ -108,6 +107,5 @@ final appRouter = GoRouter(
       path: "/subscription",
       builder: (context, state) => SubscriptionScreen(),
     ),
-    
   ],
 );

@@ -18,9 +18,7 @@ import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import '../widgets/mostrar_dia_segun_fecha.dart';
 
 class GestionDeClasesScreen extends StatefulWidget {
-
-  const GestionDeClasesScreen(
-      {super.key, String? taller});
+  const GestionDeClasesScreen({super.key, String? taller});
 
   @override
   State<GestionDeClasesScreen> createState() => _GestionDeClasesScreenState();
@@ -34,68 +32,67 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   bool isLoading = true;
   bool isProcessing = false;
 
-
   @override
-void initState() {
-  super.initState();
-  inicializarDatos(); // Llamada a la función que maneja la lógica asíncrona
-}
-
-Future<void> inicializarDatos() async {
-  try {
-    // Obtener el mes de forma asíncrona
-    final mes = await ObtenerMes().obtenerMes();
-    setState(() {
-      fechasDisponibles = GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
-    });
-
-    await cargarDatos();
-  } catch (e) {
-    debugPrint('Error al inicializar los datos: $e');
+  void initState() {
+    super.initState();
+    inicializarDatos(); // Llamada a la función que maneja la lógica asíncrona
   }
-}
 
-void ordenarClasesPorFechaYHora() {
-  clasesFiltradas.sort((a, b) {
-    final formatoFecha = DateFormat('dd/MM');
-    final fechaA = formatoFecha.parse(a.fecha);
-    final fechaB = formatoFecha.parse(b.fecha);
+  Future<void> inicializarDatos() async {
+    try {
+      // Obtener el mes de forma asíncrona
+      final mes = await ObtenerMes().obtenerMes();
+      setState(() {
+        fechasDisponibles =
+            GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
+      });
 
-    if (fechaA == fechaB) {
-      final formatoHora = DateFormat('HH:mm');
-      final horaA = formatoHora.parse(a.hora);
-      final horaB = formatoHora.parse(b.hora);
-      return horaA.compareTo(horaB);
+      await cargarDatos();
+    } catch (e) {
+      debugPrint('Error al inicializar los datos: $e');
     }
-    return fechaA.compareTo(fechaB);
-  });
-}
-
-Future<void> cargarDatos() async {
-  final usuarioActivo = Supabase.instance.client.auth.currentUser;
-  final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-
-  try {
-    final datos = await ObtenerTotalInfo(
-      supabase: supabase,
-      usuariosTable: 'usuarios',
-      clasesTable: taller,
-    ).obtenerClases();
-
-    setState(() {
-      clasesDisponibles = List<ClaseModels>.from(datos);
-      clasesFiltradas = List.from(datos); // Copia de datos para filtrar
-      ordenarClasesPorFechaYHora(); // Ordenar antes de mostrar
-      isLoading = false;
-    });
-  } catch (e) {
-    setState(() {
-      isLoading = false;
-    });
-    debugPrint('Error cargando datos: $e');
   }
-}
 
+  void ordenarClasesPorFechaYHora() {
+    clasesFiltradas.sort((a, b) {
+      final formatoFecha = DateFormat('dd/MM');
+      final fechaA = formatoFecha.parse(a.fecha);
+      final fechaB = formatoFecha.parse(b.fecha);
+
+      if (fechaA == fechaB) {
+        final formatoHora = DateFormat('HH:mm');
+        final horaA = formatoHora.parse(a.hora);
+        final horaB = formatoHora.parse(b.hora);
+        return horaA.compareTo(horaB);
+      }
+      return fechaA.compareTo(fechaB);
+    });
+  }
+
+  Future<void> cargarDatos() async {
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+
+    try {
+      final datos = await ObtenerTotalInfo(
+        supabase: supabase,
+        usuariosTable: 'usuarios',
+        clasesTable: taller,
+      ).obtenerClases();
+
+      setState(() {
+        clasesDisponibles = List<ClaseModels>.from(datos);
+        clasesFiltradas = List.from(datos); // Copia de datos para filtrar
+        ordenarClasesPorFechaYHora(); // Ordenar antes de mostrar
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      debugPrint('Error cargando datos: $e');
+    }
+  }
 
   void seleccionarFecha(String fecha) {
     setState(() {
@@ -176,151 +173,153 @@ Future<void> cargarDatos() async {
 
   Future<void> mostrarDialogoAgregarClase(String dia) async {
     final size = MediaQuery.of(context).size;
-  final usuarioActivo = Supabase.instance.client.auth.currentUser;
-  final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
 
-  TextEditingController horaController = TextEditingController();
+    TextEditingController horaController = TextEditingController();
 
-  await showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (context, setStateDialog) {
-          return AlertDialog(
-            title: Text("Agregar nueva clase todos los $dia"),
-            content: isProcessing
-                ? null 
-                : TextField(
-                    controller: horaController,
-                    decoration: const InputDecoration(
-                      hintText: 'Ingrese la hora de la clase (HH:mm)',
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: Text("Agregar nueva clase todos los $dia"),
+              content: isProcessing
+                  ? null
+                  : TextField(
+                      controller: horaController,
+                      decoration: const InputDecoration(
+                        hintText: 'Ingrese la hora de la clase (HH:mm)',
+                      ),
                     ),
-                  ),
-            actions: [
-              if (isProcessing)
-                ElevatedButton.icon(
-                  onPressed: null, // El botón está deshabilitado
-                  icon: SizedBox(
-                    width: size.width * 0.05,
-                    height: size.width * 0.05,
-                    child: CircularProgressIndicator(strokeWidth: size.width * 0.006,)
-                    ),
-                  label: const Text("Cargando clases"),
-                )
-              else ...[
-                ElevatedButton(
-                  onPressed: () async {
-                    setStateDialog(() {
-                      isProcessing = true;
-                    });
+              actions: [
+                if (isProcessing)
+                  ElevatedButton.icon(
+                    onPressed: null, // El botón está deshabilitado
+                    icon: SizedBox(
+                        width: size.width * 0.05,
+                        height: size.width * 0.05,
+                        child: CircularProgressIndicator(
+                          strokeWidth: size.width * 0.006,
+                        )),
+                    label: const Text("Cargando clases"),
+                  )
+                else ...[
+                  ElevatedButton(
+                    onPressed: () async {
+                      setStateDialog(() {
+                        isProcessing = true;
+                      });
 
-                    try {
-                      final hora = horaController.text.trim();
-                      if (hora.isEmpty || fechaSeleccionada == null) {
-                        throw Exception("Debe ingresar una hora y fecha válida.");
-                      }
-
-                      final horaFormatoValido =
-                          RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
-                      if (!horaFormatoValido) {
-                        throw Exception(
-                            "Formato de hora inválido. Usa HH:mm (ejemplo: 14:30).");
-                      }
-
-                      final partesHora = hora.split(':');
-                      final hh = int.tryParse(partesHora[0]) ?? -1;
-                      final mm = int.tryParse(partesHora[1]) ?? -1;
-
-                      if (hh < 0 || hh > 23 || mm < 0 || mm > 59) {
-                        throw Exception("La hora debe estar entre 00:00 y 23:59.");
-                      }
-
-                      DateTime fechaBase =
-                          DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
-                      DateTime firstDayOfMonth =
-                          DateTime(fechaBase.year, fechaBase.month, 1);
-                      int dayOfWeekSelected = fechaBase.weekday;
-                      int difference =
-                          (7 + dayOfWeekSelected - firstDayOfMonth.weekday) % 7;
-
-                      DateTime firstTargetDate =
-                          firstDayOfMonth.add(Duration(days: difference));
-
-                      for (int i = 0; i < 5; i++) {
-                        final fechaSemana =
-                            firstTargetDate.add(Duration(days: 7 * i));
-                        final fechaStr =
-                            DateFormat('dd/MM/yyyy').format(fechaSemana);
-                        final diaSemana = obtenerDia(fechaSemana);
-
-                        final existingClass = await supabase
-                            .from(taller)
-                            .select()
-                            .eq('fecha', fechaStr)
-                            .eq('hora', hora)
-                            .maybeSingle();
-
-                        if (existingClass != null) {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'La clase del $fechaStr a las $hora ya existe.',
-                              ),
-                            ),
-                          );
-                          continue;
+                      try {
+                        final hora = horaController.text.trim();
+                        if (hora.isEmpty || fechaSeleccionada == null) {
+                          throw Exception(
+                              "Debe ingresar una hora y fecha válida.");
                         }
 
-                        await supabase.from(taller).insert({
-                          'id': await GenerarId().generarIdClase(),
-                          'semana': "semana${i + 1}",
-                          'dia': diaSemana,
-                          'fecha': fechaStr,
-                          'hora': hora,
-                          'mails': [],
-                          'lugar_disponible': 5,
+                        final horaFormatoValido =
+                            RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
+                        if (!horaFormatoValido) {
+                          throw Exception(
+                              "Formato de hora inválido. Usa HH:mm (ejemplo: 14:30).");
+                        }
+
+                        final partesHora = hora.split(':');
+                        final hh = int.tryParse(partesHora[0]) ?? -1;
+                        final mm = int.tryParse(partesHora[1]) ?? -1;
+
+                        if (hh < 0 || hh > 23 || mm < 0 || mm > 59) {
+                          throw Exception(
+                              "La hora debe estar entre 00:00 y 23:59.");
+                        }
+
+                        DateTime fechaBase =
+                            DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
+                        DateTime firstDayOfMonth =
+                            DateTime(fechaBase.year, fechaBase.month, 1);
+                        int dayOfWeekSelected = fechaBase.weekday;
+                        int difference =
+                            (7 + dayOfWeekSelected - firstDayOfMonth.weekday) %
+                                7;
+
+                        DateTime firstTargetDate =
+                            firstDayOfMonth.add(Duration(days: difference));
+
+                        for (int i = 0; i < 5; i++) {
+                          final fechaSemana =
+                              firstTargetDate.add(Duration(days: 7 * i));
+                          final fechaStr =
+                              DateFormat('dd/MM/yyyy').format(fechaSemana);
+                          final diaSemana = obtenerDia(fechaSemana);
+
+                          final existingClass = await supabase
+                              .from(taller)
+                              .select()
+                              .eq('fecha', fechaStr)
+                              .eq('hora', hora)
+                              .maybeSingle();
+
+                          if (existingClass != null) {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'La clase del $fechaStr a las $hora ya existe.',
+                                ),
+                              ),
+                            );
+                            continue;
+                          }
+
+                          await supabase.from(taller).insert({
+                            'id': await GenerarId().generarIdClase(),
+                            'semana': "semana${i + 1}",
+                            'dia': diaSemana,
+                            'fecha': fechaStr,
+                            'hora': hora,
+                            'mails': [],
+                            'lugar_disponible': 5,
+                          });
+                        }
+
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Clases agregadas con éxito.'),
+                          ),
+                        );
+                        Navigator.of(context).pop();
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(e.toString()),
+                          ),
+                        );
+                      } finally {
+                        setStateDialog(() {
+                          isProcessing = false;
                         });
                       }
-
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Clases agregadas con éxito.'),
-                        ),
-                      );
+                    },
+                    child: const Text("Agregar"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
                       Navigator.of(context).pop();
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.toString()),
-                        ),
-                      );
-                    } finally {
-                      setStateDialog(() {
-                        isProcessing = false;
-                      });
-                    }
-                  },
-                  child: const Text("Agregar"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("Cancelar"),
-                ),
+                    },
+                    child: const Text("Cancelar"),
+                  ),
+                ],
               ],
-            ],
-          );
-        },
-      );
-    },
-  );
-}
-
-
+            );
+          },
+        );
+      },
+    );
+  }
 
   void cambiarFecha(bool siguiente) {
     setState(() {
@@ -351,7 +350,8 @@ Future<void> cargarDatos() async {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
+      appBar:
+          ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
       body: Center(
         child: ConstrainedBox(
           constraints:
@@ -410,7 +410,8 @@ Future<void> cargarDatos() async {
                                           "¿Quieres agregar un lugar disponible a esta clase?");
                                   if (respuesta == true) {
                                     agregarLugar(clase.id);
-                                    ModificarLugarDisponible().agregarLugarDisponible(clase.id);
+                                    ModificarLugarDisponible()
+                                        .agregarLugarDisponible(clase.id);
                                   }
                                 },
                               ),
@@ -423,7 +424,8 @@ Future<void> cargarDatos() async {
                                   if (respuesta == true &&
                                       clase.lugaresDisponibles > 0) {
                                     quitarLugar(clase.id);
-                                    ModificarLugarDisponible().removerLugarDisponible(clase.id);
+                                    ModificarLugarDisponible()
+                                        .removerLugarDisponible(clase.id);
                                   }
                                 },
                               ),

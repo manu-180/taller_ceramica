@@ -27,11 +27,10 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
   String mailError = '';
   String tallerError = '';
   bool isLoading = false;
-  
 
   Future<void> crearTablaTaller(String taller) async {
-  await supabase.rpc('create_table', params: {
-  'query': '''
+    await supabase.rpc('create_table', params: {
+      'query': '''
     CREATE TABLE IF NOT EXISTS "$taller" (
       id SERIAL PRIMARY KEY,
       semana TEXT NOT NULL,
@@ -43,10 +42,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
       mes INTEGER NOT NULL DEFAULT 1
     );
   '''
-});
-
+    });
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -144,10 +141,9 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                     obscureText: true,
                     onChanged: (value) {
                       setState(() {
-                        confirmPasswordError =
-                            value != passwordController.text
-                                ? 'La contraseña no coincide.'
-                                : '';
+                        confirmPasswordError = value != passwordController.text
+                            ? 'La contraseña no coincide.'
+                            : '';
                       });
                     },
                   ),
@@ -218,61 +214,64 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                             }
 
                             try {
-                              final AuthResponse res = await supabase.auth.signUp(
-                          email: email,
-                          password: password,
-                          data: {'fullname': Capitalize().capitalize(fullname)},
-                        );
+                              final AuthResponse res =
+                                  await supabase.auth.signUp(
+                                email: email,
+                                password: password,
+                                data: {
+                                  'fullname': Capitalize().capitalize(fullname)
+                                },
+                              );
 
-                        await supabase.from('usuarios').insert({
-                          'id': await GenerarId().generarIdUsuario(),
-                          'usuario': email,
-                          'fullname': Capitalize().capitalize(fullname),
-                          'user_uid': res.user?.id,
-                          'sexo': "mujer",
-                          'clases_disponibles': 0,
-                          'trigger_alert': 0,
-                          'clases_canceladas': [],
-                          'taller':taller,
-                          "admin": true
-                        });
+                              await supabase.from('usuarios').insert({
+                                'id': await GenerarId().generarIdUsuario(),
+                                'usuario': email,
+                                'fullname': Capitalize().capitalize(fullname),
+                                'user_uid': res.user?.id,
+                                'sexo': "mujer",
+                                'clases_disponibles': 0,
+                                'trigger_alert': 0,
+                                'clases_canceladas': [],
+                                'taller': taller,
+                                "admin": true
+                              });
 
-                        crearTablaTaller(taller);
+                              crearTablaTaller(taller);
 
-                        if (context.mounted){
-                          context.go("/");
-                        }
+                              if (context.mounted) {
+                                context.go("/");
+                              }
 
-                        EnviarWpp().sendWhatsAppMessage(
-                            '${Capitalize().capitalize(fullname)} ¡CREO UN NUEVO TALLER! "$taller". Contactalo por mail: $email',
-                            'whatsapp:+5491134272488');
+                              EnviarWpp().sendWhatsAppMessage(
+                                  '${Capitalize().capitalize(fullname)} ¡CREO UN NUEVO TALLER! "$taller". Contactalo por mail: $email',
+                                  'whatsapp:+5491134272488');
 
                               setState(() {
                                 isLoading = false;
                               });
-                              if(context.mounted) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text(
-                                  '¡Taller creado exitosamente!',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                backgroundColor: Colors.green,
-                              ));
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text(
+                                    '¡Taller creado exitosamente!',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  backgroundColor: Colors.green,
+                                ));
                               }
                             } catch (e) {
                               setState(() {
                                 isLoading = false;
                               });
-                              if (context.mounted){
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(
-                                  'Error al crear el taller: $e',
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                                backgroundColor: Colors.red,
-                              ));
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(
+                                    'Error al crear el taller: $e',
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ));
                               }
                             }
                           },

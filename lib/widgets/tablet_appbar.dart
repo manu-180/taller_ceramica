@@ -119,8 +119,14 @@ class TabletAppBarState extends State<TabletAppBar> {
         final adminRoutes = [
           {'value': '/turnos${taller ?? ''}', 'label': 'Clases'},
           {'value': '/misclases${taller ?? ''}', 'label': 'Mis clases'},
-          {'value': '/gestionhorarios${taller ?? ''}', 'label': 'Gestión de horarios'},
-          {'value': '/gestionclases${taller ?? ''}', 'label': 'Gestión de clases'},
+          {
+            'value': '/gestionhorarios${taller ?? ''}',
+            'label': 'Gestión de horarios'
+          },
+          {
+            'value': '/gestionclases${taller ?? ''}',
+            'label': 'Gestión de clases'
+          },
           {'value': '/usuarios${taller ?? ''}', 'label': 'Alumnos/as'},
           {'value': '/configuracion${taller ?? ''}', 'label': 'Configuración'},
         ];

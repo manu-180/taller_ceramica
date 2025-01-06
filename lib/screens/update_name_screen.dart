@@ -8,10 +8,7 @@ import 'package:taller_ceramica/utils/capitalize.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
 class UpdateNameScreen extends StatefulWidget {
-
-
-  const UpdateNameScreen({
-    super.key, String? taller});
+  const UpdateNameScreen({super.key, String? taller});
 
   @override
   UpdateNameScreenState createState() => UpdateNameScreenState();
@@ -86,7 +83,8 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
+      appBar:
+          ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

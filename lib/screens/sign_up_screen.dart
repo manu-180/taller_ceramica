@@ -10,10 +10,7 @@ import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import '../utils/utils_barril.dart';
 
 class SignUpScreen extends StatefulWidget {
-
-
-  const SignUpScreen(
-      {super.key, String? taller});
+  const SignUpScreen({super.key, String? taller});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -39,7 +36,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final user = Supabase.instance.client.auth.currentUser;
 
     return Scaffold(
-      appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),  
+      appBar:
+          ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
@@ -195,13 +193,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       }
 
                       try {
-                        final usuarioActivo = Supabase.instance.client.auth.currentUser;
-    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+                        final usuarioActivo =
+                            Supabase.instance.client.auth.currentUser;
+                        final taller = await ObtenerTaller()
+                            .retornarTaller(usuarioActivo!.id);
                         final listausuarios = await ObtenerTotalInfo(
-        supabase: supabase,
-        usuariosTable: 'usuarios',
-        clasesTable: taller ,
-      ).obtenerUsuarios();
+                          supabase: supabase,
+                          usuariosTable: 'usuarios',
+                          clasesTable: taller,
+                        ).obtenerUsuarios();
 
                         final emailExiste = listausuarios
                             .any((usuario) => usuario.usuario == email);

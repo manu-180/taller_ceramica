@@ -6,7 +6,8 @@ import 'package:path/path.dart' as path;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiSuscripcion {
-  Future<void> verificarSuscripcion(String purchaseToken, String subscriptionId) async {
+  Future<void> verificarSuscripcion(
+      String purchaseToken, String subscriptionId) async {
     try {
       // Obtén la ruta del archivo desde las variables de entorno
       final serviceAccountKeyPath = dotenv.env['SERVICE_ACCOUNT_KEY_PATH'];
@@ -17,12 +18,14 @@ class ApiSuscripcion {
 
       // Construye la ruta completa usando el directorio actual
       final currentDir = Directory.current.path;
-      final serviceAccountKeyFile = path.join(currentDir, serviceAccountKeyPath);
+      final serviceAccountKeyFile =
+          path.join(currentDir, serviceAccountKeyPath);
 
       // Verifica que el archivo exista
       final file = File(serviceAccountKeyFile);
       if (!file.existsSync()) {
-        throw Exception("El archivo de clave no existe en: $serviceAccountKeyFile");
+        throw Exception(
+            "El archivo de clave no existe en: $serviceAccountKeyFile");
       }
 
       // Lee la clave JSON
@@ -36,7 +39,8 @@ class ApiSuscripcion {
       final client = await clientViaServiceAccount(jsonKey, scopes);
 
       // Parámetros para la solicitud
-      const packageName = 'com.manuelnavarro.tallerdeceramica'; // Reemplaza con tu package name real
+      const packageName =
+          'com.manuelnavarro.tallerdeceramica'; // Reemplaza con tu package name real
 
       // Construye la URL de la API
       final url =
@@ -50,7 +54,8 @@ class ApiSuscripcion {
         final data = jsonDecode(response.body);
         print('Respuesta de la API: $data');
       } else {
-        print('Error al verificar la suscripción: ${response.statusCode} - ${response.body}');
+        print(
+            'Error al verificar la suscripción: ${response.statusCode} - ${response.body}');
       }
 
       // Cierra el cliente

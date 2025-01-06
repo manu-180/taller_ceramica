@@ -13,10 +13,7 @@ import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 
 class ClasesTabletScreen extends StatefulWidget {
-
-
-  const ClasesTabletScreen(
-      {super.key});
+  const ClasesTabletScreen({super.key});
 
   @override
   State<ClasesTabletScreen> createState() => _ClasesScreenState();
@@ -48,10 +45,10 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
     });
 
     final datos = await ObtenerTotalInfo(
-        supabase: supabase,
-        usuariosTable: 'usuarios',
-        clasesTable: taller,
-      ).obtenerClases();
+      supabase: supabase,
+      usuariosTable: 'usuarios',
+      clasesTable: taller,
+    ).obtenerClases();
 
     final datosSemana =
         datos.where((clase) => clase.semana == semanaSeleccionada).toList();
@@ -87,7 +84,7 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
 
     if (mounted) {
       setState(() {
-        isLoading = false; 
+        isLoading = false;
       });
     }
   }
@@ -114,12 +111,12 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
       return;
     }
 
-    final triggerAlert =
-        await ObtenerAlertTrigger().alertTrigger(user.userMetadata?['fullname']);
-    final clasesDisponibles =
-        await ObtenerClasesDisponibles().clasesDisponibles(user.userMetadata?['fullname']);
+    final triggerAlert = await ObtenerAlertTrigger()
+        .alertTrigger(user.userMetadata?['fullname']);
+    final clasesDisponibles = await ObtenerClasesDisponibles()
+        .clasesDisponibles(user.userMetadata?['fullname']);
 
-    if (!context.mounted) return; 
+    if (!context.mounted) return;
 
     if (triggerAlert > 0 && clasesDisponibles == 0) {
       mensaje =
@@ -243,32 +240,33 @@ class _ClasesScreenState extends State<ClasesTabletScreen> {
   }
 
   @override
-void initState() {
-  super.initState();
-  inicializarDatos();
-}
-
-Future<void> inicializarDatos() async {
-  try {
-    final mes = await ObtenerMes().obtenerMes();
-    setState(() {
-      fechasDisponibles = GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
-      mesActual = mes;
-    });
-
-    await cargarDatos();
-  } catch (e) {
-    debugPrint('Error al inicializar los datos: $e');
+  void initState() {
+    super.initState();
+    inicializarDatos();
   }
-}
 
-  List<String> obtenerDiasConClasesDisponibles()  {
+  Future<void> inicializarDatos() async {
+    try {
+      final mes = await ObtenerMes().obtenerMes();
+      setState(() {
+        fechasDisponibles =
+            GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
+        mesActual = mes;
+      });
+
+      await cargarDatos();
+    } catch (e) {
+      debugPrint('Error al inicializar los datos: $e');
+    }
+  }
+
+  List<String> obtenerDiasConClasesDisponibles() {
     final diasConClases = <String>{};
 
     horariosPorDia.forEach((dia, clases) {
       if (clases.any((clase) =>
           clase.mails.length < 5 &&
-           !Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora,mesActual) &&
+          !Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual) &&
           clase.lugaresDisponibles > 0)) {
         final partesFecha = dia.split(' - ')[1].split('/');
         final diaMes = int.parse(partesFecha[1]);
@@ -410,12 +408,12 @@ Future<void> inicializarDatos() async {
           height: screenWidth * 0.035,
           child: ElevatedButton(
             onPressed: ((estaLlena ||
-                        Calcular24hs()
-                            .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
-                        clase.lugaresDisponibles == 0))
+                    Calcular24hs()
+                        .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
+                    clase.lugaresDisponibles == 0))
                 ? null
                 : () async {
-                    if (! await IsAdmin().admin()) {
+                    if (!await IsAdmin().admin()) {
                       mostrarConfirmacion(context, clase);
                     } else {
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -434,8 +432,8 @@ Future<void> inicializarDatos() async {
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all(
                 estaLlena ||
-                        Calcular24hs()
-                            .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
+                        Calcular24hs().esMenorA0Horas(
+                            clase.fecha, clase.hora, mesActual) ||
                         clase.lugaresDisponibles == 0
                     ? Colors.grey.shade400
                     : Colors.green,
@@ -479,7 +477,7 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
-      height: screenHeight * 0.12, 
+      height: screenHeight * 0.12,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -489,8 +487,7 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(
-            screenWidth * 0.03),
+        borderRadius: BorderRadius.circular(screenWidth * 0.03),
       ),
       child: Row(
         children: [
@@ -498,15 +495,14 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
           Icon(
             Icons.info,
             color: color,
-            size: screenWidth * 0.03, 
+            size: screenWidth * 0.03,
           ),
           SizedBox(width: screenWidth * 0.02),
           Expanded(
             child: Text(
               text,
               style: TextStyle(
-                fontSize: screenWidth *
-                    0.015, 
+                fontSize: screenWidth * 0.015,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -591,14 +587,12 @@ class _DiaSelection extends StatelessWidget {
   const _DiaSelection({
     required this.diasUnicos,
     required this.seleccionarDia,
-    required this.fechasDisponibles, 
+    required this.fechasDisponibles,
     required this.mesActual,
   });
 
   @override
   Widget build(BuildContext context) {
-
-
     // Obtener las dimensiones de la pantalla
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;

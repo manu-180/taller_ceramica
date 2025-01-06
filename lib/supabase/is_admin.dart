@@ -9,20 +9,19 @@ class IsAdmin {
       return false;
     }
 
-      final taller = await ObtenerTaller().retornarTaller(usuarioActivo.id);
-      final users = await ObtenerTotalInfo(
-        supabase: supabase,
-        usuariosTable: 'usuarios',
-        clasesTable: taller,
-      ).obtenerUsuarios();
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo.id);
+    final users = await ObtenerTotalInfo(
+      supabase: supabase,
+      usuariosTable: 'usuarios',
+      clasesTable: taller,
+    ).obtenerUsuarios();
 
-      for (final user in users) {
-        if (user.userUid == usuarioActivo.id) {
-          print("usuario adminnnn: ${user.admin}");
-          return user.admin;
-          
-        }
+    for (final user in users) {
+      if (user.userUid == usuarioActivo.id) {
+        print("usuario adminnnn: ${user.admin}");
+        return user.admin;
       }
-      return false;
+    }
+    return false;
   }
 }

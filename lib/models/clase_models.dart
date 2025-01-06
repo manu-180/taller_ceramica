@@ -1,10 +1,10 @@
 class ClaseModels {
   final int id;
-  final String semana; 
-  final String dia; 
-  final String fecha; 
-  final String hora; 
-  final List<String> mails; 
+  final String semana;
+  final String dia;
+  final String fecha;
+  final String hora;
+  final List<String> mails;
   int lugaresDisponibles;
   int mes;
 

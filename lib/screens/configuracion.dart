@@ -87,9 +87,8 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                       title: const Text('Elige un color'),
                       children: [
                         ListView.builder(
-                          shrinkWrap: true, 
-                          physics:
-                              const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: colors.length,
                           itemBuilder: (context, index) {
                             final color = colors[index];

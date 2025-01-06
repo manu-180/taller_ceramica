@@ -14,8 +14,7 @@ class CartelSuscripcion extends StatelessWidget {
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       content: const Text(
-        "El periodo de prueba gratuito ha concluido, para continuar debes suscribirte."
-      ),
+          "El periodo de prueba gratuito ha concluido, para continuar debes suscribirte."),
       actions: [
         ElevatedButton(
           onPressed: () {
@@ -34,7 +33,7 @@ class CartelSuscripcion extends StatelessWidget {
   }
 }
 
-void showCartelSuscripcionIfNeeded(BuildContext context, String userId, 
+void showCartelSuscripcionIfNeeded(BuildContext context, String userId,
     {String? taller, required bool isSubscribed}) {
   if (!isSubscribed && userId != "939d2e1a-13b3-4af0-be54-1a0205581f3b") {
     showDialog(
@@ -42,5 +41,4 @@ void showCartelSuscripcionIfNeeded(BuildContext context, String userId,
       builder: (_) => CartelSuscripcion(taller: taller),
     );
   }
-
 }
