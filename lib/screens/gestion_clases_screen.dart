@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/subscription/subscription_verifier.dart';
 import 'package:taller_ceramica/supabase/eliminar_clase.dart';
 import 'package:taller_ceramica/supabase/generar_id.dart';
 import 'package:taller_ceramica/supabase/modificar_lugar_disponible.dart';
@@ -35,7 +36,8 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   @override
   void initState() {
     super.initState();
-    inicializarDatos(); // Llamada a la función que maneja la lógica asíncrona
+    inicializarDatos(); 
+    SubscriptionVerifier.verificarAdminYSuscripcion(context);
   }
 
   Future<void> inicializarDatos() async {

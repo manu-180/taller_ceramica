@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/subscription/subscription_verifier.dart';
 import 'package:taller_ceramica/supabase/agregar_usuario.dart';
 import 'package:taller_ceramica/supabase/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
@@ -38,6 +39,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   void initState() {
     super.initState();
     inicializarDatos();
+    SubscriptionVerifier.verificarAdminYSuscripcion(context);
   }
 
   Future<void> inicializarDatos() async {

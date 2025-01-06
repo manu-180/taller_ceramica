@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/subscription/subscription_verifier.dart';
 import 'package:taller_ceramica/widgets/box_text.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
@@ -24,6 +25,7 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
     super.initState();
     // Establece el usuario actual cuando la pantalla se inicializa
     user = ref.read(authProvider);
+    SubscriptionVerifier.verificarAdminYSuscripcion(context);
   }
 
   @override

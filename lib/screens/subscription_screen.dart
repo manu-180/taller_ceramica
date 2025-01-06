@@ -24,7 +24,6 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   void initState() {
     super.initState();
 
-    // Llama a la función para verificar las suscripciones
     SubscriptionManager().checkAndUpdateSubscription();
 
     _initializeStore();
@@ -57,7 +56,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     if (isAvailable) {
       final ProductDetailsResponse response =
           await _inAppPurchase.queryProductDetails(
-        {"monthlysubscription", "annualsubscription", "cero"}.toSet(),
+        {"monthlysubscription", "annualsubscription"}.toSet(),
       );
 
       setState(() {
@@ -67,7 +66,6 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         print(
             'Productos disponibles: ${_products.map((p) => p.title).toList()}');
 
-        // Ordenar productos: primero el mensual, luego el anual y finalmente "cero"
         _products.sort((a, b) => a.price.compareTo(b.price));
 
         for (var product in _products) {
@@ -141,11 +139,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
 
-    // Definir tamaños relativos de fuente
-    final double fontSizeTitle =
-        size.width * 0.065; // 6.5% del ancho de la pantalla
-    final double fontSizeDescription = size.width * 0.03; // 3% del ancho
-    final double fontSizePrice = size.width * 0.05; // 5% del ancho
+    final double fontSizeTitle = size.width * 0.065; 
+    final double fontSizeDescription = size.width * 0.04;
+    final double fontSizePrice = size.width * 0.07; 
 
     return Scaffold(
       appBar: AppBar(
@@ -157,79 +153,87 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         automaticallyImplyLeading: false,
       ),
       body: _isAvailable
-          ? _products.isEmpty
-              ? const Center(child: Text("No hay productos disponibles."))
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: size.height * 0.08),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: _products.map((product) {
-                        return Center(
-                          child: GestureDetector(
-                            onTap: () => _subscribe(product),
-                            child: Container(
-                              height: size.height * 0.28,
-                              width: size.width * 0.8,
-                              margin: const EdgeInsets.symmetric(vertical: 10),
-                              padding: const EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.primary,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black26,
-                                    blurRadius: 10,
-                                    offset: Offset(0, 5),
-                                  ),
-                                ],
+    ? _products.isEmpty
+        ? const Center(child: Text("No hay productos disponibles."))
+        : SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: size.height * 0.1),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: _products.map((product) {
+                    return GestureDetector(
+                      onTap: () => _subscribe(product),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical:250),
+                        child: Container(
+                          height: size.height * 0.28,
+                          width: size.width * 0.8,
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 10,
+                                offset: Offset(0, 5),
                               ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    cleanTitle(product
-                                        .title), // Aplica la limpieza del título
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: theme.colorScheme.onPrimary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize:
-                                          fontSizeTitle, // Tamaño relativo
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    product.description,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: theme.colorScheme.onPrimary,
-                                      fontSize:
-                                          fontSizeDescription, // Tamaño relativo
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Text(
-                                    product.price,
-                                    style: TextStyle(
-                                      color: theme.colorScheme.onPrimary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize:
-                                          fontSizePrice, // Tamaño relativo
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            ],
                           ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                )
-          : const Center(
-              child: Text("La tienda no está disponible."),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  cleanTitle(product.title),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: theme.colorScheme.onPrimary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: fontSizeTitle,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  product.description,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: theme.colorScheme.onPrimary,
+                                    fontSize: fontSizeDescription,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Text(
+                                product.price,
+                                style: TextStyle(
+                                  color: theme.colorScheme.onPrimary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: fontSizePrice,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
             ),
+          )
+    : const Center(
+        child: Text("La tienda no está disponible."),
+      ),
+
     );
   }
 }

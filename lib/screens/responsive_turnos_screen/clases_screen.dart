@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:taller_ceramica/subscription/subscription_verifier.dart';
 import 'package:taller_ceramica/supabase/is_admin.dart';
 import 'package:taller_ceramica/supabase/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
@@ -248,6 +249,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
   void initState() {
     super.initState();
     inicializarDatos();
+    SubscriptionVerifier.verificarAdminYSuscripcion(context);
   }
 
   Future<void> inicializarDatos() async {

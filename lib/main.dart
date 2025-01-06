@@ -18,14 +18,12 @@ Future<void> main() async {
     anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
   );
 
-  // Inicializa el flujo de compras
+  await initializeDateFormatting('es_ES', null);
+
   final subscriptionManager = SubscriptionManager();
   subscriptionManager.listenToPurchaseUpdates();
-
-  // Restaura las compras y verifica el estado de las suscripciones
   await subscriptionManager.restorePurchases();
-  await SubscriptionManager()
-      .checkAndUpdateSubscription(); // Verifica y actualiza en Supabase
+  await subscriptionManager.checkAndUpdateSubscription();
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -37,7 +35,6 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Obtén el tema actual desde Riverpod
     final AppTheme themeNotify = ref.watch(themeNotifyProvider);
 
     return MaterialApp.router(
