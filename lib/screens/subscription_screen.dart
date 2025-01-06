@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'dart:async';
 
+import 'package:taller_ceramica/api_suscripcion/api_suscripcion.dart';
+
 class SubscriptionScreen extends StatefulWidget {
   @override
   _SubscriptionScreenState createState() => _SubscriptionScreenState();
@@ -77,26 +79,35 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     }
   }
 
-  void _handlePurchaseUpdates(List<PurchaseDetails> purchases) {
-    for (var purchase in purchases) {
-      if (purchase.status == PurchaseStatus.purchased) {
-        debugPrint('Compra exitosa: ${purchase.productID}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Compra realizada: ${purchase.productID}')),
-        );
-      } else if (purchase.status == PurchaseStatus.error) {
-        debugPrint('Error en la compra: ${purchase.error}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error en la compra: ${purchase.error?.message}')),
-        );
-      } else if (purchase.status == PurchaseStatus.restored) {
-        debugPrint('Compra restaurada: ${purchase.productID}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Compra restaurada: ${purchase.productID}')),
-        );
-      }
+  void _handlePurchaseUpdates(List<PurchaseDetails> purchases) async {
+  for (var purchase in purchases) {
+    if (purchase.status == PurchaseStatus.purchased) {
+      debugPrint('Compra exitosa: ${purchase.productID}');
+
+      // Obtén el purchaseToken del objeto PurchaseDetails
+      final purchaseToken = purchase.verificationData.serverVerificationData;
+
+      // Llama a la API para verificar la suscripción, pasando el productID como subscriptionId
+      await ApiSuscripcion().verificarSuscripcion(purchaseToken, purchase.productID);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Compra realizada: ${purchase.productID}')),
+      );
+    } else if (purchase.status == PurchaseStatus.error) {
+      debugPrint('Error en la compra: ${purchase.error}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error en la compra: ${purchase.error?.message}')),
+      );
+    } else if (purchase.status == PurchaseStatus.restored) {
+      debugPrint('Compra restaurada: ${purchase.productID}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Compra restaurada: ${purchase.productID}')),
+      );
     }
   }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
