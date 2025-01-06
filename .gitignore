@@ -30,7 +30,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-android/app/service_account_key.json
+android/app/taller-f75e9-ab7c3123f9e9.json
 # Excluir build/web de ser ignorada
 !build/web/
 
