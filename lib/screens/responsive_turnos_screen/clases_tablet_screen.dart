@@ -264,7 +264,6 @@ Future<void> inicializarDatos() async {
 
   List<String> obtenerDiasConClasesDisponibles()  {
     final diasConClases = <String>{};
-    final currentMonth = DateTime.now().month;
 
     horariosPorDia.forEach((dia, clases) {
       if (clases.any((clase) =>
@@ -273,7 +272,7 @@ Future<void> inicializarDatos() async {
           clase.lugaresDisponibles > 0)) {
         final partesFecha = dia.split(' - ')[1].split('/');
         final diaMes = int.parse(partesFecha[1]);
-        if (diaMes == currentMonth) {
+        if (diaMes == mesActual) {
           final diaSolo =
               dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
           diasConClases.add(diaSolo);

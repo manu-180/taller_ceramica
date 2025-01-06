@@ -281,7 +281,7 @@ Future<void> inicializarDatos() async {
           clase.lugaresDisponibles > 0)) {
         final partesFecha = dia.split(' - ')[1].split('/');
         final diaMes = int.parse(partesFecha[1]);
-        if (diaMes == 1) {
+        if (diaMes == mesActual) {
           final diaSolo =
               dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
           diasConClases.add(diaSolo);
@@ -387,7 +387,18 @@ Future<void> inicializarDatos() async {
                                 itemBuilder: (context, index) {
                                   final clase =
                                       horariosPorDia[diaSeleccionado]![index];
-                                  return construirBotonHorario(clase);
+                                  return FutureBuilder<Widget>(
+                                    future: construirBotonHorario(clase),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return const CircularProgressIndicator();
+                                      } else if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                      } else {
+                                        return snapshot.data ?? const SizedBox();
+                                      }
+                                    },
+                                  );
                                 },
                               )
                         : const SizedBox(),
@@ -429,7 +440,7 @@ Future<void> inicializarDatos() async {
     );
   }
 
-  Widget construirBotonHorario(ClaseModels clase) {
+  Future<Widget> construirBotonHorario(ClaseModels clase) async {
     final partesFecha = clase.fecha.split('/');
     final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
     final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
@@ -444,9 +455,9 @@ Future<void> inicializarDatos() async {
           height: screenWidth * 0.12,
           child: ElevatedButton(
             onPressed: ((estaLlena ||
-                        Calcular24hs()
-                            .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
-                        clase.lugaresDisponibles == 0
+                        Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
+                        clase.lugaresDisponibles == 0 &&
+                        !await IsAdmin().admin()
                         )
                     )
                 ? null

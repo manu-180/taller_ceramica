@@ -45,16 +45,16 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     final bool isAvailable = await _inAppPurchase.isAvailable();
     if (isAvailable) {
       final ProductDetailsResponse response = await _inAppPurchase.queryProductDetails(
-        {"monthlysubscription", "annualsubscription"}.toSet(),
+        {"monthlysubscription", "annualsubscription", "cero"}.toSet(),
       );
 
       setState(() {
         _isAvailable = isAvailable;
         _products = response.productDetails;
 
-        debugPrint('Productos disponibles: ${_products.map((p) => p.title).toList()}');
+        print('Productos disponibles: ${_products.map((p) => p.title).toList()}');
 
-        // Ordenar productos: primero el mensual ($40) y luego el anual ($400)
+        // Ordenar productos: primero el mensual, luego el anual y finalmente "cero"
         _products.sort((a, b) => a.price.compareTo(b.price));
 
         for (var product in _products) {
@@ -118,72 +118,72 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         automaticallyImplyLeading: false,
       ),
       body: _isAvailable
-          ? Center(
-              child: _products.isEmpty
-                  ? const Text("No hay productos disponibles.")
-                  : Padding(
-                      padding: EdgeInsets.only(bottom: size.height * 0.08),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: _products.map((product) {
-                          return Center(
-                            child: GestureDetector(
-                              onTap: () => _subscribe(product),
-                              child: Container(
-                                height: size.height * 0.28,
-                                width: size.width * 0.8,
-                                margin: const EdgeInsets.symmetric(vertical: 10),
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Colors.black26,
-                                      blurRadius: 10,
-                                      offset: Offset(0, 5),
+          ? _products.isEmpty
+              ? const Center(child: Text("No hay productos disponibles."))
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: size.height * 0.08),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: _products.map((product) {
+                        return Center(
+                          child: GestureDetector(
+                            onTap: () => _subscribe(product),
+                            child: Container(
+                              height: size.height * 0.28,
+                              width: size.width * 0.8,
+                              margin: const EdgeInsets.symmetric(vertical: 10),
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primary,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 5),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    cleanTitle(product.title), // Aplica la limpieza del título
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: theme.colorScheme.onPrimary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: fontSizeTitle, // Tamaño relativo
                                     ),
-                                  ],
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      cleanTitle(product.title), // Aplica la limpieza del título
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: theme.colorScheme.onPrimary,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: fontSizeTitle, // Tamaño relativo
-                                      ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    product.description,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: theme.colorScheme.onPrimary,
+                                      fontSize: fontSizeDescription, // Tamaño relativo
                                     ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      product.description,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: theme.colorScheme.onPrimary,
-                                        fontSize: fontSizeDescription, // Tamaño relativo
-                                      ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Text(
+                                    product.price,
+                                    style: TextStyle(
+                                      color: theme.colorScheme.onPrimary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: fontSizePrice, // Tamaño relativo
                                     ),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                      product.price,
-                                      style: TextStyle(
-                                        color: theme.colorScheme.onPrimary,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: fontSizePrice, // Tamaño relativo
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        }).toList(),
-                      ),
+                          ),
+                        );
+                      }).toList(),
                     ),
-            )
+                  ),
+                )
           : const Center(
               child: Text("La tienda no está disponible."),
             ),
