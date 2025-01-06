@@ -8,14 +8,18 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class ApiSuscripcion {
   Future<void> verificarSuscripcion(String purchaseToken, String subscriptionId) async {
     try {
-      // Obtén el directorio actual donde se ejecuta el código
+      // Obtén la ruta del archivo desde las variables de entorno
+      final serviceAccountKeyPath = dotenv.env['SERVICE_ACCOUNT_KEY_PATH'];
+
+      if (serviceAccountKeyPath == null || serviceAccountKeyPath.isEmpty) {
+        throw Exception("La ruta del archivo de clave no está configurada.");
+      }
+
+      // Construye la ruta completa usando el directorio actual
       final currentDir = Directory.current.path;
+      final serviceAccountKeyFile = path.join(currentDir, serviceAccountKeyPath);
 
-      // Construye la ruta al archivo JSON dinámicamente
-      final serviceAccountKeyFile = dotenv.env['SERVICE_ACCOUNT_KEY']!;
-
-
-      // Verifica que el archivo existe antes de intentar leerlo
+      // Verifica que el archivo exista
       final file = File(serviceAccountKeyFile);
       if (!file.existsSync()) {
         throw Exception("El archivo de clave no existe en: $serviceAccountKeyFile");
