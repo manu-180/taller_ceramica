@@ -346,8 +346,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 5),
                                           child: Row(
-                                            mainAxisSize: MainAxisSize
-                                                .min, // Ajusta el tamaño al contenido
+                                            mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Container(
                                                 padding:
