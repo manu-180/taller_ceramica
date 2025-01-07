@@ -178,6 +178,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
 
     TextEditingController horaController = TextEditingController();
+    TextEditingController capacidadController = TextEditingController();
 
     await showDialog(
       context: context,
@@ -188,16 +189,28 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
               title: Text("Agregar nueva clase todos los $dia"),
               content: isProcessing
                   ? null
-                  : TextField(
-                      controller: horaController,
-                      decoration: const InputDecoration(
-                        hintText: 'Ingrese la hora de la clase (HH:mm)',
-                      ),
-                    ),
+                  : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                          controller: horaController,
+                          decoration: const InputDecoration(
+                            hintText: 'Ingrese la hora de la clase (HH:mm)',
+                          ),
+                        ),
+                      TextField(
+                          controller: capacidadController,
+                          decoration: const InputDecoration(
+                            hintText: 'Ingrese limite de alumnos',
+                          ),
+                        ),
+                      
+                    ],
+                  ),
               actions: [
                 if (isProcessing)
                   ElevatedButton.icon(
-                    onPressed: null, // El botón está deshabilitado
+                    onPressed: null, 
                     icon: SizedBox(
                         width: size.width * 0.05,
                         height: size.width * 0.05,
@@ -218,6 +231,13 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                         if (hora.isEmpty || fechaSeleccionada == null) {
                           throw Exception(
                               "Debe ingresar una hora y fecha válida.");
+                        }
+
+                        final capacidadText = capacidadController.text.trim();
+                        final capacidad = int.tryParse(capacidadText);
+
+                        if (capacidad == null) {
+                          throw Exception("Debe ingresar un valor numérico.");
                         }
 
                         final horaFormatoValido =
@@ -281,7 +301,8 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                             'fecha': fechaStr,
                             'hora': hora,
                             'mails': [],
-                            'lugar_disponible': 5,
+                            'lugar_disponible': capacidad,
+                            'capacidad': capacidad,
                           });
                         }
 

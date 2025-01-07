@@ -20,20 +20,18 @@ class SubscriptionVerifier {
     }
 
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo.id);
-    final isAdmin = await IsAdmin().admin();
-    final isSubscribed = await IsSubscripto().subscripto();
-    final createdAt = await CreatedAtUser().retornarCreatedAt();
+final isAdmin = await IsAdmin().admin();
+final isSubscribed = await IsSubscripto().subscripto();
+final createdAt = await CreatedAtUser().retornarCreatedAt();
 
-    final DateTime createdAtUtc = createdAt.toUtc();
-    final DateTime fechaActual = (await NTP.now()).toUtc();
+final DateTime createdAtUtc = createdAt.toUtc();
+final DateTime fechaActual = (await NTP.now()).toUtc();
 
-    // Cálculo con difference
-    final Duration diferencia = fechaActual.difference(createdAtUtc);
-    final int minutosDesdeCreacion = diferencia.inMinutes;
+// Cálculo de la diferencia en días
+final Duration diferencia = fechaActual.difference(createdAtUtc);
+final int diasDesdeCreacion = diferencia.inDays;
 
-    // Cálculo con resta directa
-  
-    if (isAdmin && !isSubscribed && minutosDesdeCreacion > 183) {
+if (isAdmin && !isSubscribed && diasDesdeCreacion > 30) {
 
 
       WidgetsBinding.instance.addPostFrameCallback((_) {

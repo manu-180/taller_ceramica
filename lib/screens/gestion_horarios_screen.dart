@@ -343,7 +343,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                     children: [
                                       ListTile(
                                         title: Text(
-                                            '${clase.hora} - Alumnos/as: ${clase.mails.join(", ")}'),
+                                            '${clase.hora} - Alumnos: ${clase.mails.join(", ")}'),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),

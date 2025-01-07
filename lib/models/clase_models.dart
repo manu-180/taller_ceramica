@@ -6,7 +6,8 @@ class ClaseModels {
   final String hora;
   final List<String> mails;
   int lugaresDisponibles;
-  int mes;
+  final int mes;
+  final int capacidad;
 
   ClaseModels({
     required this.id,
@@ -17,6 +18,7 @@ class ClaseModels {
     required this.mails,
     required this.lugaresDisponibles,
     required this.mes,
+    required this.capacidad,
   });
 
   @override
@@ -24,10 +26,6 @@ class ClaseModels {
     return 'ClaseModels(id: $id, semana: $semana, lugaresDisponibles: $lugaresDisponibles, dia: $dia, fecha: $fecha, hora: $hora, mails: $mails)';
   }
 
-  // Método para actualizar el estado de la clase
-  void actualizarLugaresDisponibles(int nuevosLugares) {
-    lugaresDisponibles = nuevosLugares;
-  }
 
   // Método para crear una instancia desde un Map (útil para bases de datos)
   factory ClaseModels.fromMap(Map<String, dynamic> map) {
@@ -40,6 +38,7 @@ class ClaseModels {
       mails: List<String>.from(map['mails'] ?? []),
       lugaresDisponibles: map['lugar_disponible'],
       mes: map['mes'],
+      capacidad: map['capacidad'],
     );
   }
 
@@ -67,6 +66,7 @@ class ClaseModels {
     List<String>? mails,
     int? lugaresDisponibles,
     int? mes,
+    int? capacidad,
   }) {
     return ClaseModels(
       id: id ?? this.id,
@@ -77,6 +77,7 @@ class ClaseModels {
       mails: mails ?? List.from(this.mails),
       lugaresDisponibles: lugaresDisponibles ?? this.lugaresDisponibles,
       mes: mes ?? this.mes,
+      capacidad: capacidad ?? this.capacidad,
     );
   }
 }

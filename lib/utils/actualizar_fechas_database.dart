@@ -61,6 +61,7 @@ class ActualizarFechasDatabase {
               mails: [],
               lugaresDisponibles: 0,
               mes: 0,
+              capacidad: 0,
             ),
           );
 
