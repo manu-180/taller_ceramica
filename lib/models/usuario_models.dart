@@ -8,6 +8,7 @@ class UsuarioModels {
   final int clasesDisponibles;
   final int alertTrigger;
   final bool admin;
+  final DateTime createdAt;
 
   UsuarioModels({
     required this.id,
@@ -19,6 +20,7 @@ class UsuarioModels {
     required this.alertTrigger,
     required this.taller,
     required this.admin,
+    required this.createdAt,
   });
 
   // Función para convertir el mapa a un objeto UsuarioModels
@@ -33,11 +35,12 @@ class UsuarioModels {
       alertTrigger: map['trigger_alert'],
       taller: map['taller'],
       admin: map['admin'],
+      createdAt: map['created_at'],
     );
   }
 
   @override
   String toString() {
-    return 'UsuarioModels(id: $id, usuario: $usuario, fullname: $fullname, userUid: $userUid, sexo: $sexo, clasesDisponibles: $clasesDisponibles, alertTrigger: $alertTrigger, taller: $taller, admin: $admin)';
+    return 'UsuarioModels(id: $id, usuario: $usuario, fullname: $fullname, userUid: $userUid, sexo: $sexo, clasesDisponibles: $clasesDisponibles, alertTrigger: $alertTrigger, taller: $taller, admin: $admin, createdAt: $createdAt)';
   }
 }

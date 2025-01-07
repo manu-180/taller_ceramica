@@ -227,10 +227,7 @@ class HomeState extends State<Home> {
                     ],
                   ),
                 ),
-                ElevatedButton(
-                  child: const Text("Ir a pagar"),
-                  onPressed: () => context.push("/subscription"),
-                )
+    
               ],
             ),
           ),

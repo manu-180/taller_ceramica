@@ -64,7 +64,11 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(height: 20),
                       Text(
                         '¿Qué hacemos?',
-                        style: Theme.of(context).textTheme.headlineLarge,
+                       style: TextStyle(
+                          fontSize: 33,
+                          fontWeight: FontWeight.bold,
+                          color: color.primary,
+                        ),
                       ),
                       const SizedBox(height: 10),
                       Container(

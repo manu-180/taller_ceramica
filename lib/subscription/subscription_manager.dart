@@ -29,7 +29,7 @@ class SubscriptionManager {
       .toList();
 
   bool isSubscribed = restoredPurchases.any((purchase) {
-    return (purchase.productID == 'monthlysubscription' || purchase.productID == 'annualsubscription') &&
+    return (purchase.productID == 'monthlysubscription' || purchase.productID == 'annualsubscription' || purchase.productID == 'cero' || purchase.productID == 'prueba') &&
            purchase.status == PurchaseStatus.purchased;
   });
 
@@ -51,7 +51,9 @@ class SubscriptionManager {
     bool isSubscribed = false;
     for (var purchase in restoredPurchases) {
       if (purchase.productID == 'monthlysubscription' ||
-          purchase.productID == 'annualsubscription') {
+          purchase.productID == 'annualsubscription' ||
+          purchase.productID == 'cero' ||
+          purchase.productID == 'prueba') {
         if (purchase.status == PurchaseStatus.purchased) {
           isSubscribed = true;
           break;

@@ -7,6 +7,7 @@ import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/subscription/subscription_manager.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/supabase/suscribir_usuario.dart';
+import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
 class SubscriptionScreen extends StatefulWidget {
   @override
@@ -56,7 +57,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     if (isAvailable) {
       final ProductDetailsResponse response =
           await _inAppPurchase.queryProductDetails(
-        {"monthlysubscription", "annualsubscription"}.toSet(),
+        {"monthlysubscription", "annualsubscription", "cero", "prueba"}.toSet(),
       );
 
       setState(() {
@@ -144,14 +145,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     final double fontSizePrice = size.width * 0.07; 
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Suscripción",
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: theme.colorScheme.primary,
-        automaticallyImplyLeading: false,
-      ),
+      appBar: ResponsiveAppBar(isTablet: size.width > 600),
       body: _isAvailable
     ? _products.isEmpty
         ? const Center(child: Text("No hay productos disponibles."))
@@ -166,7 +160,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     return GestureDetector(
                       onTap: () => _subscribe(product),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical:250),
+                        padding: const EdgeInsets.symmetric(vertical:10),
                         child: Container(
                           height: size.height * 0.28,
                           width: size.width * 0.8,

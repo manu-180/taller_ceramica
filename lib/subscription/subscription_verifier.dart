@@ -1,27 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/supabase/created_at_user.dart';
 import 'package:taller_ceramica/supabase/is_admin.dart';
 import 'package:taller_ceramica/supabase/is_subscripto.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
 
 class SubscriptionVerifier {
-  static Future<void> verificarAdminYSuscripcion(BuildContext context) async {
+  static Future<DateTime?> verificarAdminYSuscripcion(BuildContext context) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     if (usuarioActivo == null) {
-      return;
+      return null;
     }
 
     if (usuarioActivo.id == '939d2e1a-13b3-4af0-be54-1a0205581f3b') {
-      return;
+      return null;
     }
 
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo.id);
     final isAdmin = await IsAdmin().admin();
     final isSubscribed = await IsSubscripto().subscripto();
-    print("¿El usuario activo está suscripto? : $isSubscribed");
+    final createdAt = await CreatedAtUser().retornarCreatedAt();
 
-    if (isAdmin && !isSubscribed) {
+    // Asegúrate de que `createdAt` sea de tipo DateTime
+    if (createdAt == null) {
+      return null;
+    }
+
+    // Calcula la diferencia en días entre la fecha actual y `createdAt`
+    final DateTime fechaActual = DateTime.now();
+    final int diasDesdeCreacion = fechaActual.difference(createdAt).inDays;
+    print(diasDesdeCreacion);
+
+    // Verifica las condiciones para mostrar el cartel
+    if (isAdmin && !isSubscribed && diasDesdeCreacion > 30) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
           context: context,
@@ -54,5 +66,8 @@ class SubscriptionVerifier {
         );
       });
     }
+
+    // Retorna el created_at del usuario para otros usos
+    return createdAt;
   }
 }
