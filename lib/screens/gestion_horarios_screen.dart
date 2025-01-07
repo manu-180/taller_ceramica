@@ -342,8 +342,46 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       ListTile(
-                                        title: Text(
-                                            '${clase.hora} - Alumnos: ${clase.mails.join(", ")}'),
+                                        title: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize
+                                                .min, // Ajusta el tamaño al contenido
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8,
+                                                        vertical: 4),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: colors.primary,
+                                                      width: 1.5),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  color: colors.primary
+                                                      .withOpacity(0.1),
+                                                ),
+                                                child: Text(
+                                                  clase.hora,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                "- Alumnos :",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        subtitle: Text(clase.mails.join(", ")),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),

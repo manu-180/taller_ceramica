@@ -10,7 +10,6 @@ class Prueba extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    
 
     return Scaffold(
       appBar: ResponsiveAppBar(isTablet: size.width > 600),
@@ -24,14 +23,16 @@ class Prueba extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-
-          final users = await ObtenerTotalInfo(supabase: supabase, clasesTable: "ivanna", usuariosTable: "usuarios").obtenerUsuarios();
-          for(final user in users){
-            if(user.taller == "Taller de ceramica Ricardo Rojas"){
-              await supabase.from("usuarios").update({'taller': "ceramica Ricardo Rojas"}).eq('id', user.id);
+          final users = await ObtenerTotalInfo(
+                  supabase: supabase,
+                  clasesTable: "ivanna",
+                  usuariosTable: "usuarios")
+              .obtenerUsuarios();
+          for (final user in users) {
+            if (user.taller == "Taller de ceramica Ricardo Rojas") {
+              await supabase.from("usuarios").update(
+                  {'taller': "ceramica Ricardo Rojas"}).eq('id', user.id);
             }
-
-
           }
           // ActualizarFechasDatabase()
           //     .actualizarClasesAlNuevoMes("Lana's Taller", 2025);

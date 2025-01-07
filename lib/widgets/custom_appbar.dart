@@ -217,7 +217,6 @@ class CustomAppBarState extends State<CustomAppBar> {
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  
                   SizedBox(width: size.width * 0.02),
                   SizedBox(
                     width: size.width * 0.35,

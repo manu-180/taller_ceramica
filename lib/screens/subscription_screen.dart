@@ -99,7 +99,6 @@ class SubscriptionScreenState extends State<SubscriptionScreen> {
 
         final bool isActive = true;
 
-
         // Inserta la suscripción en Supabase
         await SuscribirUsuario(supabaseClient: supabase).insertSubscription(
           userId: usuarioActivo!.id,
@@ -113,7 +112,7 @@ class SubscriptionScreenState extends State<SubscriptionScreen> {
           SnackBar(
               content: Text('Error en la compra: ${purchase.error?.message}')),
         );
-      } 
+      }
     }
   }
 

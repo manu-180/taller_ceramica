@@ -19,33 +19,34 @@ class SuscribirUsuario {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
 
-      if(await inSuscription() != "") {
-        await supabase.from('subscriptions').update({
-          'product_id': productId,
-          'purchase_token': purchaseToken,
-          'start_date': startDate.toIso8601String(),
-          'is_active': isActive,
-        }).eq('id', await inSuscription());
-        return;
-      }
-      await supabaseClient.from('subscriptions').insert({
-        'user_id': userId,
+    if (await inSuscription() != "") {
+      await supabase.from('subscriptions').update({
         'product_id': productId,
         'purchase_token': purchaseToken,
         'start_date': startDate.toIso8601String(),
         'is_active': isActive,
-        'taller': taller,
-      });
-
+      }).eq('id', await inSuscription());
+      return;
+    }
+    await supabaseClient.from('subscriptions').insert({
+      'user_id': userId,
+      'product_id': productId,
+      'purchase_token': purchaseToken,
+      'start_date': startDate.toIso8601String(),
+      'is_active': isActive,
+      'taller': taller,
+    });
   }
 
-  Future<String> inSuscription() async{
+  Future<String> inSuscription() async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    final subscriptores = await ObtenerTotalInfo(supabase: supabase, clasesTable: taller, usuariosTable: "usuarios").obtenerSubscriptos();
+    final subscriptores = await ObtenerTotalInfo(
+            supabase: supabase, clasesTable: taller, usuariosTable: "usuarios")
+        .obtenerSubscriptos();
 
-    for(final sub in subscriptores) {
-      if(sub.userId == usuarioActivo.id) {
+    for (final sub in subscriptores) {
+      if (sub.userId == usuarioActivo.id) {
         return sub.id;
       }
     }

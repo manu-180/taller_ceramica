@@ -21,7 +21,8 @@ class SubscriptionManager {
   Future<void> verificarEstadoSuscripcion() async {
     // Verifica la conexión a Internet antes de proceder
     if (!await Internet().hayConexionInternet()) {
-      print("No hay conexión a Internet. No se puede verificar el estado de la suscripción.");
+      print(
+          "No hay conexión a Internet. No se puede verificar el estado de la suscripción.");
       return;
     }
 
@@ -51,7 +52,8 @@ class SubscriptionManager {
   Future<void> checkAndUpdateSubscription() async {
     // Verifica la conexión a Internet antes de proceder
     if (!await Internet().hayConexionInternet()) {
-      print("No hay conexión a Internet. No se puede verificar y actualizar la suscripción.");
+      print(
+          "No hay conexión a Internet. No se puede verificar y actualizar la suscripción.");
       return;
     }
 
@@ -125,7 +127,8 @@ class SubscriptionManager {
 
     // Verifica la conexión a Internet antes de proceder
     if (!await Internet().hayConexionInternet()) {
-      print("No hay conexión a Internet. No se pueden obtener los detalles de productos.");
+      print(
+          "No hay conexión a Internet. No se pueden obtener los detalles de productos.");
       return;
     }
 

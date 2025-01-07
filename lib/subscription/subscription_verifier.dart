@@ -20,20 +20,18 @@ class SubscriptionVerifier {
     }
 
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo.id);
-final isAdmin = await IsAdmin().admin();
-final isSubscribed = await IsSubscripto().subscripto();
-final createdAt = await CreatedAtUser().retornarCreatedAt();
+    final isAdmin = await IsAdmin().admin();
+    final isSubscribed = await IsSubscripto().subscripto();
+    final createdAt = await CreatedAtUser().retornarCreatedAt();
 
-final DateTime createdAtUtc = createdAt.toUtc();
-final DateTime fechaActual = (await NTP.now()).toUtc();
+    final DateTime createdAtUtc = createdAt.toUtc();
+    final DateTime fechaActual = (await NTP.now()).toUtc();
 
 // Cálculo de la diferencia en días
-final Duration diferencia = fechaActual.difference(createdAtUtc);
-final int diasDesdeCreacion = diferencia.inDays;
+    final Duration diferencia = fechaActual.difference(createdAtUtc);
+    final int diasDesdeCreacion = diferencia.inDays;
 
-if (isAdmin && !isSubscribed && diasDesdeCreacion > 30) {
-
-
+    if (isAdmin && !isSubscribed && diasDesdeCreacion > 30) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
           context: context,
@@ -65,7 +63,7 @@ if (isAdmin && !isSubscribed && diasDesdeCreacion > 30) {
           },
         );
       });
-    } 
+    }
     return createdAtUtc;
   }
 }

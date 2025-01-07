@@ -5,7 +5,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/supabase/redirijir_usuario_al_taller.dart';
 import 'dart:convert';
 
-
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -75,7 +74,10 @@ class HomeState extends State<Home> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Taller de Ceramica', style: TextStyle(color: Colors.white),),
+        title: const Text(
+          'Taller de Ceramica',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: color.primary,
         automaticallyImplyLeading: false,
       ),
@@ -84,7 +86,8 @@ class HomeState extends State<Home> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(size.width * 0.05, 20, size.width * 0.05, 0),
+                padding: EdgeInsets.fromLTRB(
+                    size.width * 0.05, 20, size.width * 0.05, 0),
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -96,7 +99,7 @@ class HomeState extends State<Home> {
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge
-                        ?.copyWith(fontSize: size.width * 0.04 ),
+                        ?.copyWith(fontSize: size.width * 0.04),
                   ),
                 ),
               ),
@@ -133,10 +136,10 @@ class HomeState extends State<Home> {
                         keyboardType: TextInputType.emailAddress,
                         onChanged: (value) {
                           setState(() {
-                            mailError =
-                                !emailRegex.hasMatch(emailController.text.trim())
-                                    ? 'El correo electrónico es invalido.'
-                                    : '';
+                            mailError = !emailRegex
+                                    .hasMatch(emailController.text.trim())
+                                ? 'El correo electrónico es invalido.'
+                                : '';
                           });
                         },
                       ),
@@ -147,7 +150,8 @@ class HomeState extends State<Home> {
                         decoration: InputDecoration(
                           labelText: 'Contraseña',
                           border: const OutlineInputBorder(),
-                          errorText: passwordError.isEmpty ? null : passwordError,
+                          errorText:
+                              passwordError.isEmpty ? null : passwordError,
                         ),
                         obscureText: true,
                         onChanged: (value) {
@@ -173,9 +177,10 @@ class HomeState extends State<Home> {
                               onPressed: () async {
                                 final email = emailController.text.trim();
                                 final password = passwordController.text.trim();
-              
+
                                 if (!emailRegex.hasMatch(email)) {
-                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text('El correo no es válido'),
@@ -184,9 +189,10 @@ class HomeState extends State<Home> {
                                   );
                                   return;
                                 }
-              
+
                                 if (password.length < 6) {
-                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
@@ -196,21 +202,23 @@ class HomeState extends State<Home> {
                                   );
                                   return;
                                 }
-              
+
                                 try {
                                   // Iniciar sesión
-                                  final response = await Supabase.instance.client.auth
+                                  final response = await Supabase
+                                      .instance.client.auth
                                       .signInWithPassword(
                                     email: email,
                                     password: password,
                                   );
-              
+
                                   // Guardar sesión manualmente (SharedPreferences)
                                   if (response.session != null) {
                                     final prefs =
                                         await SharedPreferences.getInstance();
-                                    final sessionData = response.session!.toJson();
-              
+                                    final sessionData =
+                                        response.session!.toJson();
+
                                     // Convertir sessionData en una cadena JSON antes de guardarlo
                                     await prefs.setString(
                                         'session', jsonEncode(sessionData));
@@ -239,7 +247,8 @@ class HomeState extends State<Home> {
                                         .hideCurrentSnackBar();
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text('Ocurrió un error inesperado'),
+                                        content:
+                                            Text('Ocurrió un error inesperado'),
                                         backgroundColor: Colors.red,
                                       ),
                                     );

@@ -190,27 +190,26 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
               content: isProcessing
                   ? null
                   : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
                           controller: horaController,
                           decoration: const InputDecoration(
                             hintText: 'Ingrese la hora de la clase (HH:mm)',
                           ),
                         ),
-                      TextField(
+                        TextField(
                           controller: capacidadController,
                           decoration: const InputDecoration(
                             hintText: 'Ingrese limite de alumnos',
                           ),
                         ),
-                      
-                    ],
-                  ),
+                      ],
+                    ),
               actions: [
                 if (isProcessing)
                   ElevatedButton.icon(
-                    onPressed: null, 
+                    onPressed: null,
                     icon: SizedBox(
                         width: size.width * 0.05,
                         height: size.width * 0.05,

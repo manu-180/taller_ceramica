@@ -26,7 +26,6 @@ class ClaseModels {
     return 'ClaseModels(id: $id, semana: $semana, lugaresDisponibles: $lugaresDisponibles, dia: $dia, fecha: $fecha, hora: $hora, mails: $mails)';
   }
 
-
   // Método para crear una instancia desde un Map (útil para bases de datos)
   factory ClaseModels.fromMap(Map<String, dynamic> map) {
     return ClaseModels(

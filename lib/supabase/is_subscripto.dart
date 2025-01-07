@@ -13,7 +13,7 @@ class IsSubscripto {
     for (final sub in subsriptos) {
       if (sub.userId == usuarioActivo.id) {
         return sub.isActive;
-      } 
+      }
     }
     return false;
   }

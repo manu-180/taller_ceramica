@@ -49,7 +49,7 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
-    final size =MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -63,67 +63,64 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-Column(
-  children: [
-    Padding(
-      padding: EdgeInsets.all(size.width *0.05),
-      child: BoxText(
-        text: "Antes de crear tu taller, te invitamos a leer brevemente más información sobre cómo funciona nuestra aplicación. Esto te ayudará a aprovechar al máximo todas sus funcionalidades."),
-    ),
-    ElevatedButton.icon(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-  title: const Text('¿Qué puede hacer nuestra aplicación?'),
-  content: SingleChildScrollView(
-    child: const Text(
-     'Nuestra aplicación está diseñada para revolucionar la gestión de tu taller de cerámica. ¡Descubre todo lo que puedes lograr con ella!\n\n'
-'**Para los alumnos:**\n'
-'- Explora todas las clases disponibles con botones en verde para inscribirte fácilmente. ¡Es sencillo y rápido inscribirte en tus clases favoritas!\n'
-'- Gestiona tus clases: revisa las que tienes inscritas y cancélalas si es necesario. Si cancelas con un día de anticipación, obtendrás un crédito para recuperarla más adelante. ¡Fácil y justo!\n\n'
-'**Para los administradores:**\n'
-'- Gestiona a tus alumnos como un experto: asigna créditos para inscribirse, elimina usuarios de clases o agrégalos, ¡incluso si la clase ya está llena! Todo al alcance de tu mano.\n'
-'- Visualiza tus clases de manera eficiente: selecciona una fecha y obtén una vista detallada de quiénes asistirán. Podrás hacer ajustes de manera rápida y sencilla.\n'
-'- Crea nuevas clases o elimínalas sin complicaciones, asegurando que tu taller esté siempre organizado y funcionando a la perfección.\n\n'
-'**¿Lo mejor?** Mientras los alumnos se manejan de forma autónoma, tú recibirás notificaciones automáticas por WhatsApp con cada inscripción, manteniéndote al tanto sin esfuerzo.\n\n'
-'**Personalización para todos los usuarios:**\n'
-'- Cambia el color del tema de la aplicación desde la pantalla de configuración, dándole tu propio estilo.\n'
-'- Actualiza los datos de tu cuenta de manera sencilla y sin complicaciones.\n\n'
-'**Importante:**\n'
-'Ten en cuenta que la aplicación incluye un mes de prueba gratuito. ¡No necesitas ingresar ningún medio de pago para disfrutar de esta experiencia inicial!\n'
-'Una vez finalizado el mes, si decides seguir disfrutando de todas las funcionalidades, deberás pagar una suscripción de \$40. ¡Es el momento de llevar tu taller al siguiente nivel!\n\n'
-'¡Empieza hoy mismo y transforma la forma en que gestionas tu taller de cerámica!'
-
-    ),
-  ),
-  actions: [
-    TextButton(
-      onPressed: () => Navigator.of(context).pop(),
-      child: const Text('Cerrar'),
-    ),
-  ],
-);
-
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(size.width * 0.05),
+                  child: BoxText(
+                      text:
+                          "Antes de crear tu taller, te invitamos a leer brevemente más información sobre cómo funciona nuestra aplicación. Esto te ayudará a aprovechar al máximo todas sus funcionalidades."),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text(
+                              '¿Qué puede hacer nuestra aplicación?'),
+                          content: SingleChildScrollView(
+                            child: const Text(
+                                'Nuestra aplicación está diseñada para revolucionar la gestión de tu taller de cerámica. ¡Descubre todo lo que puedes lograr con ella!\n\n'
+                                '**Para los alumnos:**\n'
+                                '- Explora todas las clases disponibles con botones en verde para inscribirte fácilmente. ¡Es sencillo y rápido inscribirte en tus clases favoritas!\n'
+                                '- Gestiona tus clases: revisa las que tienes inscritas y cancélalas si es necesario. Si cancelas con un día de anticipación, obtendrás un crédito para recuperarla más adelante. ¡Fácil y justo!\n\n'
+                                '**Para los administradores:**\n'
+                                '- Gestiona a tus alumnos como un experto: asigna créditos para inscribirse, elimina usuarios de clases o agrégalos, ¡incluso si la clase ya está llena! Todo al alcance de tu mano.\n'
+                                '- Visualiza tus clases de manera eficiente: selecciona una fecha y obtén una vista detallada de quiénes asistirán. Podrás hacer ajustes de manera rápida y sencilla.\n'
+                                '- Crea nuevas clases o elimínalas sin complicaciones, asegurando que tu taller esté siempre organizado y funcionando a la perfección.\n\n'
+                                '**¿Lo mejor?** Mientras los alumnos se manejan de forma autónoma, tú recibirás notificaciones automáticas por WhatsApp con cada inscripción, manteniéndote al tanto sin esfuerzo.\n\n'
+                                '**Personalización para todos los usuarios:**\n'
+                                '- Cambia el color del tema de la aplicación desde la pantalla de configuración, dándole tu propio estilo.\n'
+                                '- Actualiza los datos de tu cuenta de manera sencilla y sin complicaciones.\n\n'
+                                '**Importante:**\n'
+                                'Ten en cuenta que la aplicación incluye un mes de prueba gratuito. ¡No necesitas ingresar ningún medio de pago para disfrutar de esta experiencia inicial!\n'
+                                'Una vez finalizado el mes, si decides seguir disfrutando de todas las funcionalidades, deberás pagar una suscripción de \$40. ¡Es el momento de llevar tu taller al siguiente nivel!\n\n'
+                                '¡Empieza hoy mismo y transforma la forma en que gestionas tu taller de cerámica!'),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('Cerrar'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
-                );
-              },
-              icon: const Icon(Icons.info_outline), // Icono en el botón
-              label: const Text('Más Información'),
+                  icon: const Icon(Icons.info_outline), // Icono en el botón
+                  label: const Text('Más Información'),
+                ),
+                SizedBox(
+                  height: size.width * 0.05,
+                )
+              ],
             ),
-            SizedBox(height:size.width *0.05 ,)
-          
-        
-  
-  ],
-),
-
             Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 600),
                 child: Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: size.width *0.05),
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -147,10 +144,10 @@ Column(
                           keyboardType: TextInputType.emailAddress,
                           onChanged: (value) {
                             setState(() {
-                              mailError =
-                                  !emailRegex.hasMatch(emailController.text.trim())
-                                      ? 'El correo electrónico es inválido.'
-                                      : '';
+                              mailError = !emailRegex
+                                      .hasMatch(emailController.text.trim())
+                                  ? 'El correo electrónico es inválido.'
+                                  : '';
                             });
                           },
                         ),
@@ -177,7 +174,8 @@ Column(
                           decoration: InputDecoration(
                             labelText: 'Contraseña',
                             border: const OutlineInputBorder(),
-                            errorText: passwordError.isEmpty ? null : passwordError,
+                            errorText:
+                                passwordError.isEmpty ? null : passwordError,
                           ),
                           obscureText: true,
                           onChanged: (value) {
@@ -201,9 +199,10 @@ Column(
                           obscureText: true,
                           onChanged: (value) {
                             setState(() {
-                              confirmPasswordError = value != passwordController.text
-                                  ? 'La contraseña no coincide.'
-                                  : '';
+                              confirmPasswordError =
+                                  value != passwordController.text
+                                      ? 'La contraseña no coincide.'
+                                      : '';
                             });
                           },
                         ),
@@ -215,15 +214,17 @@ Column(
                                   setState(() {
                                     isLoading = true;
                                   });
-            
+
                                   FocusScope.of(context).unfocus();
-                                  final fullname = fullnameController.text.trim();
+                                  final fullname =
+                                      fullnameController.text.trim();
                                   final email = emailController.text.trim();
                                   final taller = tallerController.text.trim();
-                                  final password = passwordController.text.trim();
+                                  final password =
+                                      passwordController.text.trim();
                                   final confirmPassword =
                                       confirmPasswordController.text.trim();
-            
+
                                   if (fullname.isEmpty ||
                                       email.isEmpty ||
                                       taller.isEmpty ||
@@ -242,7 +243,7 @@ Column(
                                     ));
                                     return;
                                   }
-            
+
                                   if (password.length < 6) {
                                     setState(() {
                                       isLoading = false;
@@ -257,7 +258,7 @@ Column(
                                     ));
                                     return;
                                   }
-            
+
                                   if (password != confirmPassword) {
                                     setState(() {
                                       isLoading = false;
@@ -272,21 +273,24 @@ Column(
                                     ));
                                     return;
                                   }
-            
+
                                   try {
                                     final AuthResponse res =
                                         await supabase.auth.signUp(
                                       email: email,
                                       password: password,
                                       data: {
-                                        'fullname': Capitalize().capitalize(fullname)
+                                        'fullname':
+                                            Capitalize().capitalize(fullname)
                                       },
                                     );
-            
+
                                     await supabase.from('usuarios').insert({
-                                      'id': await GenerarId().generarIdUsuario(),
+                                      'id':
+                                          await GenerarId().generarIdUsuario(),
                                       'usuario': email,
-                                      'fullname': Capitalize().capitalize(fullname),
+                                      'fullname':
+                                          Capitalize().capitalize(fullname),
                                       'user_uid': res.user?.id,
                                       'sexo': "mujer",
                                       'clases_disponibles': 0,
@@ -294,19 +298,21 @@ Column(
                                       'clases_canceladas': [],
                                       'taller': Capitalize().capitalize(taller),
                                       "admin": true,
-                                      "created_at": DateTime.now().toIso8601String(),
+                                      "created_at":
+                                          DateTime.now().toIso8601String(),
                                     });
-            
-                                    crearTablaTaller(Capitalize().capitalize(taller));
-            
+
+                                    crearTablaTaller(
+                                        Capitalize().capitalize(taller));
+
                                     if (context.mounted) {
                                       context.go("/");
                                     }
-            
+
                                     EnviarWpp().sendWhatsAppMessage(
                                         '${Capitalize().capitalize(fullname)} ¡CREO UN NUEVO TALLER! "$taller". Contactalo por mail: $email',
                                         'whatsapp:+5491134272488');
-            
+
                                     setState(() {
                                       isLoading = false;
                                     });
@@ -329,7 +335,8 @@ Column(
                                           .showSnackBar(SnackBar(
                                         content: Text(
                                           'Error al crear el taller: $e',
-                                          style: const TextStyle(color: Colors.white),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                         backgroundColor: Colors.red,
                                       ));
@@ -338,8 +345,8 @@ Column(
                                 },
                           child: isLoading
                               ? const CircularProgressIndicator(
-                                  valueColor:
-                                      AlwaysStoppedAnimation<Color>(Colors.white),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
                                 )
                               : const Text('Registrar Taller'),
                         ),

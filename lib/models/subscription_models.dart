@@ -7,7 +7,6 @@ class SubscriptionModel {
   final DateTime createdAt;
   final String taller;
 
-
   SubscriptionModel({
     required this.id,
     required this.userId,

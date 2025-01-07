@@ -43,23 +43,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Column(
           children: [
             Padding(
-                  padding: EdgeInsets.fromLTRB(size.width * 0.05, 20, size.width * 0.05, 0),
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: color.primary.withAlpha(50),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      "En esta pantalla podés crear usuarios para tus alumnos y asignarles sus clases.\nEs importante hacerlo de esta manera para que, al iniciar sesión, sean reconocidos por el programa y redirigidos automáticamente a tu taller.",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.copyWith(fontSize: size.width * 0.04 ),
-                    ),
-                  ),
+              padding: EdgeInsets.fromLTRB(
+                  size.width * 0.05, 20, size.width * 0.05, 0),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: color.primary.withAlpha(50),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                SizedBox(height: size.height * 0.02),
+                child: Text(
+                  "En esta pantalla podés crear usuarios para tus alumnos y asignarles sus clases.\nEs importante hacerlo de esta manera para que, al iniciar sesión, sean reconocidos por el programa y redirigidos automáticamente a tu taller.",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(fontSize: size.width * 0.04),
+                ),
+              ),
+            ),
+            SizedBox(height: size.height * 0.02),
             Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 600),
@@ -83,7 +84,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ],
                         ),
-                         SizedBox(height: size.height * 0.02),
+                        SizedBox(height: size.height * 0.02),
                         TextField(
                           controller: fullnameController,
                           decoration: const InputDecoration(
@@ -103,10 +104,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           keyboardType: TextInputType.emailAddress,
                           onChanged: (value) {
                             setState(() {
-                              mailError =
-                                  !emailRegex.hasMatch(emailController.text.trim())
-                                      ? 'El correo electrónico es invalido.'
-                                      : '';
+                              mailError = !emailRegex
+                                      .hasMatch(emailController.text.trim())
+                                  ? 'El correo electrónico es invalido.'
+                                  : '';
                             });
                           },
                         ),
@@ -116,7 +117,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           decoration: InputDecoration(
                             labelText: 'Contraseña',
                             border: const OutlineInputBorder(),
-                            errorText: passwordError.isEmpty ? null : passwordError,
+                            errorText:
+                                passwordError.isEmpty ? null : passwordError,
                           ),
                           obscureText: true,
                           onChanged: (value) {
@@ -140,9 +142,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           obscureText: true,
                           onChanged: (value) {
                             setState(() {
-                              confirmPasswordError = value != passwordController.text
-                                  ? 'La contraseña no coincide.'
-                                  : '';
+                              confirmPasswordError =
+                                  value != passwordController.text
+                                      ? 'La contraseña no coincide.'
+                                      : '';
                             });
                           },
                         ),
@@ -152,14 +155,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             setState(() {
                               isLoading = true;
                             });
-            
+
                             FocusScope.of(context).unfocus();
                             final fullname = fullnameController.text.trim();
                             final email = emailController.text.trim();
                             final password = passwordController.text.trim();
                             final confirmPassword =
                                 confirmPasswordController.text.trim();
-            
+
                             if (fullname.isEmpty ||
                                 email.isEmpty ||
                                 password.isEmpty ||
@@ -167,7 +170,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               setState(() {
                                 isLoading = false;
                               });
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
@@ -179,12 +183,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               );
                               return;
                             }
-            
+
                             if (password.length < 6) {
                               setState(() {
                                 isLoading = false;
                               });
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
@@ -196,12 +201,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               );
                               return;
                             }
-            
+
                             if (password != confirmPassword) {
                               setState(() {
                                 isLoading = false;
                               });
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
@@ -213,7 +219,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               );
                               return;
                             }
-            
+
                             try {
                               final usuarioActivo =
                                   Supabase.instance.client.auth.currentUser;
@@ -224,18 +230,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 usuariosTable: 'usuarios',
                                 clasesTable: taller,
                               ).obtenerUsuarios();
-            
+
                               final emailExiste = listausuarios
                                   .any((usuario) => usuario.usuario == email);
-                              final fullnameExiste = listausuarios.any((usuario) =>
-                                  usuario.fullname.toLowerCase() ==
-                                  fullname.toLowerCase());
-            
+                              final fullnameExiste = listausuarios.any(
+                                  (usuario) =>
+                                      usuario.fullname.toLowerCase() ==
+                                      fullname.toLowerCase());
+
                               if (emailExiste) {
                                 setState(() {
                                   isLoading = false;
                                 });
-                                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text(
@@ -247,12 +255,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 );
                                 return;
                               }
-            
+
                               if (fullnameExiste) {
                                 setState(() {
                                   isLoading = false;
                                 });
-                                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text(
@@ -264,13 +273,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 );
                                 return;
                               }
-            
-                              final AuthResponse res = await supabase.auth.signUp(
+
+                              final AuthResponse res =
+                                  await supabase.auth.signUp(
                                 email: email,
                                 password: password,
-                                data: {'fullname': Capitalize().capitalize(fullname)},
+                                data: {
+                                  'fullname': Capitalize().capitalize(fullname)
+                                },
                               );
-            
+
                               await supabase.from('usuarios').insert({
                                 'id': await GenerarId().generarIdUsuario(),
                                 'usuario': email,
@@ -280,23 +292,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 'clases_disponibles': 0,
                                 'trigger_alert': 0,
                                 'clases_canceladas': [],
-                                'taller':
-                                    await ObtenerTaller().retornarTaller(user!.id),
+                                'taller': await ObtenerTaller()
+                                    .retornarTaller(user!.id),
                               });
-            
+
                               EnviarWpp().sendWhatsAppMessage(
                                   "${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases",
                                   'whatsapp:+5491132820164');
                               EnviarWpp().sendWhatsAppMessage(
                                   "${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases",
                                   'whatsapp:+5491134272488');
-            
+
                               setState(() {
                                 isLoading = false;
                                 showSuccessMessage = true;
                               });
-            
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
@@ -306,7 +319,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   backgroundColor: Colors.green,
                                 ),
                               );
-            
+
                               Future.delayed(const Duration(seconds: 30), () {
                                 setState(() {
                                   showSuccessMessage = false;
@@ -316,7 +329,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               setState(() {
                                 isLoading = false;
                               });
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
@@ -330,7 +344,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               setState(() {
                                 isLoading = false;
                               });
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
