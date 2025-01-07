@@ -390,7 +390,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
-                                        return const CircularProgressIndicator();
+                                        return SizedBox( child: const CircularProgressIndicator());
                                       } else if (snapshot.hasError) {
                                         return Text('Error: ${snapshot.error}');
                                       } else {
@@ -456,7 +456,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
             onPressed: ((estaLlena ||
                     Calcular24hs()
                         .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
-                    clase.lugaresDisponibles == 0 && !await IsAdmin().admin()))
+                    clase.lugaresDisponibles <= 0 && !await IsAdmin().admin()))
                 ? null
                 : () async {
                     if (context.mounted) {
@@ -467,7 +467,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
+                              clase.mails.isEmpty? "No hay alumnos inscriptos a esta clase" :"Los alumnos de esta clase son: ${clase.mails.join(', ')}",
                             ),
                             duration: const Duration(seconds: 5),
                             behavior: SnackBarBehavior.floating,
@@ -482,7 +482,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
                 estaLlena ||
                         Calcular24hs().esMenorA0Horas(
                             clase.fecha, clase.hora, mesActual) ||
-                        clase.lugaresDisponibles == 0
+                        clase.lugaresDisponibles <= 0
                     ? Colors.grey.shade400
                     : Colors.green,
               ),

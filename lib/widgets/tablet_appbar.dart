@@ -200,22 +200,7 @@ class TabletAppBarState extends State<TabletAppBar> {
               const Spacer(),
               // Botones de login / logout
               user == null
-                  ? Row(
-                      children: [
-                        SizedBox(
-                          height: size.width * 0.03,
-                          width: size.width * 0.15,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              context.push('/crear-usuario${taller ?? ''}');
-                            },
-                            child: Text(
-                              'Crear usuario',
-                              style: TextStyle(fontSize: size.width * 0.015),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: size.width * 0.02),
+                  ? 
                         SizedBox(
                           height: size.width * 0.03,
                           width: size.width * 0.15,
@@ -228,9 +213,8 @@ class TabletAppBarState extends State<TabletAppBar> {
                               style: TextStyle(fontSize: size.width * 0.015),
                             ),
                           ),
-                        ),
-                      ],
-                    )
+                        )
+               
                   : SizedBox(
                       height: size.width * 0.03,
                       width: size.width * 0.15,

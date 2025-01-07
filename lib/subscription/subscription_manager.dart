@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/utils/internet.dart'; // Importa la clase para verificar conexión
 
 class SubscriptionManager {
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
-
   final List<PurchaseDetails> _purchases = [];
 
   SubscriptionManager() {
@@ -20,10 +19,16 @@ class SubscriptionManager {
   }
 
   Future<void> verificarEstadoSuscripcion() async {
+    // Verifica la conexión a Internet antes de proceder
+    if (!await Internet().hayConexionInternet()) {
+      print("No hay conexión a Internet. No se puede verificar el estado de la suscripción.");
+      return;
+    }
+
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     if (usuarioActivo == null) return;
 
-    await InAppPurchase.instance.restorePurchases();
+    await _inAppPurchase.restorePurchases();
     final List<PurchaseDetails> restoredPurchases = _purchases
         .where((purchase) => purchase.status == PurchaseStatus.restored)
         .toList();
@@ -40,9 +45,16 @@ class SubscriptionManager {
         .from('subscriptions')
         .update({'is_active': isSubscribed}).eq('user_id', usuarioActivo.id);
 
+    print('Estado de la suscripción actualizado: $isSubscribed');
   }
 
   Future<void> checkAndUpdateSubscription() async {
+    // Verifica la conexión a Internet antes de proceder
+    if (!await Internet().hayConexionInternet()) {
+      print("No hay conexión a Internet. No se puede verificar y actualizar la suscripción.");
+      return;
+    }
+
     await _inAppPurchase.restorePurchases();
     final List<PurchaseDetails> restoredPurchases = _purchases
         .where((purchase) => purchase.status == PurchaseStatus.restored)
@@ -66,6 +78,8 @@ class SubscriptionManager {
       await supabase
           .from('subscriptions')
           .update({'is_active': isSubscribed}).eq('user_id', currentUser.id);
+
+      print('Estado de la suscripción actualizado: $isSubscribed');
     }
   }
 
@@ -73,7 +87,6 @@ class SubscriptionManager {
   void listenToPurchaseUpdates() {
     _inAppPurchase.purchaseStream.listen(
       (List<PurchaseDetails> purchaseDetailsList) {
-
         for (var purchase in purchaseDetailsList) {
           if (purchase.status == PurchaseStatus.purchased ||
               purchase.status == PurchaseStatus.restored) {
@@ -81,11 +94,13 @@ class SubscriptionManager {
               _purchases.add(purchase);
             }
           } else if (purchase.status == PurchaseStatus.error) {
+            print("Error en la compra: ${purchase.error?.message}");
           }
         }
-
       },
- 
+      onError: (error) {
+        print("Error al escuchar el flujo de compras: $error");
+      },
     );
   }
 
@@ -108,13 +123,47 @@ class SubscriptionManager {
       "annualsubscription"
     };
 
-      await _inAppPurchase.queryProductDetails(productIds);
+    // Verifica la conexión a Internet antes de proceder
+    if (!await Internet().hayConexionInternet()) {
+      print("No hay conexión a Internet. No se pueden obtener los detalles de productos.");
+      return;
+    }
 
+    try {
+      final ProductDetailsResponse response =
+          await _inAppPurchase.queryProductDetails(productIds);
 
+      if (response.error != null) {
+        print("Error al consultar los productos: ${response.error}");
+        return;
+      }
+
+      if (response.productDetails.isEmpty) {
+        print("No se encontraron productos configurados.");
+        return;
+      }
+
+      for (var product in response.productDetails) {
+        print("Producto disponible: ${product.title} - ${product.id}");
+      }
+    } catch (e) {
+      print("Error al obtener detalles de productos: $e");
+    }
   }
 
   /// Restaura las compras
   Future<void> restorePurchases() async {
+    // Verifica la conexión a Internet antes de proceder
+    if (!await Internet().hayConexionInternet()) {
+      print("No hay conexión a Internet. No se pueden restaurar las compras.");
+      return;
+    }
+
+    try {
       await _inAppPurchase.restorePurchases();
+      print("Se ha enviado la solicitud para restaurar las compras.");
+    } catch (e) {
+      print("Error al restaurar las compras: $e");
+    }
   }
 }

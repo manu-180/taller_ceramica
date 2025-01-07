@@ -2,6 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/models/subscription_models.dart';
 import 'package:taller_ceramica/models/usuario_models.dart';
+import 'package:taller_ceramica/utils/internet.dart'; // Importa la clase Internet con hayConexionInternet
 
 class ObtenerTotalInfo {
   final SupabaseClient supabase;
@@ -15,6 +16,10 @@ class ObtenerTotalInfo {
   });
 
   Future<List<ClaseModels>> obtenerClases() async {
+    if (!await Internet().hayConexionInternet()) {
+      throw Exception('No hay conexión a Internet.');
+    }
+
     try {
       final response = await supabase.from(clasesTable).select();
 
@@ -27,6 +32,10 @@ class ObtenerTotalInfo {
   }
 
   Future<List<UsuarioModels>> obtenerUsuarios() async {
+    if (!await Internet().hayConexionInternet()) {
+      throw Exception('No hay conexión a Internet.');
+    }
+
     try {
       final response = await supabase.from(usuariosTable).select();
 
@@ -39,6 +48,10 @@ class ObtenerTotalInfo {
   }
 
   Future<List<SubscriptionModel>> obtenerSubscriptos() async {
+    if (!await Internet().hayConexionInternet()) {
+      throw Exception('No hay conexión a Internet.');
+    }
+
     try {
       final response = await supabase.from("subscriptions").select();
 

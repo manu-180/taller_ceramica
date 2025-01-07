@@ -217,24 +217,10 @@ class CustomAppBarState extends State<CustomAppBar> {
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (isAdmin) ...[
-                    SizedBox(
-                      width: size.width * 0.23,
-                      height: size.height * 0.044,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          context.push('/crear-usuario/${taller ?? ''}');
-                        },
-                        child: Text(
-                          'Crear',
-                          style: TextStyle(fontSize: size.width * 0.032),
-                        ),
-                      ),
-                    )
-                  ],
+                  
                   SizedBox(width: size.width * 0.02),
                   SizedBox(
-                    width: (isAdmin) ? size.width * 0.23 : size.width * 0.34,
+                    width: size.width * 0.35,
                     height: size.height * 0.044,
                     child: ElevatedButton(
                       onPressed: () async {
@@ -247,7 +233,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                         }
                       },
                       child: Text(
-                        'Cerrar',
+                        'Cerrar sesión',
                         style: TextStyle(fontSize: size.width * 0.032),
                       ),
                     ),

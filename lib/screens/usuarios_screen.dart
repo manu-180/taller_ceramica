@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
@@ -207,6 +208,9 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar:
           ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
@@ -320,6 +324,22 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                   ],
                 ),
               ),
+            ),
+            floatingActionButton: SizedBox(
+              width: size.width * 0.38,
+              child: FloatingActionButton(
+                          onPressed: () async {
+                            final usuarioActivo = Supabase.instance.client.auth.currentUser;
+                            final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+                            
+              
+                            context.push('/crear-usuario/$taller');
+                          },
+                          child: Text(
+                            'Crear nuevo usaurio',
+                            style: TextStyle(fontSize: size.width * 0.032),
+                          ),
+                        ),
             ),
     );
   }

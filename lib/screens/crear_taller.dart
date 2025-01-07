@@ -40,7 +40,7 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
       hora TEXT NOT NULL,
       mails JSONB DEFAULT '[]',
       lugar_disponible INTEGER NOT NULL DEFAULT 0,
-      mes INTEGER NOT NULL DEFAULT "$mesActual"
+      mes INTEGER NOT NULL DEFAULT $mesActual
     );
   '''
     });
@@ -63,11 +63,6 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-// Padding(
-//   padding: EdgeInsets.all(size.width *0.05),
-//   child: BoxText(
-//     text: "Ten en cuenta que la aplicación incluye un mes de prueba gratis.\nNo se te pedirá ningún medio de pago para utilizar el programa durante este período.\nUna vez finalizado el mes, si estás interesado en seguir disfrutando de las funcionalidades, deberás pagar una suscripción de \$40."),
-// ),
 Column(
   children: [
     Padding(
@@ -297,12 +292,12 @@ Column(
                                       'clases_disponibles': 0,
                                       'trigger_alert': 0,
                                       'clases_canceladas': [],
-                                      'taller': taller,
+                                      'taller': Capitalize().capitalize(taller),
                                       "admin": true,
                                       "created_at": DateTime.now().toIso8601String(),
                                     });
             
-                                    crearTablaTaller(taller);
+                                    crearTablaTaller(Capitalize().capitalize(taller));
             
                                     if (context.mounted) {
                                       context.go("/");

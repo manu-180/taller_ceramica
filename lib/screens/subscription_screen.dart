@@ -91,8 +91,6 @@ class SubscriptionScreenState extends State<SubscriptionScreen> {
   void _handlePurchaseUpdates(List<PurchaseDetails> purchases) async {
     for (var purchase in purchases) {
       if (purchase.status == PurchaseStatus.purchased) {
-        debugPrint('Compra exitosa: ${purchase.productID}');
-
         final usuarioActivo = Supabase.instance.client.auth.currentUser;
         final purchaseToken = purchase.verificationData.serverVerificationData;
         final productId = purchase.productID;
@@ -101,7 +99,6 @@ class SubscriptionScreenState extends State<SubscriptionScreen> {
 
         final bool isActive = true;
 
-        // Llama a la API para verificar la suscripción
 
         // Inserta la suscripción en Supabase
         await SuscribirUsuario(supabaseClient: supabase).insertSubscription(
@@ -112,17 +109,11 @@ class SubscriptionScreenState extends State<SubscriptionScreen> {
           isActive: isActive,
         );
       } else if (purchase.status == PurchaseStatus.error) {
-        debugPrint('Error en la compra: ${purchase.error}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Error en la compra: ${purchase.error?.message}')),
         );
-      } else if (purchase.status == PurchaseStatus.restored) {
-        debugPrint('Compra restaurada: ${purchase.productID}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Compra restaurada: ${purchase.productID}')),
-        );
-      }
+      } 
     }
   }
 

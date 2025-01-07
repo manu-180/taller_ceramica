@@ -86,7 +86,7 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                       height: 20,
                     ),
                     ExpansionTile(
-                      title: const Text('Elige un color'),
+                      title: const Text('Elige un color', style: TextStyle(fontWeight: FontWeight.bold),),
                       children: [
                         ListView.builder(
                           shrinkWrap: true,
@@ -149,7 +149,7 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                       ],
                     ),
                     ExpansionTile(
-                      title: const Text('Actualizar datos'),
+                      title: const Text('Actualizar datos', style: TextStyle(fontWeight: FontWeight.bold)),
                       children: [
                         ListView.builder(
                           shrinkWrap: true,
