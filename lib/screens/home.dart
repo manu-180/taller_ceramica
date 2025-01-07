@@ -92,7 +92,7 @@ class HomeState extends State<Home> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    "Si sos administrador y aun no te has creado tu propia cuenta ¡crea un taller nuevo!.\nSi sos alumno, necesitas que el administrador te cree la cuenta",
+                    "Si eres administrador y aún no has creado tu cuenta, ¡es el momento de iniciar tu propio taller!\nSi eres alumno, deberás solicitar al administrador que cree tu cuenta para comenzar.",
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge
@@ -122,7 +122,7 @@ class HomeState extends State<Home> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 40),
+                      SizedBox(height: size.height * 0.02),
                       TextField(
                         controller: emailController,
                         decoration: InputDecoration(
