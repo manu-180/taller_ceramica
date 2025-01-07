@@ -1,10 +1,12 @@
 class SubscriptionModel {
-  final String id; 
-  final String userId; 
-  final String productId; 
+  final String id;
+  final String userId;
+  final String productId;
   final String purchaseToken;
-  final bool isActive; 
-  final DateTime createdAt; 
+  final bool isActive;
+  final DateTime createdAt;
+  final String taller;
+
 
   SubscriptionModel({
     required this.id,
@@ -13,11 +15,12 @@ class SubscriptionModel {
     required this.purchaseToken,
     required this.isActive,
     required this.createdAt,
+    required this.taller,
   });
 
   @override
   String toString() {
-    return 'SubscriptionModel(id: $id, userId: $userId, productId: $productId, purchaseToken: $purchaseToken, isActive: $isActive, createdAt: $createdAt)';
+    return 'SubscriptionModel(id: $id, userId: $userId, productId: $productId, purchaseToken: $purchaseToken, isActive: $isActive, createdAt: $createdAt, taller: $taller)';
   }
 
   // Método para crear una instancia desde un Map (útil para bases de datos)
@@ -29,6 +32,7 @@ class SubscriptionModel {
       purchaseToken: map['purchase_token'],
       isActive: map['is_active'],
       createdAt: DateTime.parse(map['created_at']),
+      taller: map['taller'],
     );
   }
 
@@ -41,6 +45,7 @@ class SubscriptionModel {
       'purchase_token': purchaseToken,
       'is_active': isActive,
       'created_at': createdAt.toIso8601String(),
+      'taller': taller,
     };
   }
 
@@ -52,6 +57,7 @@ class SubscriptionModel {
     String? purchaseToken,
     bool? isActive,
     DateTime? createdAt,
+    String? taller,
   }) {
     return SubscriptionModel(
       id: id ?? this.id,
@@ -60,6 +66,7 @@ class SubscriptionModel {
       purchaseToken: purchaseToken ?? this.purchaseToken,
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,
+      taller: taller ?? this.taller,
     );
   }
 }

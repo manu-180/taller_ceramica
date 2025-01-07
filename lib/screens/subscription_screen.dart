@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'dart:async';
 
-import 'package:taller_ceramica/api_suscripcion/api_suscripcion.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/subscription/subscription_manager.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
@@ -10,15 +9,17 @@ import 'package:taller_ceramica/supabase/suscribir_usuario.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
 class SubscriptionScreen extends StatefulWidget {
+  const SubscriptionScreen({super.key});
+
   @override
-  _SubscriptionScreenState createState() => _SubscriptionScreenState();
+  SubscriptionScreenState createState() => SubscriptionScreenState();
 }
 
-class _SubscriptionScreenState extends State<SubscriptionScreen> {
+class SubscriptionScreenState extends State<SubscriptionScreen> {
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
   bool _isAvailable = false;
   List<ProductDetails> _products = [];
-  Map<String, bool> _hovering = {};
+  Map<String, bool> hovering = {};
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
   @override
@@ -63,14 +64,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       setState(() {
         _isAvailable = isAvailable;
         _products = response.productDetails;
-
-        print(
-            'Productos disponibles: ${_products.map((p) => p.title).toList()}');
-
         _products.sort((a, b) => a.price.compareTo(b.price));
 
         for (var product in _products) {
-          _hovering[product.id] = false;
+          hovering[product.id] = false;
         }
       });
     }
@@ -101,12 +98,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         final productId = purchase.productID;
 
         final DateTime startDate = DateTime.now();
-        late DateTime endDate;
 
         final bool isActive = true;
 
         // Llama a la API para verificar la suscripción
-        await ApiSuscripcion().verificarSuscripcion(purchaseToken, productId);
 
         // Inserta la suscripción en Supabase
         await SuscribirUsuario(supabaseClient: supabase).insertSubscription(
@@ -115,10 +110,6 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           purchaseToken: purchaseToken,
           startDate: startDate,
           isActive: isActive,
-        );
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Compra realizada: ${purchase.productID}')),
         );
       } else if (purchase.status == PurchaseStatus.error) {
         debugPrint('Error en la compra: ${purchase.error}');
@@ -140,94 +131,95 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
 
-    final double fontSizeTitle = size.width * 0.065; 
+    final double fontSizeTitle = size.width * 0.065;
     final double fontSizeDescription = size.width * 0.04;
-    final double fontSizePrice = size.width * 0.07; 
+    final double fontSizePrice = size.width * 0.07;
 
     return Scaffold(
       appBar: ResponsiveAppBar(isTablet: size.width > 600),
       body: _isAvailable
-    ? _products.isEmpty
-        ? const Center(child: Text("No hay productos disponibles."))
-        : SingleChildScrollView(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: size.height * 0.1),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: _products.map((product) {
-                    return GestureDetector(
-                      onTap: () => _subscribe(product),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical:10),
-                        child: Container(
-                          height: size.height * 0.28,
-                          width: size.width * 0.8,
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 10,
-                                offset: Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  cleanTitle(product.title),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: theme.colorScheme.onPrimary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: fontSizeTitle,
-                                  ),
+          ? _products.isEmpty
+              ? const Center(child: Text("No hay productos disponibles."))
+              : SingleChildScrollView(
+                  child: Center(
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: size.height * 0.1),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: _products.map((product) {
+                          return GestureDetector(
+                            onTap: () => _subscribe(product),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Container(
+                                height: size.height * 0.28,
+                                width: size.width * 0.8,
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                padding: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 10,
+                                      offset: Offset(0, 5),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        cleanTitle(product.title),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: theme.colorScheme.onPrimary,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: fontSizeTitle,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        product.description,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: theme.colorScheme.onPrimary,
+                                          fontSize: fontSizeDescription,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      product.price,
+                                      style: TextStyle(
+                                        color: theme.colorScheme.onPrimary,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: fontSizePrice,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: 10),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  product.description,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: theme.colorScheme.onPrimary,
-                                    fontSize: fontSizeDescription,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Text(
-                                product.price,
-                                style: TextStyle(
-                                  color: theme.colorScheme.onPrimary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: fontSizePrice,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          );
+                        }).toList(),
                       ),
-                    );
-                  }).toList(),
-                ),
-              ),
+                    ),
+                  ),
+                )
+          : const Center(
+              child: Text("La tienda no está disponible."),
             ),
-          )
-    : const Center(
-        child: Text("La tienda no está disponible."),
-      ),
-
     );
   }
 }

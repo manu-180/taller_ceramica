@@ -9,7 +9,6 @@ import 'package:taller_ceramica/supabase/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
 import 'package:taller_ceramica/supabase/obtener_total_info.dart';
-import 'package:taller_ceramica/utils/actualizar_fechas_database.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:intl/intl.dart';
@@ -36,7 +35,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   @override
   void initState() {
     super.initState();
-    inicializarDatos(); 
+    inicializarDatos();
     SubscriptionVerifier.verificarAdminYSuscripcion(context);
   }
 

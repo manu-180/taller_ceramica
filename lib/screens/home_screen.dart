@@ -64,7 +64,7 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(height: 20),
                       Text(
                         '¿Qué hacemos?',
-                       style: TextStyle(
+                        style: TextStyle(
                           fontSize: 33,
                           fontWeight: FontWeight.bold,
                           color: color.primary,

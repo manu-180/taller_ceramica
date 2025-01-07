@@ -1,7 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
-import 'package:taller_ceramica/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/supabase/obtener_total_info.dart';
 
 class SuscribirUsuario {
   final SupabaseClient supabaseClient;
@@ -16,34 +16,39 @@ class SuscribirUsuario {
     required DateTime startDate,
     required bool isActive,
   }) async {
-    try {
-    final taller = await ObtenerTaller().retornarTaller(userId);
-      final subsriptores = await ObtenerTotalInfo(supabase: supabase, clasesTable: taller, usuariosTable: "usuarios").obtenerSubscriptos();
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
 
-      for(final sub in subsriptores){
-        if(sub.userId ==userId ){
-          await supabase.from('subscriptions').update({
-              'product_id': productId,
-              'purchase_token': purchaseToken,
-              'start_date': startDate.toIso8601String(),
-              'is_active': isActive,
-             }
-             ).eq('id', sub.id);
-             return;
-
-        } else {
-        await supabaseClient.from('subscriptions').insert({
+      if(await inSuscription() != "") {
+        await supabase.from('subscriptions').update({
+          'product_id': productId,
+          'purchase_token': purchaseToken,
+          'start_date': startDate.toIso8601String(),
+          'is_active': isActive,
+        }).eq('id', await inSuscription());
+        return;
+      }
+      await supabaseClient.from('subscriptions').insert({
         'user_id': userId,
         'product_id': productId,
         'purchase_token': purchaseToken,
         'start_date': startDate.toIso8601String(),
         'is_active': isActive,
+        'taller': taller,
       });
-      return;
-        }
+
+  }
+
+  Future<String> inSuscription() async{
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+    final subscriptores = await ObtenerTotalInfo(supabase: supabase, clasesTable: taller, usuariosTable: "usuarios").obtenerSubscriptos();
+
+    for(final sub in subscriptores) {
+      if(sub.userId == usuarioActivo.id) {
+        return sub.id;
       }
-    } catch (e) {
-      print('Error al insertar la suscripción: $e');
     }
+    return "";
   }
 }

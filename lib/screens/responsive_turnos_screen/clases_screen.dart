@@ -9,7 +9,6 @@ import 'package:taller_ceramica/supabase/obtener_taller.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
-import 'package:taller_ceramica/utils/actualizar_fechas_database.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
@@ -447,7 +446,6 @@ class _ClasesScreenState extends State<ClasesScreen> {
     final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
     final estaLlena = clase.mails.length >= 5;
     final screenWidth = MediaQuery.of(context).size.width;
-    final user = Supabase.instance.client.auth.currentUser;
 
     return Column(
       children: [

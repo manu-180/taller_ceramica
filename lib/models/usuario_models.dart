@@ -35,7 +35,7 @@ class UsuarioModels {
       alertTrigger: map['trigger_alert'],
       taller: map['taller'],
       admin: map['admin'],
-      createdAt: map['created_at'],
+      createdAt: DateTime.parse(map['created_at']),
     );
   }
 

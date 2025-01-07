@@ -18,7 +18,6 @@ class IsAdmin {
 
     for (final user in users) {
       if (user.userUid == usuarioActivo.id) {
-        print("usuario adminnnn: ${user.admin}");
         return user.admin;
       }
     }

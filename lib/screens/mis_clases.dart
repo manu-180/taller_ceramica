@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:taller_ceramica/subscription/subscription_manager.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
-import 'package:taller_ceramica/supabase/is_admin.dart';
-import 'package:taller_ceramica/supabase/is_subscripto.dart';
 import 'package:taller_ceramica/supabase/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
 import 'package:taller_ceramica/main.dart';
@@ -29,7 +25,7 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
   void initState() {
     super.initState();
     SubscriptionVerifier.verificarAdminYSuscripcion(context);
-    cargarMesActual(); 
+    cargarMesActual();
     final user = ref.read(authProvider);
     if (user != null) {
       cargarClasesOrdenadasPorProximidad(user.userMetadata?['fullname']);

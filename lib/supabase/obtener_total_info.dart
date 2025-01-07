@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/models/subscription_models.dart';
@@ -23,7 +22,6 @@ class ObtenerTotalInfo {
           .map((item) => ClaseModels.fromMap(item))
           .toList();
     } catch (e) {
-      print('Error al obtener clases: $e');
       throw Exception('No se pudieron obtener las clases: $e');
     }
   }
@@ -36,7 +34,6 @@ class ObtenerTotalInfo {
           .map((item) => UsuarioModels.fromMap(item))
           .toList();
     } catch (e) {
-      print('Error al obtener usuarios: $e');
       throw Exception('No se pudieron obtener los usuarios: $e');
     }
   }
@@ -49,7 +46,6 @@ class ObtenerTotalInfo {
           .map((item) => SubscriptionModel.fromMap(item))
           .toList();
     } catch (e) {
-      print('Error al obtener subsriptos: $e');
       throw Exception('No se pudieron obtener los usuarios: $e');
     }
   }

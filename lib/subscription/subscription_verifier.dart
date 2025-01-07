@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:ntp/ntp.dart';
 import 'package:taller_ceramica/supabase/created_at_user.dart';
 import 'package:taller_ceramica/supabase/is_admin.dart';
 import 'package:taller_ceramica/supabase/is_subscripto.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
 
 class SubscriptionVerifier {
-  static Future<DateTime?> verificarAdminYSuscripcion(BuildContext context) async {
+  static Future<DateTime?> verificarAdminYSuscripcion(
+      BuildContext context) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     if (usuarioActivo == null) {
       return null;
@@ -22,25 +24,25 @@ class SubscriptionVerifier {
     final isSubscribed = await IsSubscripto().subscripto();
     final createdAt = await CreatedAtUser().retornarCreatedAt();
 
-    // Asegúrate de que `createdAt` sea de tipo DateTime
-    if (createdAt == null) {
-      return null;
-    }
+    final DateTime createdAtUtc = createdAt.toUtc();
+    final DateTime fechaActual = (await NTP.now()).toUtc();
 
-    // Calcula la diferencia en días entre la fecha actual y `createdAt`
-    final DateTime fechaActual = DateTime.now();
-    final int diasDesdeCreacion = fechaActual.difference(createdAt).inDays;
-    print(diasDesdeCreacion);
+    // Cálculo con difference
+    final Duration diferencia = fechaActual.difference(createdAtUtc);
+    final int minutosDesdeCreacion = diferencia.inMinutes;
 
-    // Verifica las condiciones para mostrar el cartel
-    if (isAdmin && !isSubscribed && diasDesdeCreacion > 30) {
+    // Cálculo con resta directa
+  
+    if (isAdmin && !isSubscribed && minutosDesdeCreacion > 183) {
+
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
             return WillPopScope(
-              onWillPop: () async => false, // Evitar que se cierre al retroceder
+              onWillPop: () async => false,
               child: AlertDialog(
                 title: const Text('El periodo de prueba ha concluido'),
                 content: const Text(
@@ -65,9 +67,7 @@ class SubscriptionVerifier {
           },
         );
       });
-    }
-
-    // Retorna el created_at del usuario para otros usos
-    return createdAt;
+    } 
+    return createdAtUtc;
   }
 }

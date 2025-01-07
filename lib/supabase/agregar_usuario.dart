@@ -119,7 +119,7 @@ class AgregarUsuario {
         final yyyy = int.tryParse(partes[2]) ?? 0;
 
         // Filtramos SOLO las clases del mes y año actuales
-        if (mm == await ObtenerMes().obtenerMes() && yyyy == 2025) {
+        if (mm == await ObtenerMes().obtenerMes() && yyyy == currentYear) {
           // Verificamos que sea la misma combinación de (dia + hora)
           if (item.dia == clase.dia && item.hora == clase.hora) {
             // Inserta solo si el usuario no está, y si no excedimos 4
