@@ -297,12 +297,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               });
 
                               EnviarWpp().sendWhatsAppMessage(
-                                  "${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases",
-                                  'whatsapp:+5491132820164');
-                              EnviarWpp().sendWhatsAppMessage(
-                                  "${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases",
-                                  'whatsapp:+5491134272488');
-
+                                        "HXe3ce917c3f0fe4bcaafe1275ec68d107",
+                                        'whatsapp:+5491134272488',
+                                        [Capitalize().capitalize(fullname)]
+                                          );
                               setState(() {
                                 isLoading = false;
                                 showSuccessMessage = true;

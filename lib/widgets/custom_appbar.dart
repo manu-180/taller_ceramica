@@ -103,7 +103,7 @@ class CustomAppBarState extends State<CustomAppBar> {
 
     if (errorMessage != null) {
       return AppBar(
-        title: Text('Error: $errorMessage'),
+        title: Text('Error: $errorMessage', style: TextStyle(color: Colors.white),),
         backgroundColor: color.primary,
       );
     }

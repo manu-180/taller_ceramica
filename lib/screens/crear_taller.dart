@@ -314,10 +314,12 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                           context.go("/");
                                         }
                             
-                                        EnviarWpp().sendWhatsAppMessage(
-                                            '${Capitalize().capitalize(fullname)} ¡CREO UN NUEVO TALLER! "$taller". Contactalo por mail: $email',
-                                            'whatsapp:+5491134272488');
-                            
+                                         EnviarWpp().sendWhatsAppMessage(
+                                        "HXd8748cc9c7d60600cfda07262b4710df",
+                                        'whatsapp:+5491134272488',
+                                        [Capitalize().capitalize(fullname), taller, email]
+                                          );
+                                                      
                                         setState(() {
                                           isLoading = false;
                                         });

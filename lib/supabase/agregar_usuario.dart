@@ -38,20 +38,18 @@ class AgregarUsuario {
             ModificarLugarDisponible().removerLugarDisponible(idClase);
             if (parametro) {
               EnviarWpp().sendWhatsAppMessage(
-                  "Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491134272488');
-              EnviarWpp().sendWhatsAppMessage(
-                  "Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491132820164');
+              "HX13d84cd6816c60f21f172fe42bb3b0bb",
+              'whatsapp:+5491134272488',
+              [user, clase.dia, clase.fecha, clase.hora]
+                );
             }
             if (!parametro) {
               ModificarCredito().removerCreditoUsuario(user);
               EnviarWpp().sendWhatsAppMessage(
-                  "$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491134272488');
-              EnviarWpp().sendWhatsAppMessage(
-                  "$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491132820164');
+              "HXefcf9346661c8871da3f019743967611",
+              'whatsapp:+5491134272488',
+              [user, clase.dia, clase.fecha, clase.hora]
+                );
             }
           }
         }
@@ -145,9 +143,10 @@ class AgregarUsuario {
     // 4. Al final, si llegamos a 4 inserciones, avisamos por WhatsApp
     if (count == 4) {
       EnviarWpp().sendWhatsAppMessage(
-        "Has insertado a $user a 4 clases el día ${clase.dia} a las ${clase.hora}",
-        'whatsapp:+5491134272488',
-      );
+              "HX6dad986ed219654d62aed35763d10ccb",
+              'whatsapp:+5491134272488',
+              [user, clase.dia]
+                );
     }
   }
 }

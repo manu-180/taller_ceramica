@@ -52,6 +52,7 @@ class ClaseModels {
       'mails': mails,
       'lugar_disponible': lugaresDisponibles,
       'mes': mes,
+      'capacidad': capacidad,
     };
   }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/main.dart';
+import 'package:taller_ceramica/supabase/obtener_taller.dart';
 import 'package:taller_ceramica/supabase/obtener_total_info.dart';
+import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/utils/actualizar_fechas_database.dart' ;
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
@@ -10,6 +12,8 @@ class Prueba extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    
 
     return Scaffold(
       appBar: ResponsiveAppBar(isTablet: size.width > 600),
@@ -23,19 +27,8 @@ class Prueba extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final users = await ObtenerTotalInfo(
-                  supabase: supabase,
-                  clasesTable: "ivanna",
-                  usuariosTable: "usuarios")
-              .obtenerUsuarios();
-          for (final user in users) {
-            if (user.taller == "Taller de ceramica Ricardo Rojas") {
-              await supabase.from("usuarios").update(
-                  {'taller': "ceramica Ricardo Rojas"}).eq('id', user.id);
-            }
-          }
-          // ActualizarFechasDatabase()
-          //     .actualizarClasesAlNuevoMes("Lana's Taller", 2025);
+          final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+          ActualizarFechasDatabase().actualizarClasesAlNuevoMes(taller, 2025);
         },
         child: const Icon(Icons.print),
       ),

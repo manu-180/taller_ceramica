@@ -301,6 +301,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                             'hora': hora,
                             'mails': [],
                             'lugar_disponible': capacidad,
+                            'mes': await ObtenerMes().obtenerMes(),
                             'capacidad': capacidad,
                           });
                         }
