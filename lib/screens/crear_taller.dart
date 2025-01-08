@@ -207,148 +207,155 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                           },
                         ),
                         const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: isLoading
-                              ? null
-                              : () async {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-
-                                  FocusScope.of(context).unfocus();
-                                  final fullname =
-                                      fullnameController.text.trim();
-                                  final email = emailController.text.trim();
-                                  final taller = tallerController.text.trim();
-                                  final password =
-                                      passwordController.text.trim();
-                                  final confirmPassword =
-                                      confirmPasswordController.text.trim();
-
-                                  if (fullname.isEmpty ||
-                                      email.isEmpty ||
-                                      taller.isEmpty ||
-                                      password.isEmpty ||
-                                      confirmPassword.isEmpty) {
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                      content: Text(
-                                        'Todos los campos son obligatorios.',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      backgroundColor: Colors.red,
-                                    ));
-                                    return;
-                                  }
-
-                                  if (password.length < 6) {
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                      content: Text(
-                                        'La contraseña debe tener al menos 6 caracteres.',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      backgroundColor: Colors.red,
-                                    ));
-                                    return;
-                                  }
-
-                                  if (password != confirmPassword) {
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                      content: Text(
-                                        'La contraseña no coincide.',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      backgroundColor: Colors.red,
-                                    ));
-                                    return;
-                                  }
-
-                                  try {
-                                    final AuthResponse res =
-                                        await supabase.auth.signUp(
-                                      email: email,
-                                      password: password,
-                                      data: {
-                                        'fullname':
-                                            Capitalize().capitalize(fullname)
-                                      },
-                                    );
-
-                                    await supabase.from('usuarios').insert({
-                                      'id':
-                                          await GenerarId().generarIdUsuario(),
-                                      'usuario': email,
-                                      'fullname':
-                                          Capitalize().capitalize(fullname),
-                                      'user_uid': res.user?.id,
-                                      'sexo': "mujer",
-                                      'clases_disponibles': 0,
-                                      'trigger_alert': 0,
-                                      'clases_canceladas': [],
-                                      'taller': Capitalize().capitalize(taller),
-                                      "admin": true,
-                                      "created_at":
-                                          DateTime.now().toIso8601String(),
-                                    });
-
-                                    crearTablaTaller(
-                                        Capitalize().capitalize(taller));
-
-                                    if (context.mounted) {
-                                      context.go("/");
-                                    }
-
-                                    EnviarWpp().sendWhatsAppMessage(
-                                        '${Capitalize().capitalize(fullname)} ¡CREO UN NUEVO TALLER! "$taller". Contactalo por mail: $email',
-                                        'whatsapp:+5491134272488');
-
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text(
-                                          '¡Taller creado exitosamente!',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        backgroundColor: Colors.green,
-                                      ));
-                                    }
-                                  } catch (e) {
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                        content: Text(
-                                          'Error al crear el taller: $e',
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                        backgroundColor: Colors.red,
-                                      ));
-                                    }
-                                  }
-                                },
-                          child: isLoading
-                              ? const CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
-                                )
-                              : const Text('Registrar Taller'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(onPressed: () => context.go("/"), child: Text("Volver atras")),
+                            SizedBox(width: 15),
+                            FilledButton(
+                              onPressed: isLoading
+                                  ? null
+                                  : () async {
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                            
+                                      FocusScope.of(context).unfocus();
+                                      final fullname =
+                                          fullnameController.text.trim();
+                                      final email = emailController.text.trim();
+                                      final taller = tallerController.text.trim();
+                                      final password =
+                                          passwordController.text.trim();
+                                      final confirmPassword =
+                                          confirmPasswordController.text.trim();
+                            
+                                      if (fullname.isEmpty ||
+                                          email.isEmpty ||
+                                          taller.isEmpty ||
+                                          password.isEmpty ||
+                                          confirmPassword.isEmpty) {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                          content: Text(
+                                            'Todos los campos son obligatorios.',
+                                            style: TextStyle(color: Colors.white),
+                                          ),
+                                          backgroundColor: Colors.red,
+                                        ));
+                                        return;
+                                      }
+                            
+                                      if (password.length < 6) {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                          content: Text(
+                                            'La contraseña debe tener al menos 6 caracteres.',
+                                            style: TextStyle(color: Colors.white),
+                                          ),
+                                          backgroundColor: Colors.red,
+                                        ));
+                                        return;
+                                      }
+                            
+                                      if (password != confirmPassword) {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                          content: Text(
+                                            'La contraseña no coincide.',
+                                            style: TextStyle(color: Colors.white),
+                                          ),
+                                          backgroundColor: Colors.red,
+                                        ));
+                                        return;
+                                      }
+                            
+                                      try {
+                                        final AuthResponse res =
+                                            await supabase.auth.signUp(
+                                          email: email,
+                                          password: password,
+                                          data: {
+                                            'fullname':
+                                                Capitalize().capitalize(fullname)
+                                          },
+                                        );
+                            
+                                        await supabase.from('usuarios').insert({
+                                          'id':
+                                              await GenerarId().generarIdUsuario(),
+                                          'usuario': email,
+                                          'fullname':
+                                              Capitalize().capitalize(fullname),
+                                          'user_uid': res.user?.id,
+                                          'sexo': "mujer",
+                                          'clases_disponibles': 0,
+                                          'trigger_alert': 0,
+                                          'clases_canceladas': [],
+                                          'taller': Capitalize().capitalize(taller),
+                                          "admin": true,
+                                          "created_at":
+                                              DateTime.now().toIso8601String(),
+                                        });
+                            
+                                        crearTablaTaller(
+                                            Capitalize().capitalize(taller));
+                            
+                                        if (context.mounted) {
+                                          context.go("/");
+                                        }
+                            
+                                        EnviarWpp().sendWhatsAppMessage(
+                                            '${Capitalize().capitalize(fullname)} ¡CREO UN NUEVO TALLER! "$taller". Contactalo por mail: $email',
+                                            'whatsapp:+5491134272488');
+                            
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(const SnackBar(
+                                            content: Text(
+                                              '¡Taller creado exitosamente!',
+                                              style: TextStyle(color: Colors.white),
+                                            ),
+                                            backgroundColor: Colors.green,
+                                          ));
+                                        }
+                                      } catch (e) {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(
+                                              'Error al crear el taller: $e',
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            backgroundColor: Colors.red,
+                                          ));
+                                        }
+                                      }
+                                    },
+                              child: isLoading
+                                  ? const CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    )
+                                  : const Text('Registrar Taller'),
+                            ),
+                          ],
                         ),
                       ],
                     ),

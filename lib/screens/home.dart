@@ -87,7 +87,7 @@ class HomeState extends State<Home> {
             children: [
               Padding(
                 padding: EdgeInsets.fromLTRB(
-                    size.width * 0.05, 20, size.width * 0.05, 0),
+                    size.width * 0.05, 60, size.width * 0.05, 0),
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -95,7 +95,7 @@ class HomeState extends State<Home> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    "Si eres administrador y aún no has creado tu cuenta, ¡es el momento de iniciar tu propio taller!\nSi eres alumno, deberás solicitar al administrador que cree tu cuenta para comenzar.",
+                    "Si eres administrador y aún no has creado tu cuenta, ¡es el momento de iniciar tu propio taller!.\nSi eres alumno, deberás solicitar al administrador que cree tu cuenta para comenzar.",
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge
