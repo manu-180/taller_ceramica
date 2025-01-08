@@ -58,7 +58,10 @@ class AgregarUsuario {
   }
 
   Future<void> agregarUsuarioEnCuatroClases(
-      ClaseModels clase, String user) async {
+      ClaseModels clase, 
+      String user,
+      void Function(ClaseModels claseActualizada) callback
+      ) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
 
@@ -132,6 +135,8 @@ class AgregarUsuario {
 
               // Disminuir cupos
               ModificarLugarDisponible().removerLugarDisponible(item.id);
+
+              callback(item);
 
               count++;
             }

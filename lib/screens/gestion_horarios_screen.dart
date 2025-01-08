@@ -226,50 +226,83 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
-                          onPressed: () {
-                            if (usuarioSeleccionado.isEmpty) return;
+  onPressed: () async {
+    // 1. Hacer onPressed async para usar await
+    if (usuarioSeleccionado.isEmpty) return;
 
-                            if (tipoAccion == "insertar") {
-                              setState(() {
-                                if (insertarX4) {
-                                  AgregarUsuario(supabase).agregarUsuarioEnCuatroClases(clase, usuarioSeleccionado);
-                                  // clase.mails.add(usuarioSeleccionado);
-                                } else {
-                                  AgregarUsuario(supabase).agregarUsuarioAClase(
-                                      clase.id,
-                                      usuarioSeleccionado,
-                                      true,
-                                      clase);
-                                  // clase.mails.add(usuarioSeleccionado);
-                                }
-                              });
-                            } else if (tipoAccion == "remover") {
-                              setState(() {
-                                if (insertarX4) {
-                                  RemoverUsuario(supabase)
-                                      .removerUsuarioDeMuchasClase(
-                                          clase, usuarioSeleccionado);
-                                  clase.mails.remove(usuarioSeleccionado);
-                                } else {
-                                  RemoverUsuario(supabase)
-                                      .removerUsuarioDeClase(
-                                          clase.id, usuarioSeleccionado, true);
-                                  clase.mails.remove(usuarioSeleccionado);
-                                }
-                              });
-                            }
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(tipoAccion == "insertar"
-                              ? "Insertar"
-                              : "Remover"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("Cancelar"),
-                        ),
+    // 2. Separar el proceso asíncrono fuera de setState
+    if (tipoAccion == "insertar") {
+      if (insertarX4) {
+        // Insertar en 4 clases
+        await AgregarUsuario(supabase).agregarUsuarioEnCuatroClases(
+          clase,
+          usuarioSeleccionado,
+          // Este callback actualiza la UI para cada clase modificada
+          (ClaseModels claseActualizada) {
+            setState(() {
+              final idx = horariosDisponibles
+                  .indexWhere((c) => c.id == claseActualizada.id);
+              if (idx != -1) {
+                horariosDisponibles[idx] = claseActualizada;
+              }
+
+              final idxFiltrado = horariosFiltrados
+                  .indexWhere((c) => c.id == claseActualizada.id);
+              if (idxFiltrado != -1) {
+                horariosFiltrados[idxFiltrado] = claseActualizada;
+              }
+            });
+          },
+        );
+      } else {
+        // Insertar en una sola clase
+        await AgregarUsuario(supabase).agregarUsuarioAClase(
+          clase.id,
+          usuarioSeleccionado,
+          true,
+          clase,
+        );
+        // Actualiza la UI de forma sincrónica
+        setState(() {
+          clase.mails.add(usuarioSeleccionado);
+        });
+      }
+    } else if (tipoAccion == "remover") {
+      if (insertarX4) {
+        // Remover de 4 clases
+        await RemoverUsuario(supabase).removerUsuarioDeMuchasClase(
+          clase,
+          usuarioSeleccionado,
+        );
+        setState(() {
+          clase.mails.remove(usuarioSeleccionado);
+        });
+      } else {
+        // Remover de una sola clase
+        await RemoverUsuario(supabase).removerUsuarioDeClase(
+          clase.id,
+          usuarioSeleccionado,
+          true,
+        );
+        setState(() {
+          clase.mails.remove(usuarioSeleccionado);
+        });
+      }
+    }
+
+    if (context.mounted){
+    Navigator.of(context).pop();
+  }},
+  child: Text(tipoAccion == "insertar" ? "Insertar" : "Remover"),
+),
+
+ElevatedButton(
+  onPressed: () {
+    Navigator.of(context).pop();
+  },
+  child: const Text("Cancelar"),
+),
+
                       ],
                     ),
                   ],
