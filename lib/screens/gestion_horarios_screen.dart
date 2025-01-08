@@ -232,17 +232,15 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                             if (tipoAccion == "insertar") {
                               setState(() {
                                 if (insertarX4) {
-                                  AgregarUsuario(supabase)
-                                      .agregarUsuarioEnCuatroClases(
-                                          clase, usuarioSeleccionado);
-                                  clase.mails.add(usuarioSeleccionado);
+                                  AgregarUsuario(supabase).agregarUsuarioEnCuatroClases(clase, usuarioSeleccionado);
+                                  // clase.mails.add(usuarioSeleccionado);
                                 } else {
                                   AgregarUsuario(supabase).agregarUsuarioAClase(
                                       clase.id,
                                       usuarioSeleccionado,
                                       true,
                                       clase);
-                                  clase.mails.add(usuarioSeleccionado);
+                                  // clase.mails.add(usuarioSeleccionado);
                                 }
                               });
                             } else if (tipoAccion == "remover") {
