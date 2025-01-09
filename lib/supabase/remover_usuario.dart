@@ -51,29 +51,48 @@ class RemoverUsuario {
   }
 
   Future<void> removerUsuarioDeMuchasClase(
-      ClaseModels clase, String user) async {
-    final usuarioActivo = Supabase.instance.client.auth.currentUser;
-    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-    final data = await ObtenerTotalInfo(
-            supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
-        .obtenerClases();
+  ClaseModels clase,
+  String user,
+  void Function(ClaseModels claseActualizada)? callback, // callback opcional
+) async {
+  final usuarioActivo = Supabase.instance.client.auth.currentUser;
+  final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+  final data = await ObtenerTotalInfo(
+    supabase: supabase,
+    usuariosTable: 'usuarios',
+    clasesTable: taller,
+  ).obtenerClases();
 
-    for (final clase in data) {
-      if (clase.hora == clase.hora && clase.dia == clase.dia) {
-        if (clase.mails.contains(user)) {
-          clase.mails.remove(user);
-          await supabaseClient
-              .from(taller)
-              .update(clase.toMap())
-              .eq('id', clase.id);
-          ModificarLugarDisponible().agregarLugarDisponible(clase.id);
+  // Renombramos la variable del for a 'item' para no chocar con la variable 'clase'
+  for (final item in data) {
+    // Comparamos con la "clase base" a remover
+    if (item.hora == clase.hora && item.dia == clase.dia) {
+      if (item.mails.contains(user)) {
+        // Remover usuario de mails
+        item.mails.remove(user);
+
+        // Actualizamos en Supabase
+        await supabaseClient
+            .from(taller)
+            .update(item.toMap())
+            .eq('id', item.id);
+
+        ModificarLugarDisponible().agregarLugarDisponible(item.id);
+
+        // Llamamos al callback si no es null
+        if (callback != null) {
+          callback(item);
         }
       }
     }
-    EnviarWpp().sendWhatsAppMessage(
-              "HX2dcf10749ec095471f99620be45dbc11",
-              'whatsapp:+5491134272488',
-              [user]
-                );
   }
+
+  // Enviamos el mensaje de WhatsApp al final (o antes, según lo necesites)
+  EnviarWpp().sendWhatsAppMessage(
+    "HX2dcf10749ec095471f99620be45dbc11",
+    'whatsapp:+5491134272488',
+    [user],
+  );
+}
+
 }
