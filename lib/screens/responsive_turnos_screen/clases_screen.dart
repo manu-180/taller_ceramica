@@ -455,74 +455,81 @@ class _ClasesScreenState extends State<ClasesScreen> {
   }
 
   Future<Widget> construirBotonHorario(ClaseModels clase) async {
-    final partesFecha = clase.fecha.split('/');
-    final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
-    final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
-    final estaLlena = clase.mails.length >=
-        await ObtenerCapacidadClase().capacidadClase(clase.id);
-    final screenWidth = MediaQuery.of(context).size.width;
+  final partesFecha = clase.fecha.split('/');
+  final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
+  final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
+  final estaLlena = clase.mails.length >=
+      await ObtenerCapacidadClase().capacidadClase(clase.id);
+  final screenWidth = MediaQuery.of(context).size.width;
 
-    return Column(
-      children: [
-        SizedBox(
-          width: screenWidth * 0.7,
-          height: screenWidth * 0.12,
-          child: ElevatedButton(
-            onPressed: ((estaLlena ||
-                    Calcular24hs()
-                        .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
-                    clase.lugaresDisponibles <= 0 && !await IsAdmin().admin()))
-                ? null
-                : () async {
-                    if (context.mounted) {
-                      if (!await IsAdmin().admin()) {
+  // Verifica si el usuario es administrador
+  final esAdmin = await IsAdmin().admin();
+
+  return Column(
+    children: [
+      SizedBox(
+        width: screenWidth * 0.7,
+        height: screenWidth * 0.12,
+        child: ElevatedButton(
+          onPressed: esAdmin
+              ? () async {
+                  // Si es administrador, ejecuta directamente la función
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          clase.mails.isEmpty
+                              ? "No hay alumnos inscriptos a esta clase"
+                              : "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
+                        ),
+                        duration: const Duration(seconds: 5),
+                        behavior: SnackBarBehavior.floating,
+                        margin: const EdgeInsets.all(10),
+                      ),
+                    );
+                  }
+                }
+              : ((estaLlena ||
+                      Calcular24hs().esMenorA0Horas(
+                          clase.fecha, clase.hora, mesActual) ||
+                      clase.lugaresDisponibles <= 0))
+                  ? null // Si no es admin y el botón está deshabilitado, no hace nada
+                  : () async {
+                      // Si no es admin, realiza la inscripción
+                      if (context.mounted) {
                         mostrarConfirmacion(context, clase);
-                      } else {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              clase.mails.isEmpty
-                                  ? "No hay alumnos inscriptos a esta clase"
-                                  : "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
-                            ),
-                            duration: const Duration(seconds: 5),
-                            behavior: SnackBarBehavior.floating,
-                            margin: const EdgeInsets.all(10),
-                          ),
-                        );
                       }
-                    }
-                  },
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(
-                estaLlena ||
-                        Calcular24hs().esMenorA0Horas(
-                            clase.fecha, clase.hora, mesActual) ||
-                        clase.lugaresDisponibles <= 0
-                    ? Colors.grey.shade400
-                    : Colors.green,
-              ),
-              shape: WidgetStateProperty.all(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(screenWidth * 0.03)),
-              ),
+                    },
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              estaLlena ||
+                      Calcular24hs()
+                          .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
+                      clase.lugaresDisponibles <= 0
+                  ? Colors.grey.shade400
+                  : Colors.green,
             ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Text(
-                  diaYHora,
-                  style: const TextStyle(fontSize: 11, color: Colors.white),
-                ),
-              ],
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(screenWidth * 0.03)),
             ),
           ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Text(
+                diaYHora,
+                style: const TextStyle(fontSize: 11, color: Colors.white),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 18),
-      ],
-    );
-  }
+      ),
+      const SizedBox(height: 18),
+    ],
+  );
+}
 }
 
 class _AvisoDeClasesDisponibles extends StatelessWidget {
