@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
@@ -35,9 +33,9 @@ class _ClasesScreenState extends State<ClasesScreen> {
   ];
   int mesActual = 1;
   bool isLoading = true;
-  List<ClaseModels> todasLasClases = [];
   List<ClaseModels> diasUnicos = [];
   Map<String, List<ClaseModels>> horariosPorDia = {};
+  String? avisoDeClasesDisponibles;
 
   Future<void> cargarDatos() async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
@@ -85,77 +83,142 @@ class _ClasesScreenState extends State<ClasesScreen> {
       horariosPorDia.putIfAbsent(diaFecha, () => []).add(clase);
     }
 
+    final diasConClasesDisponibles = await obtenerDiasConClasesDisponibles();
+    if (diasConClasesDisponibles.isEmpty) {
+      avisoDeClasesDisponibles = "No hay clases disponibles esta semana.";
+    } else {
+      avisoDeClasesDisponibles =
+          "Hay clases disponibles el ${diasConClasesDisponibles.join(', ')}.";
+    }
+
     if (mounted) {
       setState(() {
-        isLoading = false; // Desactivamos el indicador de carga
+        isLoading = false;
       });
     }
   }
 
-  void mostrarConfirmacion(BuildContext context, ClaseModels clase) async {
-    final user = Supabase.instance.client.auth.currentUser;
+  Future<List<String>> obtenerDiasConClasesDisponibles() async {
+  final diasConClases = <String>{};
 
-    // Inicializar variables para el mensaje y el botón
-    String mensaje;
-    bool mostrarBotonAceptar = false;
+  for (var entry in horariosPorDia.entries) {
+    final dia = entry.key;
+    final clases = entry.value;
 
-    // Verificar si el usuario está autenticado
-    if (user == null) {
-      mensaje = "Debes iniciar sesión para inscribirte a una clase";
-      if (context.mounted) {
-        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+    // Iterar sobre todas las clases del día para evaluar las condiciones
+    for (var clase in clases) {
+      final capacidad = await ObtenerCapacidadClase().capacidadClase(clase.id);
+      final mailsLimpios = clase.mails.map((mail) => mail.trim()).toList();
+      final menorA24 = Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual);
+
+      print("Clase ID: ${clase.id}, Capacidad: $capacidad, Mails: ${mailsLimpios.length}, MenorA24: $menorA24");
+
+      if (mailsLimpios.length < capacidad && !menorA24) {
+        print("Clase disponible: ${clase.dia} ${clase.fecha} ${clase.hora}");
+        final partesFecha = dia.split(' - ')[1].split('/');
+        final diaMes = int.parse(partesFecha[1]);
+
+        if (diaMes == mesActual) {
+          final diaSolo = dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
+          diasConClases.add(diaSolo);
+        }
       }
-      return;
-    }
-
-    if (clase.mails.contains(user.userMetadata?['fullname'])) {
-      mensaje = 'Revisa en "mis clases"';
-      if (context.mounted) {
-        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
-      }
-      return;
-    }
-
-    // Operaciones asincrónicas
-    final triggerAlert = await ObtenerAlertTrigger()
-        .alertTrigger(user.userMetadata?['fullname']);
-    final clasesDisponibles = await ObtenerClasesDisponibles()
-        .clasesDisponibles(user.userMetadata?['fullname']);
-
-    if (!context.mounted) return; // Verificar si el widget sigue montado
-
-    if (triggerAlert > 0 && clasesDisponibles == 0) {
-      mensaje =
-          'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación';
-      if (context.mounted) {
-        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
-      }
-      return;
-    }
-
-    if (clasesDisponibles == 0) {
-      mensaje = "No tienes créditos disponibles para inscribirte a esta clase";
-      if (context.mounted) {
-        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
-      }
-      return;
-    }
-
-    // if (Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)) {
-    //   mensaje = 'No puedes inscribirte a esta clase';
-    //   if (context.mounted) {
-    //     _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
-    //   }
-    //   return;
-    // }
-    mensaje =
-        '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
-    mostrarBotonAceptar = true;
-
-    if (context.mounted) {
-      _mostrarDialogo(context, mensaje, mostrarBotonAceptar, clase, user);
     }
   }
+
+  return diasConClases.toList();
+}
+
+
+  @override
+  void initState() {
+    super.initState();
+    inicializarDatos();
+    SubscriptionVerifier.verificarAdminYSuscripcion(context);
+  }
+
+  Future<void> inicializarDatos() async {
+    try {
+      final mes = await ObtenerMes().obtenerMes();
+      setState(() {
+        fechasDisponibles =
+            GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
+        mesActual = mes;
+      });
+
+      await cargarDatos();
+    } catch (e) {
+      debugPrint('Error al inicializar los datos: $e');
+    }
+  }
+
+  void cambiarSemanaAdelante() {
+    final indiceActual = semanas.indexOf(semanaSeleccionada);
+    final nuevoIndice = (indiceActual + 1) % semanas.length;
+    semanaSeleccionada = semanas[nuevoIndice];
+    cargarDatos();
+  }
+
+  void cambiarSemanaAtras() {
+    final indiceActual = semanas.indexOf(semanaSeleccionada);
+    final nuevoIndice = (indiceActual - 1 + semanas.length) % semanas.length;
+    semanaSeleccionada = semanas[nuevoIndice];
+    cargarDatos();
+  }
+
+   void mostrarConfirmacion(BuildContext context, ClaseModels clase) async {
+  final user = Supabase.instance.client.auth.currentUser;
+
+  String mensaje;
+  bool mostrarBotonAceptar = false;
+
+  if (user == null) {
+    mensaje = "Debes iniciar sesión para inscribirte a una clase";
+    if (context.mounted) {
+      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+    }
+    return;
+  }
+
+  final mailsLimpios = clase.mails.map((mail) => mail.trim()).toList();
+
+  if (mailsLimpios.contains(user.userMetadata?['fullname'])) {
+    mensaje = 'Revisa en "mis clases"';
+    if (context.mounted) {
+      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+    }
+    return;
+  }
+
+  final triggerAlert = await ObtenerAlertTrigger().alertTrigger(user.userMetadata?['fullname']);
+  final clasesDisponibles = await ObtenerClasesDisponibles().clasesDisponibles(user.userMetadata?['fullname']);
+
+  if (!context.mounted) return;
+
+  if (triggerAlert > 0 && clasesDisponibles == 0) {
+    mensaje = 'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación';
+    if (context.mounted) {
+      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+    }
+    return;
+  }
+
+  if (clasesDisponibles == 0) {
+    mensaje = "No tienes créditos disponibles para inscribirte a esta clase";
+    if (context.mounted) {
+      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+    }
+    return;
+  }
+
+  mensaje = '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
+  mostrarBotonAceptar = true;
+
+  if (context.mounted) {
+    _mostrarDialogo(context, mensaje, mostrarBotonAceptar, clase, user);
+  }
+}
+
 
   void _mostrarDialogo(
       BuildContext context, String mensaje, bool mostrarBotonAceptar,
@@ -200,6 +263,15 @@ class _ClasesScreenState extends State<ClasesScreen> {
     );
   }
 
+  void manejarSeleccionClase(ClaseModels clase, String user) async {
+    await AgregarUsuario(supabase)
+        .agregarUsuarioAClase(clase.id, user, false, clase);
+
+    setState(() {
+      cargarDatos();
+    });
+  }
+
   String _obtenerTituloDialogo(String mensaje) {
     if (mensaje == "Debes iniciar sesión para inscribirte a una clase") {
       return "Inicia sesión";
@@ -216,84 +288,10 @@ class _ClasesScreenState extends State<ClasesScreen> {
     }
   }
 
-  void manejarSeleccionClase(ClaseModels clase, String user) async {
-    await AgregarUsuario(supabase)
-        .agregarUsuarioAClase(clase.id, user, false, clase);
-
-    setState(() {
-      cargarDatos();
-    });
-  }
-
-  void cambiarSemanaAdelante() {
-    final indiceActual = semanas.indexOf(semanaSeleccionada);
-    final nuevoIndice = (indiceActual + 1) % semanas.length;
-    semanaSeleccionada = semanas[nuevoIndice];
-    cargarDatos();
-  }
-
-  void cambiarSemanaAtras() {
-    final indiceActual = semanas.indexOf(semanaSeleccionada);
-    final nuevoIndice = (indiceActual - 1 + semanas.length) % semanas.length;
-    semanaSeleccionada = semanas[nuevoIndice];
-    cargarDatos();
-  }
-
   void seleccionarDia(String dia) {
     setState(() {
       diaSeleccionado = dia;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    inicializarDatos();
-    SubscriptionVerifier.verificarAdminYSuscripcion(context);
-  }
-
-  Future<void> inicializarDatos() async {
-    try {
-      final mes = await ObtenerMes().obtenerMes();
-      setState(() {
-        fechasDisponibles =
-            GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
-        mesActual = mes;
-      });
-
-      await cargarDatos();
-    } catch (e) {
-      debugPrint('Error al inicializar los datos: $e');
-    }
-  }
-
-  Future<List<String>> obtenerDiasConClasesDisponibles() async {
-    final diasConClases = <String>{};
-
-    for (var entry in horariosPorDia.entries) {
-      final dia = entry.key;
-      final clases = entry.value;
-
-      final hayClaseDisponible = await Future.any(clases.map((clase) async {
-        return clase.mails.length <
-                await ObtenerCapacidadClase().capacidadClase(clase.id) &&
-            !Calcular24hs()
-                .esMenorA0Horas(clase.fecha, clase.hora, mesActual) &&
-            clase.lugaresDisponibles > 0;
-      }));
-
-      if (hayClaseDisponible) {
-        final partesFecha = dia.split(' - ')[1].split('/');
-        final diaMes = int.parse(partesFecha[1]);
-        if (diaMes == mesActual) {
-          final diaSolo =
-              dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
-          diasConClases.add(diaSolo);
-        }
-      }
-    }
-
-    return diasConClases.toList();
   }
 
   @override
@@ -304,8 +302,6 @@ class _ClasesScreenState extends State<ClasesScreen> {
 
     // Relativo a la pantalla
     double paddingSize = screenWidth * 0.05; // 5% del ancho de la pantalla
-    double buttonWidth = screenWidth * 0.7; // 70% del ancho de la pantalla
-    double fontSize = screenWidth * 0.04; // 4% del ancho de la pantalla
 
     return Scaffold(
       appBar: ResponsiveAppBar(isTablet: screenWidth > 600),
@@ -324,7 +320,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
                 style: Theme.of(context)
                     .textTheme
                     .bodyLarge
-                    ?.copyWith(fontSize: fontSize),
+                    ?.copyWith(fontSize: screenWidth * 0.04),
               ),
             ),
           ),
@@ -342,34 +338,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
                 Expanded(
                   flex: 2,
                   child: isLoading
-                      ? Column(
-                          children: List.generate(
-                              5,
-                              (index) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 20),
-                                    child: SizedBox(
-                                      height: buttonWidth * 0.166,
-                                      child: ElevatedButton(
-                                        onPressed: () {},
-                                        style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: SizedBox(
-                                            width: 20,
-                                            height: 20,
-                                            child: CircularProgressIndicator(
-                                                strokeWidth:
-                                                    screenWidth * 0.006),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )),
-                        )
+                      ? Center(child: CircularProgressIndicator())
                       : _DiaSelection(
                           diasUnicos: diasUnicos,
                           seleccionarDia: seleccionarDia,
@@ -380,8 +349,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
                 Expanded(
                   flex: 3,
                   child: Padding(
-                    padding: EdgeInsets.only(
-                        left: paddingSize * 2, right: paddingSize),
+                    padding: EdgeInsets.symmetric(horizontal: paddingSize),
                     child: diaSeleccionado != null
                         ? isLoading
                             ? const SizedBox()
@@ -419,117 +387,96 @@ class _ClasesScreenState extends State<ClasesScreen> {
           Padding(
             padding:
                 EdgeInsets.symmetric(horizontal: paddingSize, vertical: 20),
-            child: FutureBuilder<List<String>>(
-              future: obtenerDiasConClasesDisponibles(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text(
-                    'Error: ${snapshot.error}',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  );
-                } else if (snapshot.hasData && snapshot.data!.isEmpty) {
-                  return _AvisoDeClasesDisponibles(
+            child: avisoDeClasesDisponibles != null
+                ? _AvisoDeClasesDisponibles(
                     colors: colors,
                     color: color,
-                    text: "No hay clases disponibles esta semana.",
-                  );
-                } else {
-                  return _AvisoDeClasesDisponibles(
-                    colors: colors,
-                    color: color,
-                    text:
-                        "Hay clases disponibles el ${snapshot.data!.join(', ')}.",
-                  );
-                }
-              },
-            ),
+                    text: avisoDeClasesDisponibles!,
+                  )
+                : const CircularProgressIndicator(),
           ),
-          const SizedBox(
-            height: 30,
-          )
+          const SizedBox(height: 30),
         ],
       ),
     );
   }
 
   Future<Widget> construirBotonHorario(ClaseModels clase) async {
-  final partesFecha = clase.fecha.split('/');
-  final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
-  final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
-  final estaLlena = clase.mails.length >=
-      await ObtenerCapacidadClase().capacidadClase(clase.id);
-  final screenWidth = MediaQuery.of(context).size.width;
+    final partesFecha = clase.fecha.split('/');
+    final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
+    final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
+    final estaLlena = clase.mails.length >=
+        await ObtenerCapacidadClase().capacidadClase(clase.id);
+    final screenWidth = MediaQuery.of(context).size.width;
 
-  // Verifica si el usuario es administrador
-  final esAdmin = await IsAdmin().admin();
+    // Verifica si el usuario es administrador
+    final esAdmin = await IsAdmin().admin();
 
-  return Column(
-    children: [
-      SizedBox(
-        width: screenWidth * 0.7,
-        height: screenWidth * 0.12,
-        child: ElevatedButton(
-          onPressed: esAdmin
-              ? () async {
-                  // Si es administrador, ejecuta directamente la función
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          clase.mails.isEmpty
-                              ? "No hay alumnos inscriptos a esta clase"
-                              : "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
+    return Column(
+      children: [
+        SizedBox(
+          width: screenWidth * 0.7,
+          height: screenWidth * 0.12,
+          child: ElevatedButton(
+            onPressed: esAdmin
+                ? () async {
+                    // Si es administrador, ejecuta directamente la función
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            clase.mails.isEmpty
+                                ? "No hay alumnos inscriptos a esta clase"
+                                : "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
+                          ),
+                          duration: const Duration(seconds: 5),
+                          behavior: SnackBarBehavior.floating,
+                          margin: const EdgeInsets.all(10),
                         ),
-                        duration: const Duration(seconds: 5),
-                        behavior: SnackBarBehavior.floating,
-                        margin: const EdgeInsets.all(10),
-                      ),
-                    );
+                      );
+                    }
                   }
-                }
-              : ((estaLlena ||
-                      Calcular24hs().esMenorA0Horas(
-                          clase.fecha, clase.hora, mesActual) ||
-                      clase.lugaresDisponibles <= 0))
-                  ? null // Si no es admin y el botón está deshabilitado, no hace nada
-                  : () async {
-                      // Si no es admin, realiza la inscripción
-                      if (context.mounted) {
-                        mostrarConfirmacion(context, clase);
-                      }
-                    },
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
-              estaLlena ||
-                      Calcular24hs()
-                          .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
-                      clase.lugaresDisponibles <= 0
-                  ? Colors.grey.shade400
-                  : Colors.green,
-            ),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(screenWidth * 0.03)),
-            ),
-          ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Text(
-                diaYHora,
-                style: const TextStyle(fontSize: 11, color: Colors.white),
+                : ((estaLlena ||
+                        Calcular24hs().esMenorA0Horas(
+                            clase.fecha, clase.hora, mesActual) ||
+                        clase.lugaresDisponibles <= 0))
+                    ? null // Si no es admin y el botón está deshabilitado, no hace nada
+                    : () async {
+                        // Si no es admin, realiza la inscripción
+                        if (context.mounted) {
+                          mostrarConfirmacion(context, clase);
+                        }
+                      },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                estaLlena ||
+                        Calcular24hs()
+                            .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
+                        clase.lugaresDisponibles <= 0
+                    ? Colors.grey.shade400
+                    : Colors.green,
               ),
-            ],
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(screenWidth * 0.03)),
+              ),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Text(
+                  diaYHora,
+                  style: const TextStyle(fontSize: 11, color: Colors.white),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      const SizedBox(height: 18),
-    ],
-  );
-}
+        const SizedBox(height: 18),
+      ],
+    );
+  }
 }
 
 class _AvisoDeClasesDisponibles extends StatelessWidget {
@@ -545,9 +492,7 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Obtener dimensiones de la pantalla
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
       padding: EdgeInsets.all(screenWidth * 0.04),
@@ -560,16 +505,13 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(
-            screenWidth * 0.03), // 3% del ancho para el borde redondeado
+        borderRadius: BorderRadius.circular(screenWidth * 0.03),
         boxShadow: [
           BoxShadow(
             color: colors.primary.withAlpha(70),
-            spreadRadius:
-                screenWidth * 0.005, // 0.5% del ancho para spreadRadius
-            blurRadius: screenWidth * 0.01, // 1% del ancho para blurRadius
-            offset:
-                Offset(0, screenHeight * 0.005), // 0.5% del alto para offset
+            spreadRadius: screenWidth * 0.005,
+            blurRadius: screenWidth * 0.01,
+            offset: Offset(0, MediaQuery.of(context).size.height * 0.005),
           ),
         ],
       ),
@@ -578,15 +520,14 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
           Icon(
             Icons.info,
             color: color,
-            size: screenWidth * 0.08, // 8% del ancho para el tamaño del ícono
+            size: screenWidth * 0.08,
           ),
-          SizedBox(width: screenWidth * 0.03), // 3% del ancho para el espaciado
+          SizedBox(width: screenWidth * 0.03),
           Expanded(
             child: Text(
               text,
               style: TextStyle(
-                fontSize:
-                    screenWidth * 0.04, // 4% del ancho para el tamaño de fuente
+                fontSize: screenWidth * 0.04,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -612,7 +553,6 @@ class _SemanaNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -621,51 +561,19 @@ class _SemanaNavigation extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
-            width: screenWidth * 0.12,
-            height: screenWidth * 0.12,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey.shade200,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(25),
-                  blurRadius: screenWidth * 0.01,
-                  offset: Offset(0, screenHeight * 0.005),
-                ),
-              ],
-            ),
-            child: IconButton(
-              onPressed: cambiarSemanaAtras,
-              icon: Icon(
-                Icons.arrow_left,
-                size: screenWidth * 0.07,
-              ),
-              color: Colors.black,
+          IconButton(
+            onPressed: cambiarSemanaAtras,
+            icon: Icon(
+              Icons.arrow_left,
+              size: screenWidth * 0.07,
             ),
           ),
           SizedBox(width: screenWidth * 0.12),
-          Container(
-            width: screenWidth * 0.12,
-            height: screenWidth * 0.12,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey.shade200,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(25),
-                  blurRadius: screenWidth * 0.01,
-                  offset: Offset(0, screenHeight * 0.005),
-                ),
-              ],
-            ),
-            child: IconButton(
-              onPressed: cambiarSemanaAdelante,
-              icon: Icon(
-                Icons.arrow_right,
-                size: screenWidth * 0.07,
-              ),
-              color: Colors.black,
+          IconButton(
+            onPressed: cambiarSemanaAdelante,
+            icon: Icon(
+              Icons.arrow_right,
+              size: screenWidth * 0.07,
             ),
           ),
         ],

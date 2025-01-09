@@ -6,18 +6,25 @@ class ObtenerCapacidadClase {
   Future<int> capacidadClase(int claseId) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     if (usuarioActivo == null) {
+      print("Usuario no autenticado");
       return 0;
     }
+
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo.id);
     final clases = await ObtenerTotalInfo(
-            supabase: supabase, clasesTable: taller, usuariosTable: "usuarios")
-        .obtenerClases();
+      supabase: supabase,
+      clasesTable: taller,
+      usuariosTable: "usuarios",
+    ).obtenerClases();
 
     for (final clase in clases) {
       if (clase.id == claseId) {
+        print("Capacidad de la clase (${clase.id}): ${clase.capacidad}");
         return clase.capacidad;
       }
     }
+    print("Clase no encontrada para el ID: $claseId");
     return 0;
   }
 }
+
