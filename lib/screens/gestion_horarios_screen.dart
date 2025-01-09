@@ -485,9 +485,31 @@ ElevatedButton(
                               );
                             },
                           )
-                        : const Center(
-                            child: Text(
-                                "No hay horarios disponibles para esta fecha."),
+                        : Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: size.width * 0.2),
+                              child: SizedBox(
+                                width: size.width * 0.65,
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                          Icons.info,
+                                          color: color,
+                                          size: size.width * 0.12, // 8% del ancho para el tamaño del ícono
+                                        ),
+                                        SizedBox(height: size.width * 0.02),
+                                    Text(
+                                                            '**No hay horarios disponibles para esta fecha** ',
+                                                            style: TextStyle(
+                                                              fontSize: 25,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: colors.primary,
+                                                            ),
+                                                          ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                   ),
               ],
