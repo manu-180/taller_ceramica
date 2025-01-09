@@ -36,18 +36,17 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   void initState() {
     super.initState();
     inicializarDatos();
+    // Verificación de Admin / Subscripción
     SubscriptionVerifier.verificarAdminYSuscripcion(context);
   }
 
   Future<void> inicializarDatos() async {
     try {
-      // Obtener el mes de forma asíncrona
       final mes = await ObtenerMes().obtenerMes();
       setState(() {
         fechasDisponibles =
             GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
       });
-
       await cargarDatos();
     } catch (e) {
       debugPrint('Error al inicializar los datos: $e');
@@ -83,8 +82,8 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
 
       setState(() {
         clasesDisponibles = List<ClaseModels>.from(datos);
-        clasesFiltradas = List.from(datos); // Copia de datos para filtrar
-        ordenarClasesPorFechaYHora(); // Ordenar antes de mostrar
+        clasesFiltradas = List.from(datos);
+        ordenarClasesPorFechaYHora();
         isLoading = false;
       });
     } catch (e) {
@@ -104,6 +103,8 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     });
   }
 
+  /// Estos métodos siguen funcionando porque 'lugaresDisponibles' sí es un int no final.
+  /// Si lo tuvieras como final, tendrías que usar copyWith igual que capacidad.
   Future<void> agregarLugar(int id) async {
     setState(() {
       final index = clasesFiltradas.indexWhere((clase) => clase.id == id);
@@ -122,7 +123,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     });
   }
 
-  // Función para mostrar el diálogo de confirmación
+  // Diálogo de confirmación
   Future<bool?> mostrarDialogoConfirmacion(
       BuildContext context, String mensaje) {
     return showDialog<bool>(
@@ -133,15 +134,11 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
           content: Text(mensaje),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false); // "No"
-              },
+              onPressed: () => Navigator.of(context).pop(false),
               child: const Text("No"),
             ),
             ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop(true); // "Sí"
-              },
+              onPressed: () => Navigator.of(context).pop(true),
               child: const Text("Sí"),
             ),
           ],
@@ -151,7 +148,6 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   }
 
   String obtenerDia(DateTime fecha) {
-    // Utiliza el parámetro 'fecha' de tipo DateTime correctamente
     switch (fecha.weekday) {
       case DateTime.monday:
         return 'lunes';
@@ -177,8 +173,8 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
 
-    TextEditingController horaController = TextEditingController();
-    TextEditingController capacidadController = TextEditingController();
+    final horaController = TextEditingController();
+    final capacidadController = TextEditingController();
 
     await showDialog(
       context: context,
@@ -195,13 +191,13 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                         TextField(
                           controller: horaController,
                           decoration: const InputDecoration(
-                            hintText: 'Ingrese la hora de la clase (HH:mm)',
+                            hintText: 'Hora de la clase (HH:mm)',
                           ),
                         ),
                         TextField(
                           controller: capacidadController,
                           decoration: const InputDecoration(
-                            hintText: 'Ingrese limite de alumnos',
+                            hintText: 'Capacidad max. de alumnos',
                           ),
                         ),
                       ],
@@ -211,11 +207,12 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                   ElevatedButton.icon(
                     onPressed: null,
                     icon: SizedBox(
-                        width: size.width * 0.05,
-                        height: size.width * 0.05,
-                        child: CircularProgressIndicator(
-                          strokeWidth: size.width * 0.006,
-                        )),
+                      width: size.width * 0.05,
+                      height: size.width * 0.05,
+                      child: CircularProgressIndicator(
+                        strokeWidth: size.width * 0.006,
+                      ),
+                    ),
                     label: const Text("Cargando clases"),
                   )
                 else ...[
@@ -243,7 +240,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                             RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
                         if (!horaFormatoValido) {
                           throw Exception(
-                              "Formato de hora inválido. Usa HH:mm (ejemplo: 14:30).");
+                              "Formato de hora inválido. Usa HH:mm (ej: 14:30).");
                         }
 
                         final partesHora = hora.split(':');
@@ -255,18 +252,21 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                               "La hora debe estar entre 00:00 y 23:59.");
                         }
 
-                        DateTime fechaBase =
+                        final fechaBase =
                             DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
-                        DateTime firstDayOfMonth =
+                        final firstDayOfMonth =
                             DateTime(fechaBase.year, fechaBase.month, 1);
-                        int dayOfWeekSelected = fechaBase.weekday;
-                        int difference =
-                            (7 + dayOfWeekSelected - firstDayOfMonth.weekday) %
-                                7;
+                        final dayOfWeekSelected = fechaBase.weekday;
 
-                        DateTime firstTargetDate =
+                        final difference = (7 +
+                                dayOfWeekSelected -
+                                firstDayOfMonth.weekday) %
+                            7;
+
+                        final firstTargetDate =
                             firstDayOfMonth.add(Duration(days: difference));
 
+                        // Creamos 5 clases, una cada 7 días
                         for (int i = 0; i < 5; i++) {
                           final fechaSemana =
                               firstTargetDate.add(Duration(days: 7 * i));
@@ -329,9 +329,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                     child: const Text("Agregar"),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+                    onPressed: () => Navigator.of(context).pop(),
                     child: const Text("Cancelar"),
                   ),
                 ],
@@ -343,17 +341,87 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     );
   }
 
+  Future<void> mostrarDialogoModificarCapacidad(ClaseModels clase) async {
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+
+    final capacityController =
+        TextEditingController(text: clase.capacidad.toString());
+
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Modificar capacidad de la clase"),
+          content: TextField(
+            controller: capacityController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: "Capacidad máxima",
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Cancelar"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final newCapacityString = capacityController.text.trim();
+                final newCapacity = int.tryParse(newCapacityString);
+
+                if (newCapacity == null) {
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(this.context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        "Por favor ingresa un valor numérico válido para la capacidad.",
+                      ),
+                    ),
+                  );
+                  return;
+                }
+
+                
+                await supabase.from(taller).update({
+                  'capacidad': newCapacity,
+                  'lugar_disponible': newCapacity - clase.mails.length,
+                }).eq('id', clase.id);
+
+                setState(() {
+                  final index =
+                      clasesFiltradas.indexWhere((c) => c.id == clase.id);
+                  if (index != -1) {
+                    // Creamos una nueva instancia con la capacidad actualizada
+                    final updatedClase = clase.copyWith(
+                      capacidad: newCapacity,
+                      lugaresDisponibles: newCapacity - clase.mails.length, 
+                      // si deseas que lugaresDisponibles sea igual a la nueva capacidad
+                    );
+
+                    // Reemplazamos la versión vieja en la lista
+                    clasesFiltradas[index] = updatedClase;
+                  }
+                });
+
+                Navigator.of(context).pop(); // Cierra el diálogo
+              },
+              child: const Text("Guardar"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void cambiarFecha(bool siguiente) {
     setState(() {
       if (fechaSeleccionada != null) {
         final int indexActual = fechasDisponibles.indexOf(fechaSeleccionada!);
-
         if (siguiente) {
-          // Ir a la siguiente fecha y volver al inicio si es la última
           fechaSeleccionada =
               fechasDisponibles[(indexActual + 1) % fechasDisponibles.length];
         } else {
-          // Ir a la fecha anterior y volver al final si es la primera
           fechaSeleccionada = fechasDisponibles[
               (indexActual - 1 + fechasDisponibles.length) %
                   fechasDisponibles.length];
@@ -376,15 +444,15 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
           ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
       body: Center(
         child: ConstrainedBox(
-          constraints:
-              const BoxConstraints(maxWidth: 600), // Ancho máximo de 600
+          constraints: const BoxConstraints(maxWidth: 600),
           child: Column(
             children: [
               const Padding(
                 padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
                 child: BoxText(
-                    text:
-                        "En esta sección podrás gestionar las clases disponibles. Agregar o remover lugares, eliminar clases y agregar nuevas clases."),
+                  text:
+                      "En esta sección podrás gestionar las clases disponibles. Agregar o remover lugares, eliminar clases y agregar nuevas clases.",
+                ),
               ),
               const SizedBox(height: 10),
               MostrarDiaSegunFecha(
@@ -398,7 +466,9 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                 value: fechaSeleccionada,
                 hint: const Text('Selecciona una fecha'),
                 onChanged: (value) {
-                  seleccionarFecha(value!);
+                  if (value != null) {
+                    seleccionarFecha(value);
+                  }
                 },
                 items: fechasDisponibles.map((fecha) {
                   return DropdownMenuItem(
@@ -408,7 +478,11 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                 }).toList(),
               ),
               const SizedBox(height: 20),
+
+              // Loader si está cargando
               if (isLoading) const CircularProgressIndicator(),
+
+              // Lista de clases si no está cargando
               if (!isLoading &&
                   fechaSeleccionada != null &&
                   clasesFiltradas.isNotEmpty)
@@ -418,55 +492,74 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                     itemBuilder: (context, index) {
                       final clase = clasesFiltradas[index];
                       return Card(
-                        child: ListTile(
-                          title: Text(
-                              '${clase.hora} - Lugares disponibles: ${clase.lugaresDisponibles}'),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.add),
-                                onPressed: () async {
-                                  bool? respuesta =
-                                      await mostrarDialogoConfirmacion(context,
-                                          "¿Quieres agregar un lugar disponible a esta clase?");
-                                  if (respuesta == true) {
-                                    agregarLugar(clase.id);
-                                    ModificarLugarDisponible()
-                                        .agregarLugarDisponible(clase.id);
-                                  }
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.remove),
-                                onPressed: () async {
-                                  bool? respuesta =
-                                      await mostrarDialogoConfirmacion(context,
-                                          "¿Quieres remover un lugar disponible a esta clase?");
-                                  if (respuesta == true &&
-                                      clase.lugaresDisponibles > 0) {
-                                    quitarLugar(clase.id);
-                                    ModificarLugarDisponible()
-                                        .removerLugarDisponible(clase.id);
-                                  }
-                                },
-                              ),
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.delete, color: Colors.red),
-                                onPressed: () async {
-                                  bool? respuesta =
-                                      await mostrarDialogoConfirmacion(context,
-                                          "¿Estás seguro/a que quieres eliminar esta clase?");
-                                  if (respuesta == true) {
-                                    setState(() {
-                                      clasesFiltradas.removeAt(index);
-                                      EliminarClase().eliminarClase(clase.id);
-                                    });
-                                  }
-                                },
-                              ),
-                            ],
+                        // InkWell para detectar el longPress
+                        child: InkWell(
+                          onLongPress: () {
+                            // Al hacer longPress, abrimos el diálogo para cambiar capacidad
+                            mostrarDialogoModificarCapacidad(clase);
+                          },
+                          child: ListTile(
+                            title: Text(
+                              '${clase.hora} - Lugares disponibles: ${clase.lugaresDisponibles}',
+                            ),
+                            subtitle: Text(
+                              'Capacidad máxima: ${clase.capacidad}',
+                            ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.add),
+                                  onPressed: () async {
+                                    bool? respuesta =
+                                        await mostrarDialogoConfirmacion(
+                                      context,
+                                      "¿Quieres agregar un lugar disponible a esta clase?",
+                                    );
+                                    if (respuesta == true) {
+                                      agregarLugar(clase.id);
+                                      ModificarLugarDisponible()
+                                          .agregarLugarDisponible(clase.id);
+                                    }
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.remove),
+                                  onPressed: () async {
+                                    bool? respuesta =
+                                        await mostrarDialogoConfirmacion(
+                                      context,
+                                      "¿Quieres remover un lugar disponible de esta clase?",
+                                    );
+                                    if (respuesta == true &&
+                                        clase.lugaresDisponibles > 0) {
+                                      quitarLugar(clase.id);
+                                      ModificarLugarDisponible()
+                                          .removerLugarDisponible(clase.id);
+                                    }
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () async {
+                                    bool? respuesta =
+                                        await mostrarDialogoConfirmacion(
+                                      context,
+                                      "¿Estás seguro/a que quieres eliminar esta clase?",
+                                    );
+                                    if (respuesta == true) {
+                                      setState(() {
+                                        clasesFiltradas.removeAt(index);
+                                        EliminarClase().eliminarClase(clase.id);
+                                      });
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -477,6 +570,8 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
           ),
         ),
       ),
+
+      // Botón flotante para crear una nueva clase
       floatingActionButton: SizedBox(
         width: 200,
         child: FloatingActionButton(
@@ -487,13 +582,15 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
-                      'Por favor, selecciona una fecha antes de agregar clases.'),
+                    'Por favor, selecciona una fecha antes de agregar clases.',
+                  ),
                 ),
               );
               return;
             }
             mostrarDialogoAgregarClase(
-                DiaConFecha().obtenerDiaDeLaSemana(fechaSeleccionada!));
+              DiaConFecha().obtenerDiaDeLaSemana(fechaSeleccionada!),
+            );
           },
           child: const Text("Crear una clase nueva"),
         ),

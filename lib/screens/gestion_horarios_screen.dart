@@ -15,6 +15,10 @@ import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/mostrar_dia_segun_fecha.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
+// IMPORTANTE: asume que tienes un archivo DiaConFecha con un método para obtener el día.
+// Si no, reemplaza la lógica en _obtenerDia(fecha)
+import 'package:taller_ceramica/utils/dia_con_fecha.dart';
+
 class GestionHorariosScreen extends StatefulWidget {
   const GestionHorariosScreen({super.key, String? taller});
 
@@ -28,11 +32,14 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   List<ClaseModels> horariosDisponibles = [];
   List<ClaseModels> horariosFiltrados = [];
   bool isLoading = true;
+
+  // Para la parte de usuarios
   List<String> usuariosDisponibles = [];
   String usuarioSeleccionado = "";
   TextEditingController usuarioController = TextEditingController();
   List<String> usuariosDisponiblesOriginal = [];
-  bool insertarX4 = false; // Variable para activar/desactivar insertar x4
+  bool insertarX4 = false;
+
   final actualizarFechasDatabase = ActualizarFechasDatabase();
 
   @override
@@ -46,8 +53,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
     try {
       final mes = await ObtenerMes().obtenerMes();
       setState(() {
-        fechasDisponibles =
-            GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
+        fechasDisponibles = GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
       });
 
       await cargarDatos();
@@ -59,27 +65,32 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   Future<void> cargarDatos() async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+
     try {
       final datos = await ObtenerTotalInfo(
         supabase: supabase,
         usuariosTable: 'usuarios',
         clasesTable: taller,
       ).obtenerClases();
+
       final usuarios = await ObtenerTotalInfo(
         supabase: supabase,
         usuariosTable: 'usuarios',
         clasesTable: taller,
       ).obtenerUsuarios();
 
+      // Filtra solo las clases que terminan en /2025 (p.ej. dd/mm/2025)
       final datosDiciembre = datos.where((clase) {
         final fecha = clase.fecha;
         return fecha.endsWith('/2025');
       }).toList();
 
+      // Filtra usuarios que estén asociados a "taller"
       final usuariosFiltrados = usuarios.where((usuario) {
         return usuario.taller == taller;
       }).toList();
 
+      // Extrae sus nombres
       final nombresFiltrados =
           usuariosFiltrados.map((usuario) => usuario.fullname).toList();
 
@@ -103,9 +114,12 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   void seleccionarFecha(String fecha) {
     setState(() {
       fechaSeleccionada = fecha;
+      // Filtra las clases que coinciden con esa fecha
       horariosFiltrados = horariosDisponibles
           .where((clase) => clase.fecha == fechaSeleccionada)
           .toList();
+
+      // Ordena por hora ascendente
       horariosFiltrados.sort((a, b) {
         final formatoFecha = DateFormat('dd/MM/yyyy');
         final fechaA = formatoFecha.parse(a.fecha);
@@ -139,10 +153,18 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
         }
         seleccionarFecha(fechaSeleccionada!);
       } else {
+        // Si aún no hay fechaSeleccionada, arranca con la primera
         fechaSeleccionada = fechasDisponibles[0];
         seleccionarFecha(fechaSeleccionada!);
       }
     });
+  }
+
+  /// Función para obtener el día de la semana desde la fecha seleccionada.
+  /// Asume que tienes la clase [DiaConFecha] que ofrece obtenerDiaDeLaSemana(String fecha).
+  String _obtenerDia(String? fecha) {
+    if (fecha == null || fecha.isEmpty) return '';
+    return DiaConFecha().obtenerDiaDeLaSemana(fecha);
   }
 
   Future<void> mostrarDialogo(
@@ -226,109 +248,122 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
-  onPressed: () async {
-    // 1. Si no hay usuario seleccionado, salimos
-    if (usuarioSeleccionado.isEmpty) return;
+                          onPressed: () async {
+                            // 1. Si no hay usuario seleccionado, salimos
+                            if (usuarioSeleccionado.isEmpty) return;
 
-    // 2. Cerramos el cartel de inmediato
-    Navigator.of(context).pop();
+                            // 2. Cerramos el cartel de inmediato
+                            Navigator.of(context).pop();
 
-    // 3. Ahora ejecutamos el proceso asíncrono en segundo plano
-    if (tipoAccion == "insertar") {
-      if (insertarX4) {
-        // Inserta en 4 clases
-        await AgregarUsuario(supabase).agregarUsuarioEnCuatroClases(
-          clase,
-          usuarioSeleccionado,
-          (ClaseModels claseActualizada) {
-            // 4. Si la pantalla principal todavía está montada, actualizamos
-            if (mounted) {
-              setState(() {
-                final idx = horariosDisponibles
-                    .indexWhere((c) => c.id == claseActualizada.id);
-                if (idx != -1) {
-                  horariosDisponibles[idx] = claseActualizada;
-                }
+                            // 3. Ahora ejecutamos el proceso asíncrono en segundo plano
+                            if (tipoAccion == "insertar") {
+                              if (insertarX4) {
+                                // Inserta en 4 clases
+                                await AgregarUsuario(supabase)
+                                    .agregarUsuarioEnCuatroClases(
+                                  clase,
+                                  usuarioSeleccionado,
+                                  (ClaseModels claseActualizada) {
+                                    // 4. Si la pantalla principal todavía está montada, actualizamos
+                                    if (mounted) {
+                                      setState(() {
+                                        final idx = horariosDisponibles
+                                            .indexWhere((c) =>
+                                                c.id ==
+                                                claseActualizada.id);
+                                        if (idx != -1) {
+                                          horariosDisponibles[idx] =
+                                              claseActualizada;
+                                        }
 
-                final idxFiltrado = horariosFiltrados
-                    .indexWhere((c) => c.id == claseActualizada.id);
-                if (idxFiltrado != -1) {
-                  horariosFiltrados[idxFiltrado] = claseActualizada;
-                }
-              });
-            }
-          },
-        );
-      } else {
-        // Inserta en una sola clase
-        await AgregarUsuario(supabase).agregarUsuarioAClase(
-          clase.id,
-          usuarioSeleccionado,
-          true,
-          clase,
-        );
-        // 4. Actualizamos la pantalla principal si sigue montada
-        if (mounted) {
-          setState(() {
-            clase.mails.add(usuarioSeleccionado);
-          });
-        }
-      }
-    } else if (tipoAccion == "remover") {
-  if (insertarX4) {
-    // Remueve de 4 clases
-    await RemoverUsuario(supabase).removerUsuarioDeMuchasClase(
-      clase,
-      usuarioSeleccionado,
-      (ClaseModels claseActualizada) {
-        // Este callback se llama cada vez que se hace un "remove" en una de las clases
-        if (mounted) {
-          setState(() {
-            // Buscamos la clase por ID y actualizamos la lista local
-            final idx = horariosDisponibles.indexWhere(
-              (c) => c.id == claseActualizada.id,
-            );
-            if (idx != -1) {
-              horariosDisponibles[idx] = claseActualizada;
-            }
+                                        final idxFiltrado =
+                                            horariosFiltrados.indexWhere(
+                                          (c) =>
+                                              c.id == claseActualizada.id,
+                                        );
+                                        if (idxFiltrado != -1) {
+                                          horariosFiltrados[idxFiltrado] =
+                                              claseActualizada;
+                                        }
+                                      });
+                                    }
+                                  },
+                                );
+                              } else {
+                                // Inserta en una sola clase
+                                await AgregarUsuario(supabase)
+                                    .agregarUsuarioAClase(
+                                  clase.id,
+                                  usuarioSeleccionado,
+                                  true,
+                                  clase,
+                                );
+                                // 4. Actualizamos la pantalla principal si sigue montada
+                                if (mounted) {
+                                  setState(() {
+                                    clase.mails.add(usuarioSeleccionado);
+                                  });
+                                }
+                              }
+                            } else if (tipoAccion == "remover") {
+                              if (insertarX4) {
+                                // Remueve de 4 clases
+                                await RemoverUsuario(supabase)
+                                    .removerUsuarioDeMuchasClase(
+                                  clase,
+                                  usuarioSeleccionado,
+                                  (ClaseModels claseActualizada) {
+                                    // Este callback se llama cada vez que se hace un "remove"
+                                    if (mounted) {
+                                      setState(() {
+                                        final idx = horariosDisponibles
+                                            .indexWhere((c) =>
+                                                c.id ==
+                                                claseActualizada.id);
+                                        if (idx != -1) {
+                                          horariosDisponibles[idx] =
+                                              claseActualizada;
+                                        }
 
-            final idxFiltrado = horariosFiltrados.indexWhere(
-              (c) => c.id == claseActualizada.id,
-            );
-            if (idxFiltrado != -1) {
-              horariosFiltrados[idxFiltrado] = claseActualizada;
-            }
-          });
-        }
-      },
-    );
-  } else {
-    // Remueve de una sola clase
-    await RemoverUsuario(supabase).removerUsuarioDeClase(
-      clase.id,
-      usuarioSeleccionado,
-      true,
-    );
-    if (mounted) {
-      setState(() {
-        clase.mails.remove(usuarioSeleccionado);
-      });
-    }
-  }
-}
-
-  },
-  child: Text(tipoAccion == "insertar" ? "Insertar" : "Remover"),
-),
-
-
-ElevatedButton(
-  onPressed: () {
-    Navigator.of(context).pop();
-  },
-  child: const Text("Cancelar"),
-),
-
+                                        final idxFiltrado =
+                                            horariosFiltrados.indexWhere(
+                                          (c) =>
+                                              c.id == claseActualizada.id,
+                                        );
+                                        if (idxFiltrado != -1) {
+                                          horariosFiltrados[idxFiltrado] =
+                                              claseActualizada;
+                                        }
+                                      });
+                                    }
+                                  },
+                                );
+                              } else {
+                                // Remueve de una sola clase
+                                await RemoverUsuario(supabase)
+                                    .removerUsuarioDeClase(
+                                  clase.id,
+                                  usuarioSeleccionado,
+                                  true,
+                                );
+                                if (mounted) {
+                                  setState(() {
+                                    clase.mails.remove(usuarioSeleccionado);
+                                  });
+                                }
+                              }
+                            }
+                          },
+                          child: Text(
+                            tipoAccion == "insertar" ? "Insertar" : "Remover",
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("Cancelar"),
+                        ),
                       ],
                     ),
                   ],
@@ -346,6 +381,8 @@ ElevatedButton(
     final size = MediaQuery.of(context).size;
     final color = Theme.of(context).primaryColor;
     final colors = Theme.of(context).colorScheme;
+    final partesFecha = fechaSeleccionada?.split('/');
+    final diaMes = '${partesFecha?[0]}/${partesFecha?[1]}';
 
     return Scaffold(
       appBar: ResponsiveAppBar(isTablet: size.width > 600),
@@ -357,10 +394,12 @@ ElevatedButton(
             child: Column(
               children: [
                 const Padding(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    child: BoxText(
-                        text:
-                            "En esta sesión podrás gestionar tus horarios. Ver quiénes asisten a tus clases y agregar o remover usuarios de las mismas")),
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  child: BoxText(
+                    text:
+                        "En esta sesión podrás gestionar tus horarios. Ver quiénes asisten a tus clases y agregar o remover usuarios de las mismas",
+                  ),
+                ),
                 const SizedBox(height: 20),
                 MostrarDiaSegunFecha(
                   text: fechaSeleccionada ?? '',
@@ -373,7 +412,9 @@ ElevatedButton(
                   value: fechaSeleccionada,
                   hint: const Text('Selecciona una fecha'),
                   onChanged: (value) {
-                    seleccionarFecha(value!);
+                    if (value != null) {
+                      seleccionarFecha(value);
+                    }
                   },
                   items: fechasDisponibles.map((fecha) {
                     return DropdownMenuItem(
@@ -383,7 +424,11 @@ ElevatedButton(
                   }).toList(),
                 ),
                 const SizedBox(height: 10),
+
+                // Muestra un loader si está cargando
                 if (isLoading) const CircularProgressIndicator(),
+
+                // Si ya no está cargando y existe fechaSeleccionada...
                 if (!isLoading && fechaSeleccionada != null)
                   Expanded(
                     child: horariosFiltrados.isNotEmpty
@@ -408,12 +453,14 @@ ElevatedButton(
                                               Container(
                                                 padding:
                                                     const EdgeInsets.symmetric(
-                                                        horizontal: 8,
-                                                        vertical: 4),
+                                                  horizontal: 8,
+                                                  vertical: 4,
+                                                ),
                                                 decoration: BoxDecoration(
                                                   border: Border.all(
-                                                      color: colors.primary,
-                                                      width: 1.5),
+                                                    color: colors.primary,
+                                                    width: 1.5,
+                                                  ),
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                   color: colors.primary
@@ -427,17 +474,18 @@ ElevatedButton(
                                                   ),
                                                 ),
                                               ),
-                                              SizedBox(width: 10),
-                                              Text(
+                                              const SizedBox(width: 10),
+                                              const Text(
                                                 "- Alumnos :",
                                                 style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               )
                                             ],
                                           ),
                                         ),
-                                        subtitle: Text(clase.mails.join(", ")),
+                                        subtitle:
+                                            Text(clase.mails.join(", ")),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
@@ -451,13 +499,17 @@ ElevatedButton(
                                                   : size.width * 0.33,
                                               child: ElevatedButton(
                                                 onPressed: () {
-                                                  mostrarDialogo("insertar",
-                                                      clase, colors);
+                                                  mostrarDialogo(
+                                                    "insertar",
+                                                    clase,
+                                                    colors,
+                                                  );
                                                 },
                                                 child: const Text(
                                                   "Agregar Usuario",
-                                                  style:
-                                                      TextStyle(fontSize: 10),
+                                                  style: TextStyle(
+                                                    fontSize: 10,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -468,12 +520,17 @@ ElevatedButton(
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   mostrarDialogo(
-                                                      "remover", clase, colors);
+                                                    "remover",
+                                                    clase,
+                                                    colors,
+                                                  );
                                                 },
                                                 child: const Text(
-                                                    "Remover Usuario",
-                                                    style: TextStyle(
-                                                        fontSize: 10)),
+                                                  "Remover Usuario",
+                                                  style: TextStyle(
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -493,19 +550,21 @@ ElevatedButton(
                                 child: Column(
                                   children: [
                                     Icon(
-                                          Icons.info,
-                                          color: color,
-                                          size: size.width * 0.12, // 8% del ancho para el tamaño del ícono
-                                        ),
-                                        SizedBox(height: size.width * 0.02),
+                                      Icons.info,
+                                      color: color,
+                                      size: size.width * 0.12, 
+                                    ),
+                                    SizedBox(height: size.width * 0.02),
+                                    // TEXTO cuando no hay clases
                                     Text(
-                                                            '**No hay horarios disponibles para esta fecha** ',
-                                                            style: TextStyle(
-                                                              fontSize: 25,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: colors.primary,
-                                                            ),
-                                                          ),
+                                      
+                                      'No hay clases cargadas el ${_obtenerDia(fechaSeleccionada)} $diaMes',
+                                      style: TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold,
+                                        color: colors.primary,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
