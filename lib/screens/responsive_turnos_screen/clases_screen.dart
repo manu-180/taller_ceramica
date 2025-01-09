@@ -338,7 +338,35 @@ class _ClasesScreenState extends State<ClasesScreen> {
                 Expanded(
                   flex: 2,
                   child: isLoading
-                      ? Center(child: CircularProgressIndicator())
+                      ? Column(
+                          children: List.generate(
+                              5,
+                              (index) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 20),
+                                    child: SizedBox(
+                                      height: screenWidth * 0.113,
+                                      child: ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: SizedBox(
+                                            width: 100,
+                                            height:4 ,
+                                            child: LinearProgressIndicator(
+                                                // strokeWidth:
+                                                //     screenWidth * 0.006
+                                                    ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                        )
                       : _DiaSelection(
                           diasUnicos: diasUnicos,
                           seleccionarDia: seleccionarDia,
@@ -387,13 +415,14 @@ class _ClasesScreenState extends State<ClasesScreen> {
           Padding(
             padding:
                 EdgeInsets.symmetric(horizontal: paddingSize, vertical: 20),
-            child: avisoDeClasesDisponibles != null
-                ? _AvisoDeClasesDisponibles(
-                    colors: colors,
-                    color: color,
-                    text: avisoDeClasesDisponibles!,
-                  )
-                : const CircularProgressIndicator(),
+            child: _AvisoDeClasesDisponibles(
+  colors: colors,
+  color: color,
+  text: avisoDeClasesDisponibles ?? "",
+  isLoading: isLoading, // Si no hay datos, muestra el indicador
+),
+
+
           ),
           const SizedBox(height: 30),
         ],
@@ -484,11 +513,13 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
     required this.text,
     required this.colors,
     required this.color,
+    this.isLoading = false,
   });
 
   final ColorScheme colors;
   final Color color;
   final String text;
+  final bool isLoading; // Nueva propiedad para indicar el estado de carga
 
   @override
   Widget build(BuildContext context) {
@@ -524,20 +555,26 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
           ),
           SizedBox(width: screenWidth * 0.03),
           Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: screenWidth * 0.04,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
+            child: isLoading
+                ? LinearProgressIndicator(
+                    backgroundColor: colors.secondaryContainer,
+                    color: colors.primary,
+                  )
+                : Text(
+                    text,
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.04,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
           ),
         ],
       ),
     );
   }
 }
+
 
 class _SemanaNavigation extends StatelessWidget {
   final String semanaSeleccionada;
