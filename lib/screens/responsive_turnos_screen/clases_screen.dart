@@ -85,18 +85,19 @@ class _ClasesScreenState extends State<ClasesScreen> {
     }
 
     final diasConClasesDisponibles = await obtenerDiasConClasesDisponibles();
-    if (diasConClasesDisponibles.isEmpty) {
-      avisoDeClasesDisponibles = "No hay clases disponibles esta semana.";
-    } else {
-      avisoDeClasesDisponibles =
-          "Hay clases disponibles el ${diasConClasesDisponibles.join(', ')}.";
-    }
+if (diasConClasesDisponibles.isEmpty) {
+  avisoDeClasesDisponibles = "No hay clases disponibles esta semana.";
+} else {
+  avisoDeClasesDisponibles =
+      "Hay clases disponibles el ${diasConClasesDisponibles.join(', ')}.";
+}
 
-    if (mounted) {
-      setState(() {
-        isLoading = false;
-      });
-    }
+if (mounted) {
+  setState(() {
+    isLoading = false;
+  });
+}
+
   }
 
   Future<List<String>> obtenerDiasConClasesDisponibles() async {
@@ -154,18 +155,31 @@ class _ClasesScreenState extends State<ClasesScreen> {
   }
 
   void cambiarSemanaAdelante() {
-    final indiceActual = semanas.indexOf(semanaSeleccionada);
-    final nuevoIndice = (indiceActual + 1) % semanas.length;
-    semanaSeleccionada = semanas[nuevoIndice];
-    cargarDatos();
-  }
+  final indiceActual = semanas.indexOf(semanaSeleccionada);
+  final nuevoIndice = (indiceActual + 1) % semanas.length;
 
-  void cambiarSemanaAtras() {
-    final indiceActual = semanas.indexOf(semanaSeleccionada);
-    final nuevoIndice = (indiceActual - 1 + semanas.length) % semanas.length;
+  setState(() {
     semanaSeleccionada = semanas[nuevoIndice];
-    cargarDatos();
-  }
+    isLoading = true;
+    avisoDeClasesDisponibles = null;
+  });
+
+  cargarDatos();
+}
+
+void cambiarSemanaAtras() {
+  final indiceActual = semanas.indexOf(semanaSeleccionada);
+  final nuevoIndice = (indiceActual - 1 + semanas.length) % semanas.length;
+
+  setState(() {
+    semanaSeleccionada = semanas[nuevoIndice];
+    isLoading = true;
+    avisoDeClasesDisponibles = null;
+  });
+
+  cargarDatos();
+}
+
 
    void mostrarConfirmacion(BuildContext context, ClaseModels clase) async {
   final user = Supabase.instance.client.auth.currentUser;
@@ -411,20 +425,21 @@ class _ClasesScreenState extends State<ClasesScreen> {
             ),
           ),
           Padding(
-            padding:
-                EdgeInsets.symmetric(horizontal: paddingSize, vertical: 20),
-            child: avisoDeClasesDisponibles != null
-                ? _AvisoDeClasesDisponibles(
-                    colors: colors,
-                    color: color,
-                    text: avisoDeClasesDisponibles!,
-                  )
-                : ShimmerLoading(
-                  brillo:colors.primary.withAlpha(40), 
-                  color: colors.primary.withAlpha(120), 
-                  height: screenWidth * 0.19 ,
-                  width: screenWidth * 0.9 ,),
-          ),
+  padding: EdgeInsets.symmetric(horizontal: paddingSize, vertical: 20),
+  child: avisoDeClasesDisponibles != null && !isLoading
+      ? _AvisoDeClasesDisponibles(
+          colors: colors,
+          color: color,
+          text: avisoDeClasesDisponibles!,
+        )
+      : ShimmerLoading(
+          brillo: colors.primary.withAlpha(40),
+          color: colors.primary.withAlpha(120),
+          height: screenWidth * 0.19,
+          width: screenWidth * 0.9,
+        ),
+),
+
           const SizedBox(height: 30),
         ],
       ),
