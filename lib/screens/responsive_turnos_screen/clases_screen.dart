@@ -10,6 +10,7 @@ import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
+import 'package:taller_ceramica/widgets/shimmer_loader.dart';
 
 class ClasesScreen extends StatefulWidget {
   const ClasesScreen({
@@ -355,12 +356,9 @@ class _ClasesScreenState extends State<ClasesScreen> {
                                         ),
                                         child: Center(
                                           child: SizedBox(
-                                            width: 100,
-                                            height:4 ,
-                                            child: LinearProgressIndicator(
-                                                // strokeWidth:
-                                                //     screenWidth * 0.006
-                                                    ),
+                                            width: screenWidth * 0.5,
+                                            height: screenWidth * 0.008,
+                                            child: LinearProgressIndicator(),
                                           ),
                                         ),
                                       ),
@@ -415,14 +413,17 @@ class _ClasesScreenState extends State<ClasesScreen> {
           Padding(
             padding:
                 EdgeInsets.symmetric(horizontal: paddingSize, vertical: 20),
-            child: _AvisoDeClasesDisponibles(
-  colors: colors,
-  color: color,
-  text: avisoDeClasesDisponibles ?? "",
-  isLoading: isLoading, // Si no hay datos, muestra el indicador
-),
-
-
+            child: avisoDeClasesDisponibles != null
+                ? _AvisoDeClasesDisponibles(
+                    colors: colors,
+                    color: color,
+                    text: avisoDeClasesDisponibles!,
+                  )
+                : ShimmerLoading(
+                  brillo:colors.primary.withAlpha(40), 
+                  color: colors.primary.withAlpha(120), 
+                  height: screenWidth * 0.19 ,
+                  width: screenWidth * 0.9 ,),
           ),
           const SizedBox(height: 30),
         ],
@@ -513,13 +514,11 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
     required this.text,
     required this.colors,
     required this.color,
-    this.isLoading = false,
   });
 
   final ColorScheme colors;
   final Color color;
   final String text;
-  final bool isLoading; // Nueva propiedad para indicar el estado de carga
 
   @override
   Widget build(BuildContext context) {
@@ -537,37 +536,25 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(screenWidth * 0.03),
-        boxShadow: [
-          BoxShadow(
-            color: colors.primary.withAlpha(70),
-            spreadRadius: screenWidth * 0.005,
-            blurRadius: screenWidth * 0.01,
-            offset: Offset(0, MediaQuery.of(context).size.height * 0.005),
-          ),
-        ],
       ),
       child: Row(
         children: [
           Icon(
             Icons.info,
             color: color,
-            size: screenWidth * 0.08,
+            size: screenWidth * 0.08, // 8% del ancho para el tamaño del ícono
           ),
-          SizedBox(width: screenWidth * 0.03),
+          SizedBox(width: screenWidth * 0.03), // 3% del ancho para el espaciado
           Expanded(
-            child: isLoading
-                ? LinearProgressIndicator(
-                    backgroundColor: colors.secondaryContainer,
-                    color: colors.primary,
-                  )
-                : Text(
-                    text,
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.04,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize:
+                    screenWidth * 0.04, // 4% del ancho para el tamaño de fuente
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
           ),
         ],
       ),
