@@ -424,11 +424,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                   }).toList(),
                 ),
                 const SizedBox(height: 10),
-
-                // Muestra un loader si está cargando
-                if (isLoading) const CircularProgressIndicator(),
-
-                // Si ya no está cargando y existe fechaSeleccionada...
+                
                 if (!isLoading && fechaSeleccionada != null)
                   Expanded(
                     child: horariosFiltrados.isNotEmpty

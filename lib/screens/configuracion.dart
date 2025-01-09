@@ -5,13 +5,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
+import 'package:taller_ceramica/supabase/obtener_taller.dart';
 import 'package:taller_ceramica/widgets/box_text.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
 
 class Configuracion extends ConsumerStatefulWidget {
-  const Configuracion({super.key, String? taller});
+  const Configuracion({super.key, this.taller});
+
+  final String? taller;
 
   @override
   _ConfiguracionState createState() => _ConfiguracionState();
@@ -19,13 +22,23 @@ class Configuracion extends ConsumerStatefulWidget {
 
 class _ConfiguracionState extends ConsumerState<Configuracion> {
   User? user;
+  String? taller;
 
   @override
   void initState() {
     super.initState();
-    // Establece el usuario actual cuando la pantalla se inicializa
+    // Establece el usuario actual y el taller al inicializar
     user = ref.read(authProvider);
+    _obtenerTallerUsuario();
     SubscriptionVerifier.verificarAdminYSuscripcion(context);
+  }
+
+  Future<void> _obtenerTallerUsuario() async {
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final tallerObtenido = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+    setState(() {
+      taller = tallerObtenido;
+    });
   }
 
   @override
@@ -36,30 +49,30 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
     final int selectedColor = ref.watch(themeNotifyProvider).selectedColor;
     final color = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
+
     final List<Map<String, String>> options = [
       {
         'title': 'Cambiar contraseña',
         'route': '/cambiarpassword',
       },
-      {
-        'title': 'Cambiar nombre de usuario',
-        'route': '/cambiarfullnameivanna',
-      },
+      if (taller != null)
+        {
+          'title': 'Cambiar nombre de usuario',
+          'route': '/cambiarfullname/$taller', // Ruta dinámica
+        },
     ];
 
     return Scaffold(
       appBar: ResponsiveAppBar(isTablet: size.width > 600),
       body: Center(
         child: ConstrainedBox(
-          constraints:
-              const BoxConstraints(maxWidth: 600), // Establece el ancho máximo
+          constraints: const BoxConstraints(maxWidth: 600),
           child: user == null
               ? Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.lock_outline,
-                          size: 80, color: Colors.grey),
+                      const Icon(Icons.lock_outline, size: 80, color: Colors.grey),
                       const SizedBox(height: 20),
                       Text(
                         'Para cambiar la configuración debes iniciar sesión!',
@@ -82,9 +95,7 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                           text:
                               "En esta sección podrás cambiar el color de la aplicación y el modo de visualización"),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     ExpansionTile(
                       title: const Text(
                         'Elige un color',
@@ -106,25 +117,19 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                                     color: color,
                                     size: 35,
                                   ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
+                                  const SizedBox(width: 15),
                                   Icon(
                                     Icons.palette_outlined,
                                     color: color,
                                     size: 35,
                                   ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
+                                  const SizedBox(width: 15),
                                   Icon(
                                     Icons.palette_outlined,
                                     color: color,
                                     size: 35,
                                   ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
+                                  const SizedBox(width: 15),
                                 ],
                               ),
                               activeColor: color,

@@ -3,6 +3,7 @@ import 'package:taller_ceramica/widgets/box_text.dart';
 import 'package:taller_ceramica/supabase/is_mujer.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
+import 'package:taller_ceramica/widgets/shimmer_loader.dart';
 
 class HomeScreen extends StatelessWidget {
   final String? taller;
@@ -60,6 +61,7 @@ class HomeScreen extends StatelessWidget {
                       _buildLoadingImage(
                         imagePath: 'assets/images/ceramicamujer.gif',
                         height: 300,
+                        width: size.width * 0.9
                       ),
                       const SizedBox(height: 20),
                       Text(
@@ -86,6 +88,7 @@ class HomeScreen extends StatelessWidget {
                       _buildLoadingImage(
                         imagePath: 'assets/images/ceramicagif.gif',
                         height: 300,
+                        width: size.width * 0.9
                       ),
                       const SizedBox(height: 20),
                       Container(
@@ -114,6 +117,8 @@ class HomeScreen extends StatelessWidget {
   Widget _buildLoadingImage({
     required String imagePath,
     required double height,
+    required double width,
+    
   }) {
     return FutureBuilder(
       future: _loadAssetImage(imagePath),
@@ -121,8 +126,8 @@ class HomeScreen extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SizedBox(
             height: height,
-            child: const Center(
-              child: CircularProgressIndicator(),
+            child: Center(
+              child: ShimmerLoading(color: Color(0xFFE0E0E0), width: width, height: height, brillo: Color(0xFFF5F5F5)),
             ),
           );
         } else if (snapshot.hasError) {

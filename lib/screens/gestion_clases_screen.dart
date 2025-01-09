@@ -479,10 +479,6 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Loader si está cargando
-              if (isLoading) const CircularProgressIndicator(),
-
-              // Lista de clases si no está cargando
               if (!isLoading &&
                   fechaSeleccionada != null &&
                   clasesFiltradas.isNotEmpty)
