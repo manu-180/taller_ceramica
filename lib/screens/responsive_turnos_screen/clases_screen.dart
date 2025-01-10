@@ -378,11 +378,7 @@ void cambiarSemanaAtras() {
                                           ),
                                         ),
                                         child: Center(
-                                          child: SizedBox(
-                                            width: screenWidth * 0.5,
-                                            height: screenWidth * 0.008,
-                                            child: LinearProgressIndicator(),
-                                          ),
+                                          child: ClipRRect(borderRadius: BorderRadius.circular(20), child: LinearProgressIndicator(minHeight: 2.2,)),
                                         ),
                                       ),
                                     ),
