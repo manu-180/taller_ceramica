@@ -124,7 +124,7 @@ class CustomAppBarState extends State<CustomAppBar> {
       {'value': '/gestionclases/${taller ?? ''}', 'label': 'Gestión de clases'},
       {'value': '/usuarios/${taller ?? ''}', 'label': 'Alumnos/as'},
       {'value': '/configuracion/${taller ?? ''}', 'label': 'Configuración'},
-      // {'value': '/prueba', 'label': 'prueba'},
+      {'value': '/prueba', 'label': 'prueba'},
     ];
     final userRoutes = [
       {'value': '/turnos/${taller ?? ''}', 'label': 'Clases'},
