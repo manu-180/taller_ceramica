@@ -37,6 +37,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
   List<ClaseModels> diasUnicos = [];
   Map<String, List<ClaseModels>> horariosPorDia = {};
   String? avisoDeClasesDisponibles;
+  Map<int, int> capacidadCache = {};
 
   Future<void> cargarDatos() async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
@@ -45,6 +46,11 @@ class _ClasesScreenState extends State<ClasesScreen> {
     setState(() {
       isLoading = true;
     });
+
+    final capacidades = await ObtenerCapacidadClase().cargarTodasLasCapacidades();
+    for (var capacidad in capacidades) {
+      capacidadCache[capacidad['id']] = capacidad['capacidad'];
+    }
 
     final datos = await ObtenerTotalInfo(
       supabase: supabase,
@@ -107,9 +113,10 @@ if (mounted) {
     final dia = entry.key;
     final clases = entry.value;
 
-    // Iterar sobre todas las clases del día para evaluar las condiciones
     for (var clase in clases) {
-      final capacidad = await ObtenerCapacidadClase().capacidadClase(clase.id);
+      // Consultar la capacidad desde la caché
+      final capacidad = capacidadCache[clase.id] ?? 0;
+
       final mailsLimpios = clase.mails.map((mail) => mail.trim()).toList();
       final menorA24 = Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual);
 
@@ -130,6 +137,8 @@ if (mounted) {
 
   return diasConClases.toList();
 }
+
+
 
 
   @override
@@ -401,13 +410,13 @@ void cambiarSemanaAtras() {
                                   final clase =
                                       horariosPorDia[diaSeleccionado]![index];
                                   return FutureBuilder<Widget>(
-                                    future: construirBotonHorario(clase),
+                                    future: construirBotonHorario(clase, capacidadCache),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
                                         return SizedBox(
                                             child:
-                                                const CircularProgressIndicator());
+                                                const SizedBox());
                                       } else if (snapshot.hasError) {
                                         return Text('Error: ${snapshot.error}');
                                       } else {
@@ -446,83 +455,81 @@ void cambiarSemanaAtras() {
     );
   }
 
-  Future<Widget> construirBotonHorario(ClaseModels clase) async {
-    final partesFecha = clase.fecha.split('/');
-    final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
-    final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
-    final estaLlena = clase.mails.length >=
-        await ObtenerCapacidadClase().capacidadClase(clase.id);
-    final screenWidth = MediaQuery.of(context).size.width;
+  Future<Widget> construirBotonHorario(ClaseModels clase, Map<int, int> capacidadCache) async {
+  final partesFecha = clase.fecha.split('/');
+  final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
+  final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
 
-    // Verifica si el usuario es administrador
-    final esAdmin = await IsAdmin().admin();
+  // Usar la capacidad desde la caché
+  final capacidad = capacidadCache[clase.id] ?? 0;
+  final estaLlena = clase.mails.length >= capacidad;
 
-    return Column(
-      children: [
-        SizedBox(
-          width: screenWidth * 0.7,
-          height: screenWidth * 0.12,
-          child: ElevatedButton(
-            onPressed: esAdmin
-                ? () async {
-                    // Si es administrador, ejecuta directamente la función
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            clase.mails.isEmpty
-                                ? "No hay alumnos inscriptos a esta clase"
-                                : "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
-                          ),
-                          duration: const Duration(seconds: 5),
-                          behavior: SnackBarBehavior.floating,
-                          margin: const EdgeInsets.all(10),
+  final screenWidth = MediaQuery.of(context).size.width;
+
+  // Verifica si el usuario es administrador
+  final esAdmin = await IsAdmin().admin();
+
+  return Column(
+    children: [
+      SizedBox(
+        width: screenWidth * 0.7,
+        height: screenWidth * 0.12,
+        child: ElevatedButton(
+          onPressed: esAdmin
+              ? () async {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          clase.mails.isEmpty
+                              ? "No hay alumnos inscriptos a esta clase"
+                              : "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
                         ),
-                      );
-                    }
+                        duration: const Duration(seconds: 5),
+                        behavior: SnackBarBehavior.floating,
+                        margin: const EdgeInsets.all(10),
+                      ),
+                    );
                   }
-                : ((estaLlena ||
-                        Calcular24hs().esMenorA0Horas(
-                            clase.fecha, clase.hora, mesActual) ||
-                        clase.lugaresDisponibles <= 0))
-                    ? null // Si no es admin y el botón está deshabilitado, no hace nada
-                    : () async {
-                        // Si no es admin, realiza la inscripción
-                        if (context.mounted) {
-                          mostrarConfirmacion(context, clase);
-                        }
-                      },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
-                estaLlena ||
-                        Calcular24hs()
-                            .esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
-                        clase.lugaresDisponibles <= 0
-                    ? Colors.grey.shade400
-                    : Colors.green,
-              ),
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(screenWidth * 0.03)),
-              ),
+                }
+              : ((estaLlena ||
+                      Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
+                      clase.lugaresDisponibles <= 0))
+                  ? null
+                  : () async {
+                      if (context.mounted) {
+                        mostrarConfirmacion(context, clase);
+                      }
+                    },
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              estaLlena ||
+                      Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
+                      clase.lugaresDisponibles <= 0
+                  ? Colors.grey.shade400
+                  : Colors.green,
             ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Text(
-                  diaYHora,
-                  style: const TextStyle(fontSize: 11, color: Colors.white),
-                ),
-              ],
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(screenWidth * 0.03)),
             ),
           ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Text(
+                diaYHora,
+                style: const TextStyle(fontSize: 11, color: Colors.white),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 18),
-      ],
-    );
-  }
-}
+      ),
+      const SizedBox(height: 18),
+    ],
+  );
+  }}
 
 class _AvisoDeClasesDisponibles extends StatelessWidget {
   const _AvisoDeClasesDisponibles({

@@ -26,5 +26,16 @@ class ObtenerCapacidadClase {
     print("Clase no encontrada para el ID: $claseId");
     return 0;
   }
+
+  Future<List<Map<String, dynamic>>> cargarTodasLasCapacidades() async {
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+  final response = await Supabase.instance.client
+      .from(taller)
+      .select('id, capacidad');
+      
+  return (response as List).map((e) => e as Map<String, dynamic>).toList();
+}
+
 }
 
