@@ -35,7 +35,8 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
 
   Future<void> _obtenerTallerUsuario() async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
-    final tallerObtenido = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+    final tallerObtenido =
+        await ObtenerTaller().retornarTaller(usuarioActivo!.id);
     setState(() {
       taller = tallerObtenido;
     });
@@ -72,7 +73,8 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.lock_outline, size: 80, color: Colors.grey),
+                      const Icon(Icons.lock_outline,
+                          size: 80, color: Colors.grey),
                       const SizedBox(height: 20),
                       Text(
                         'Para cambiar la configuración debes iniciar sesión!',

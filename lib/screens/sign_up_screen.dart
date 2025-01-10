@@ -296,11 +296,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     .retornarTaller(user!.id),
                               });
 
-                              EnviarWpp().sendWhatsAppMessage(
-                                        "HXe3ce917c3f0fe4bcaafe1275ec68d107",
-                                        'whatsapp:+5491134272488',
-                                        [Capitalize().capitalize(fullname)]
-                                          );
+                              // EnviarWpp().sendWhatsAppMessage(
+                              //           "HXe3ce917c3f0fe4bcaafe1275ec68d107",
+                              //           'whatsapp:+5491134272488',
+                              //           [Capitalize().capitalize(fullname)]
+                              //             );
                               setState(() {
                                 isLoading = false;
                                 showSuccessMessage = true;

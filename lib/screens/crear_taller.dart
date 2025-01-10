@@ -210,7 +210,9 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            ElevatedButton(onPressed: () => context.go("/"), child: Text("Volver atras")),
+                            ElevatedButton(
+                                onPressed: () => context.go("/"),
+                                child: Text("Volver atras")),
                             SizedBox(width: 15),
                             FilledButton(
                               onPressed: isLoading
@@ -219,17 +221,18 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                       setState(() {
                                         isLoading = true;
                                       });
-                            
+
                                       FocusScope.of(context).unfocus();
                                       final fullname =
                                           fullnameController.text.trim();
                                       final email = emailController.text.trim();
-                                      final taller = tallerController.text.trim();
+                                      final taller =
+                                          tallerController.text.trim();
                                       final password =
                                           passwordController.text.trim();
                                       final confirmPassword =
                                           confirmPasswordController.text.trim();
-                            
+
                                       if (fullname.isEmpty ||
                                           email.isEmpty ||
                                           taller.isEmpty ||
@@ -242,13 +245,14 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                             .showSnackBar(const SnackBar(
                                           content: Text(
                                             'Todos los campos son obligatorios.',
-                                            style: TextStyle(color: Colors.white),
+                                            style:
+                                                TextStyle(color: Colors.white),
                                           ),
                                           backgroundColor: Colors.red,
                                         ));
                                         return;
                                       }
-                            
+
                                       if (password.length < 6) {
                                         setState(() {
                                           isLoading = false;
@@ -257,13 +261,14 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                             .showSnackBar(const SnackBar(
                                           content: Text(
                                             'La contraseña debe tener al menos 6 caracteres.',
-                                            style: TextStyle(color: Colors.white),
+                                            style:
+                                                TextStyle(color: Colors.white),
                                           ),
                                           backgroundColor: Colors.red,
                                         ));
                                         return;
                                       }
-                            
+
                                       if (password != confirmPassword) {
                                         setState(() {
                                           isLoading = false;
@@ -272,27 +277,28 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                             .showSnackBar(const SnackBar(
                                           content: Text(
                                             'La contraseña no coincide.',
-                                            style: TextStyle(color: Colors.white),
+                                            style:
+                                                TextStyle(color: Colors.white),
                                           ),
                                           backgroundColor: Colors.red,
                                         ));
                                         return;
                                       }
-                            
+
                                       try {
                                         final AuthResponse res =
                                             await supabase.auth.signUp(
                                           email: email,
                                           password: password,
                                           data: {
-                                            'fullname':
-                                                Capitalize().capitalize(fullname)
+                                            'fullname': Capitalize()
+                                                .capitalize(fullname)
                                           },
                                         );
-                            
+
                                         await supabase.from('usuarios').insert({
-                                          'id':
-                                              await GenerarId().generarIdUsuario(),
+                                          'id': await GenerarId()
+                                              .generarIdUsuario(),
                                           'usuario': email,
                                           'fullname':
                                               Capitalize().capitalize(fullname),
@@ -301,25 +307,26 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                           'clases_disponibles': 0,
                                           'trigger_alert': 0,
                                           'clases_canceladas': [],
-                                          'taller': Capitalize().capitalize(taller),
+                                          'taller':
+                                              Capitalize().capitalize(taller),
                                           "admin": true,
                                           "created_at":
                                               DateTime.now().toIso8601String(),
                                         });
-                            
+
                                         crearTablaTaller(
                                             Capitalize().capitalize(taller));
-                            
+
                                         if (context.mounted) {
                                           context.go("/");
                                         }
-                            
-                                         EnviarWpp().sendWhatsAppMessage(
-                                        "HXd8748cc9c7d60600cfda07262b4710df",
-                                        'whatsapp:+5491134272488',
-                                        [Capitalize().capitalize(fullname), taller, email]
-                                          );
-                                                      
+
+                                        //  EnviarWpp().sendWhatsAppMessage(
+                                        // "HXd8748cc9c7d60600cfda07262b4710df",
+                                        // 'whatsapp:+5491134272488',
+                                        // [Capitalize().capitalize(fullname), taller, email]
+                                        //   );
+
                                         setState(() {
                                           isLoading = false;
                                         });
@@ -328,7 +335,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                               .showSnackBar(const SnackBar(
                                             content: Text(
                                               '¡Taller creado exitosamente!',
-                                              style: TextStyle(color: Colors.white),
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             ),
                                             backgroundColor: Colors.green,
                                           ));

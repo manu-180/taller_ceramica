@@ -53,7 +53,8 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
     try {
       final mes = await ObtenerMes().obtenerMes();
       setState(() {
-        fechasDisponibles = GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
+        fechasDisponibles =
+            GenerarFechasDelMes().generarFechasDelMes(mes, 2025);
       });
 
       await cargarDatos();
@@ -269,8 +270,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                       setState(() {
                                         final idx = horariosDisponibles
                                             .indexWhere((c) =>
-                                                c.id ==
-                                                claseActualizada.id);
+                                                c.id == claseActualizada.id);
                                         if (idx != -1) {
                                           horariosDisponibles[idx] =
                                               claseActualizada;
@@ -278,8 +278,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
 
                                         final idxFiltrado =
                                             horariosFiltrados.indexWhere(
-                                          (c) =>
-                                              c.id == claseActualizada.id,
+                                          (c) => c.id == claseActualizada.id,
                                         );
                                         if (idxFiltrado != -1) {
                                           horariosFiltrados[idxFiltrado] =
@@ -318,8 +317,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                       setState(() {
                                         final idx = horariosDisponibles
                                             .indexWhere((c) =>
-                                                c.id ==
-                                                claseActualizada.id);
+                                                c.id == claseActualizada.id);
                                         if (idx != -1) {
                                           horariosDisponibles[idx] =
                                               claseActualizada;
@@ -327,8 +325,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
 
                                         final idxFiltrado =
                                             horariosFiltrados.indexWhere(
-                                          (c) =>
-                                              c.id == claseActualizada.id,
+                                          (c) => c.id == claseActualizada.id,
                                         );
                                         if (idxFiltrado != -1) {
                                           horariosFiltrados[idxFiltrado] =
@@ -424,7 +421,6 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                   }).toList(),
                 ),
                 const SizedBox(height: 10),
-                
                 if (!isLoading && fechaSeleccionada != null)
                   Expanded(
                     child: horariosFiltrados.isNotEmpty
@@ -480,8 +476,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                             ],
                                           ),
                                         ),
-                                        subtitle:
-                                            Text(clase.mails.join(", ")),
+                                        subtitle: Text(clase.mails.join(", ")),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
@@ -548,12 +543,11 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                     Icon(
                                       Icons.info,
                                       color: color,
-                                      size: size.width * 0.12, 
+                                      size: size.width * 0.12,
                                     ),
                                     SizedBox(height: size.width * 0.02),
                                     // TEXTO cuando no hay clases
                                     Text(
-                                      
                                       'No hay clases cargadas el ${_obtenerDia(fechaSeleccionada)} $diaMes',
                                       style: TextStyle(
                                         fontSize: 25,

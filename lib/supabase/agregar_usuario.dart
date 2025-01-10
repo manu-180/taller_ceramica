@@ -37,19 +37,28 @@ class AgregarUsuario {
                 .eq('id', idClase);
             ModificarLugarDisponible().removerLugarDisponible(idClase);
             if (parametro) {
-              EnviarWpp().sendWhatsAppMessage(
-              "HX13d84cd6816c60f21f172fe42bb3b0bb",
-              'whatsapp:+5491134272488',
-              [user, clase.dia, clase.fecha, clase.hora]
-                );
+              // EnviarWpp().sendWhatsAppMessage(
+              // "HX13d84cd6816c60f21f172fe42bb3b0bb",
+              // 'whatsapp:+5491134272488',
+              // [user, clase.dia, clase.fecha, clase.hora]
+              //   );
+
+              EnviarWpp().enviarMensajesViejo(
+                "$user se ha sumado existosamente a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+                'whatsapp:+5491134272488',
+              );
             }
             if (!parametro) {
               ModificarCredito().removerCreditoUsuario(user);
-              EnviarWpp().sendWhatsAppMessage(
-              "HXefcf9346661c8871da3f019743967611",
-              'whatsapp:+5491134272488',
-              [user, clase.dia, clase.fecha, clase.hora]
-                );
+              // EnviarWpp().sendWhatsAppMessage(
+              // "HXefcf9346661c8871da3f019743967611",
+              // 'whatsapp:+5491134272488',
+              // [user, clase.dia, clase.fecha, clase.hora]
+              //   );
+              EnviarWpp().enviarMensajesViejo(
+                "has insertado existosamente a $user de las la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+                'whatsapp:+5491134272488',
+              );
             }
           }
         }
@@ -57,11 +66,8 @@ class AgregarUsuario {
     }
   }
 
-  Future<void> agregarUsuarioEnCuatroClases(
-      ClaseModels clase, 
-      String user,
-      void Function(ClaseModels claseActualizada) callback
-      ) async {
+  Future<void> agregarUsuarioEnCuatroClases(ClaseModels clase, String user,
+      void Function(ClaseModels claseActualizada) callback) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
 
@@ -147,11 +153,15 @@ class AgregarUsuario {
 
     // 4. Al final, si llegamos a 4 inserciones, avisamos por WhatsApp
     if (count == 4) {
-      EnviarWpp().sendWhatsAppMessage(
-              "HX6dad986ed219654d62aed35763d10ccb",
-              'whatsapp:+5491134272488',
-              [user, clase.dia]
-                );
+      // EnviarWpp().sendWhatsAppMessage(
+      //         "HX6dad986ed219654d62aed35763d10ccb",
+      //         'whatsapp:+5491134272488',
+      //         [user, clase.dia]
+      //           );
+      EnviarWpp().enviarMensajesViejo(
+        "has insertado existosamente a $user de las 4 clasea del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+        'whatsapp:+5491134272488',
+      );
     }
   }
 }

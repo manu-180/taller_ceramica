@@ -59,10 +59,9 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       _buildLoadingImage(
-                        imagePath: 'assets/images/ceramicamujer.gif',
-                        height: 300,
-                        width: size.width * 0.9
-                      ),
+                          imagePath: 'assets/images/ceramicamujer.gif',
+                          height: 300,
+                          width: size.width * 0.9),
                       const SizedBox(height: 20),
                       Text(
                         '¿Qué hacemos?',
@@ -86,10 +85,9 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       _buildLoadingImage(
-                        imagePath: 'assets/images/ceramicagif.gif',
-                        height: 300,
-                        width: size.width * 0.9
-                      ),
+                          imagePath: 'assets/images/ceramicagif.gif',
+                          height: 300,
+                          width: size.width * 0.9),
                       const SizedBox(height: 20),
                       Container(
                         padding: const EdgeInsets.all(16),
@@ -118,7 +116,6 @@ class HomeScreen extends StatelessWidget {
     required String imagePath,
     required double height,
     required double width,
-    
   }) {
     return FutureBuilder(
       future: _loadAssetImage(imagePath),
@@ -127,7 +124,11 @@ class HomeScreen extends StatelessWidget {
           return SizedBox(
             height: height,
             child: Center(
-              child: ShimmerLoading(color: Color(0xFFE0E0E0), width: width, height: height, brillo: Color(0xFFF5F5F5)),
+              child: ShimmerLoading(
+                  color: Color(0xFFE0E0E0),
+                  width: width,
+                  height: height,
+                  brillo: Color(0xFFF5F5F5)),
             ),
           );
         } else if (snapshot.hasError) {

@@ -30,20 +30,29 @@ class RemoverUsuario {
               .update({'mails': listUsers}).eq('id', idClase);
           ModificarLugarDisponible().agregarLugarDisponible(idClase);
           if (!parametro) {
-            EnviarWpp().sendWhatsAppMessage(
-              "HXd9ba581e7d5b1a3c7740c90d870fe7b7",
+            // EnviarWpp().sendWhatsAppMessage(
+            //   "HXd9ba581e7d5b1a3c7740c90d870fe7b7",
+            //   'whatsapp:+5491134272488',
+            //     Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)
+            //         ? [user, clase.dia, clase.fecha, clase.hora, "Se genero un credito para recuperar la clase"]
+            //         : [user, clase.dia, clase.fecha, clase.hora, "Cancelo con menos de 24 horas de anticipacion, no podra recuperar la clase"],
+            //     );
+
+            EnviarWpp().enviarMensajesViejo(
+              "$user ha canelado existosamente la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
               'whatsapp:+5491134272488',
-                Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)
-                    ? [user, clase.dia, clase.fecha, clase.hora, "Se genero un credito para recuperar la clase"]
-                    : [user, clase.dia, clase.fecha, clase.hora, "Cancelo con menos de 24 horas de anticipacion, no podra recuperar la clase"],
-                );
+            );
           }
           if (parametro) {
-             EnviarWpp().sendWhatsAppMessage(
-              "HXc0f22718dded5d710b659d89b4117bb1",
-              'whatsapp:+5491134272488',
-              [user, clase.dia, clase.fecha, clase.hora]
-                );
+            //  EnviarWpp().sendWhatsAppMessage(
+            //   "HXc0f22718dded5d710b659d89b4117bb1",
+            //   'whatsapp:+5491134272488',
+            //   [user, clase.dia, clase.fecha, clase.hora]
+            //     );
+            EnviarWpp().enviarMensajesViejo(
+              "has removido existosamente a $user de las la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+              'whatsapp:+54911',
+            );
           }
         }
       }
@@ -51,48 +60,52 @@ class RemoverUsuario {
   }
 
   Future<void> removerUsuarioDeMuchasClase(
-  ClaseModels clase,
-  String user,
-  void Function(ClaseModels claseActualizada)? callback, // callback opcional
-) async {
-  final usuarioActivo = Supabase.instance.client.auth.currentUser;
-  final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-  final data = await ObtenerTotalInfo(
-    supabase: supabase,
-    usuariosTable: 'usuarios',
-    clasesTable: taller,
-  ).obtenerClases();
+    ClaseModels clase,
+    String user,
+    void Function(ClaseModels claseActualizada)? callback, // callback opcional
+  ) async {
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+    final data = await ObtenerTotalInfo(
+      supabase: supabase,
+      usuariosTable: 'usuarios',
+      clasesTable: taller,
+    ).obtenerClases();
 
-  // Renombramos la variable del for a 'item' para no chocar con la variable 'clase'
-  for (final item in data) {
-    // Comparamos con la "clase base" a remover
-    if (item.hora == clase.hora && item.dia == clase.dia) {
-      if (item.mails.contains(user)) {
-        // Remover usuario de mails
-        item.mails.remove(user);
+    // Renombramos la variable del for a 'item' para no chocar con la variable 'clase'
+    for (final item in data) {
+      // Comparamos con la "clase base" a remover
+      if (item.hora == clase.hora && item.dia == clase.dia) {
+        if (item.mails.contains(user)) {
+          // Remover usuario de mails
+          item.mails.remove(user);
 
-        // Actualizamos en Supabase
-        await supabaseClient
-            .from(taller)
-            .update(item.toMap())
-            .eq('id', item.id);
+          // Actualizamos en Supabase
+          await supabaseClient
+              .from(taller)
+              .update(item.toMap())
+              .eq('id', item.id);
 
-        ModificarLugarDisponible().agregarLugarDisponible(item.id);
+          ModificarLugarDisponible().agregarLugarDisponible(item.id);
 
-        // Llamamos al callback si no es null
-        if (callback != null) {
-          callback(item);
+          // Llamamos al callback si no es null
+          if (callback != null) {
+            callback(item);
+          }
         }
       }
     }
+
+    // Enviamos el mensaje de WhatsApp al final (o antes, según lo necesites)
+    // EnviarWpp().sendWhatsAppMessage(
+    //   "HX2dcf10749ec095471f99620be45dbc11",
+    //   'whatsapp:+5491134272488',
+    //   [user],
+    // );
+
+    EnviarWpp().enviarMensajesViejo(
+      "has removido existosamente a $user de las 4 clases",
+      'whatsapp:+5491134272488',
+    );
   }
-
-  // Enviamos el mensaje de WhatsApp al final (o antes, según lo necesites)
-  EnviarWpp().sendWhatsAppMessage(
-    "HX2dcf10749ec095471f99620be45dbc11",
-    'whatsapp:+5491134272488',
-    [user],
-  );
-}
-
 }
