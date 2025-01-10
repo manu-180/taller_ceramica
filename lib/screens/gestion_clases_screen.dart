@@ -196,6 +196,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                         ),
                         TextField(
                           controller: capacidadController,
+                          keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             hintText: 'Capacidad max. de alumnos',
                           ),
@@ -300,7 +301,6 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                         );}
 
                           await supabase.from(taller).insert({
-                            'id': await GenerarId().generarIdClase(),
                             'semana': EncontrarSemana().obtenerSemana(fechaStr),
                             'dia': diaSemana,
                             'fecha': fechaStr,

@@ -40,7 +40,9 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
       hora TEXT NOT NULL,
       mails JSONB DEFAULT '[]',
       lugar_disponible INTEGER NOT NULL DEFAULT 0,
-      mes INTEGER NOT NULL DEFAULT $mesActual
+      mes INTEGER NOT NULL DEFAULT $mesActual,
+      capacidad INTEGER NOT NULL DEFAULT 0
+
     );
   '''
     });
