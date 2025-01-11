@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
-import 'package:taller_ceramica/supabase/actualizar_el_mes.dart';
-import 'package:taller_ceramica/supabase/obtener_mes.dart';
+import 'package:taller_ceramica/supabase/utiles/actualizar_el_mes.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_mes.dart';
 
 class ActualizarFechasDatabase {
   int mesActual = 1;

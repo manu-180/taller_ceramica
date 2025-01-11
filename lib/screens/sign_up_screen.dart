@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/supabase/generar_id.dart';
-import 'package:taller_ceramica/supabase/obtener_taller.dart';
-import 'package:taller_ceramica/supabase/obtener_total_info.dart';
+import 'package:taller_ceramica/supabase/utiles/generar_id.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_total_info.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import '../utils/utils_barril.dart';

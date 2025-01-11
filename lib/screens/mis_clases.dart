@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
-import 'package:taller_ceramica/supabase/obtener_mes.dart';
-import 'package:taller_ceramica/supabase/obtener_taller.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_mes.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';

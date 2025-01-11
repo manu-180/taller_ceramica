@@ -126,14 +126,6 @@ class SubscriptionManager {
       if (response.error != null) {
         throw Exception("Error al consultar los productos: ${response.error}");
       }
-
-      if (response.productDetails.isEmpty) {
-        throw Exception("No se encontraron productos configurados.");
-      }
-
-      for (var product in response.productDetails) {
-        throw Exception("Producto disponible: ${product.title} - ${product.id}");
-      }
     } catch (e) {
       throw Exception("Error al obtener detalles de productos: $e");
     }
@@ -145,7 +137,6 @@ class SubscriptionManager {
     }
 
       await _inAppPurchase.restorePurchases();
-      throw Exception("Se ha enviado la solicitud para restaurar las compras.");
     
   }
 }

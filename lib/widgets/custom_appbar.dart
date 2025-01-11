@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/supabase/is_admin.dart';
-import 'package:taller_ceramica/supabase/obtener_taller.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/is_admin.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});

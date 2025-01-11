@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
-import 'package:taller_ceramica/supabase/is_admin.dart';
-import 'package:taller_ceramica/supabase/obtener_capacidad_clase.dart';
-import 'package:taller_ceramica/supabase/obtener_mes.dart';
-import 'package:taller_ceramica/supabase/obtener_taller.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/is_admin.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_capacidad_clase.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_mes.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';

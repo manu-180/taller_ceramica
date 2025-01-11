@@ -1,9 +1,9 @@
-import 'package:taller_ceramica/supabase/obtener_taller.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/main.dart';
 
-class ObtenerClasesDisponibles {
-  Future<int> clasesDisponibles(String user) async {
+class ObtenerAlertTrigger {
+  Future<int> alertTrigger(String user) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
     final data = await ObtenerTotalInfo(
@@ -12,7 +12,7 @@ class ObtenerClasesDisponibles {
 
     for (final item in data) {
       if (item.fullname == user) {
-        return item.clasesDisponibles;
+        return item.alertTrigger;
       }
     }
     return 0;

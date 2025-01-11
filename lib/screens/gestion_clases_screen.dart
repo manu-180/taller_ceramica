@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
-import 'package:taller_ceramica/supabase/eliminar_clase.dart';
-import 'package:taller_ceramica/supabase/modificar_lugar_disponible.dart';
-import 'package:taller_ceramica/supabase/obtener_mes.dart';
-import 'package:taller_ceramica/supabase/obtener_taller.dart';
-import 'package:taller_ceramica/supabase/obtener_total_info.dart';
+import 'package:taller_ceramica/supabase/clases/eliminar_clase.dart';
+import 'package:taller_ceramica/supabase/modificar_datos/modificar_lugar_disponible.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_mes.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_total_info.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:intl/intl.dart';
@@ -30,6 +30,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   List<ClaseModels> clasesFiltradas = [];
   bool isLoading = true;
   bool isProcessing = false;
+  int mes = 0;
 
   @override
   void initState() {
@@ -306,7 +307,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                             'hora': hora,
                             'mails': [],
                             'lugar_disponible': capacidad,
-                            'mes': await ObtenerMes().obtenerMes(),
+                            'mes': mes,
                             'capacidad': capacidad,
                           });
                         }

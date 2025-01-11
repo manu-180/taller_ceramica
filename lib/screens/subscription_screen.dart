@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/subscription/subscription_manager.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
-import 'package:taller_ceramica/supabase/suscribir_usuario.dart';
+import 'package:taller_ceramica/supabase/suscribir/suscribir_usuario.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
 class SubscriptionScreen extends StatefulWidget {
