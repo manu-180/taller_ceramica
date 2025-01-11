@@ -11,13 +11,6 @@ class EliminarDeBD {
       dotenv.env['SERVICE_ROLE_KEY'] ?? '',
     );
 
-    // Obtén el usuario autenticado actual
-
-    if (userUid == null) {
-      throw Exception('No hay ningún usuario autenticado.');
-    }
-
-    // Elimina el usuario usando la API de administración
-    await supabase.auth.admin.deleteUser(userUid);
+        await supabase.auth.admin.deleteUser(userUid);
   }
 }

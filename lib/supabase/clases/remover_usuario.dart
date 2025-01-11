@@ -71,23 +71,15 @@ class RemoverUsuario {
       clasesTable: taller,
     ).obtenerClases();
 
-    // Renombramos la variable del for a 'item' para no chocar con la variable 'clase'
     for (final item in data) {
-      // Comparamos con la "clase base" a remover
       if (item.hora == clase.hora && item.dia == clase.dia) {
         if (item.mails.contains(user)) {
-          // Remover usuario de mails
           item.mails.remove(user);
 
-          // Actualizamos en Supabase
-          await supabaseClient
-              .from(taller)
-              .update(item.toMap())
-              .eq('id', item.id);
+          await supabaseClient.from(taller).update(item.toMap()).eq('id', item.id);
 
           ModificarLugarDisponible().agregarLugarDisponible(item.id);
 
-          // Llamamos al callback si no es null
           if (callback != null) {
             callback(item);
           }

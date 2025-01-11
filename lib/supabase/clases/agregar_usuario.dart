@@ -75,7 +75,6 @@ class AgregarUsuario {
             supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
         .obtenerClases();
 
-    // Mapa para ordenar días de la semana en orden correcto
     final Map<String, int> diaToNumero = {
       'lunes': 1,
       'martes': 2,
@@ -86,9 +85,7 @@ class AgregarUsuario {
       'domingo': 7,
     };
 
-    // Función para convertir "dd/mm/yyyy" a DateTime
     DateTime parseFecha(String fecha) {
-      // Ej: "01/01/2025"
       final partes = fecha.split('/');
       final dd = int.tryParse(partes[0]) ?? 0;
       final mm = int.tryParse(partes[1]) ?? 0;
@@ -96,50 +93,34 @@ class AgregarUsuario {
       return DateTime(yyyy, mm, dd);
     }
 
-    // 1. Ordenamos la lista primero por día de la semana, luego por fecha
     data.sort((a, b) {
-      // Orden por el valor numérico del día de la semana
       final diaCompare = diaToNumero[a.dia]!.compareTo(diaToNumero[b.dia]!);
       if (diaCompare != 0) {
         return diaCompare;
       }
 
-      // Si los dos items son del mismo día (ej. ambos "miercoles"), ordena por fecha
       final dateA = parseFecha(a.fecha);
       final dateB = parseFecha(b.fecha);
       return dateA.compareTo(dateB);
     });
 
-    // 2. Variables para identificar el mes y año actual
-    final now = DateTime.now();
 
-    final currentYear = now.year;
-
-    // 3. Insertar al usuario en hasta 4 clases
     int count = 0;
 
     for (final item in data) {
-      // Parseamos la fecha de la clase para ver si es de este mes/año
       final partes = item.fecha.split('/');
       if (partes.length == 3) {
-        final mm = int.tryParse(partes[1]) ?? 0;
-        final yyyy = int.tryParse(partes[2]) ?? 0;
 
-        // Filtramos SOLO las clases del mes y año actuales
-        if (mm == await ObtenerMes().obtenerMes() && yyyy == currentYear) {
-          // Verificamos que sea la misma combinación de (dia + hora)
+
           if (item.dia == clase.dia && item.hora == clase.hora) {
-            // Inserta solo si el usuario no está, y si no excedimos 4
             if (!item.mails.contains(user) && count < 4) {
               item.mails.add(user);
 
-              // Actualizar en Supabase
               await supabaseClient
                   .from(taller)
                   .update(item.toMap())
                   .eq('id', item.id);
 
-              // Disminuir cupos
               ModificarLugarDisponible().removerLugarDisponible(item.id);
 
               callback(item);
@@ -147,7 +128,7 @@ class AgregarUsuario {
               count++;
             }
           }
-        }
+        
       }
     }
 
