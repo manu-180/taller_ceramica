@@ -12,8 +12,7 @@ class Internet {
           resultado == ConnectivityResult.mobile ||
           resultado == ConnectivityResult.wifi);
     } catch (e) {
-      print('Error al verificar la conectividad: $e');
-      return false; // Considera que no hay conexión si ocurre un error
+      return false;
     }
   }
 }

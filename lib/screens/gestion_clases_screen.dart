@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
 import 'package:taller_ceramica/supabase/eliminar_clase.dart';
-import 'package:taller_ceramica/supabase/generar_id.dart';
 import 'package:taller_ceramica/supabase/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';

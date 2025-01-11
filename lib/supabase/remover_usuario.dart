@@ -2,7 +2,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/supabase/obtener_taller.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
-import 'package:taller_ceramica/utils/calcular_24hs.dart';
 import 'package:taller_ceramica/supabase/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/obtener_total_info.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';

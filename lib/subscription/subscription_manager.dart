@@ -21,9 +21,7 @@ class SubscriptionManager {
   Future<void> verificarEstadoSuscripcion() async {
     // Verifica la conexión a Internet antes de proceder
     if (!await Internet().hayConexionInternet()) {
-      print(
-          "No hay conexión a Internet. No se puede verificar el estado de la suscripción.");
-      return;
+      throw Exception('No hay conexión a Internet.');
     }
 
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
@@ -46,15 +44,12 @@ class SubscriptionManager {
         .from('subscriptions')
         .update({'is_active': isSubscribed}).eq('user_id', usuarioActivo.id);
 
-    print('Estado de la suscripción actualizado: $isSubscribed');
   }
 
   Future<void> checkAndUpdateSubscription() async {
     // Verifica la conexión a Internet antes de proceder
     if (!await Internet().hayConexionInternet()) {
-      print(
-          "No hay conexión a Internet. No se puede verificar y actualizar la suscripción.");
-      return;
+      throw Exception('No hay conexión a Internet.');
     }
 
     await _inAppPurchase.restorePurchases();
@@ -81,7 +76,6 @@ class SubscriptionManager {
           .from('subscriptions')
           .update({'is_active': isSubscribed}).eq('user_id', currentUser.id);
 
-      print('Estado de la suscripción actualizado: $isSubscribed');
     }
   }
 
@@ -95,13 +89,8 @@ class SubscriptionManager {
             if (!_purchases.any((p) => p.productID == purchase.productID)) {
               _purchases.add(purchase);
             }
-          } else if (purchase.status == PurchaseStatus.error) {
-            print("Error en la compra: ${purchase.error?.message}");
-          }
+          } 
         }
-      },
-      onError: (error) {
-        print("Error al escuchar el flujo de compras: $error");
       },
     );
   }
@@ -127,9 +116,7 @@ class SubscriptionManager {
 
     // Verifica la conexión a Internet antes de proceder
     if (!await Internet().hayConexionInternet()) {
-      print(
-          "No hay conexión a Internet. No se pueden obtener los detalles de productos.");
-      return;
+      throw Exception('No hay conexión a Internet.');
     }
 
     try {
@@ -137,36 +124,31 @@ class SubscriptionManager {
           await _inAppPurchase.queryProductDetails(productIds);
 
       if (response.error != null) {
-        print("Error al consultar los productos: ${response.error}");
-        return;
+        throw Exception("Error al consultar los productos: ${response.error}");
       }
 
       if (response.productDetails.isEmpty) {
-        print("No se encontraron productos configurados.");
-        return;
+        throw Exception("No se encontraron productos configurados.");
       }
 
       for (var product in response.productDetails) {
-        print("Producto disponible: ${product.title} - ${product.id}");
+        throw Exception("Producto disponible: ${product.title} - ${product.id}");
       }
     } catch (e) {
-      print("Error al obtener detalles de productos: $e");
+      throw Exception("Error al obtener detalles de productos: $e");
     }
   }
 
-  /// Restaura las compras
   Future<void> restorePurchases() async {
-    // Verifica la conexión a Internet antes de proceder
     if (!await Internet().hayConexionInternet()) {
-      print("No hay conexión a Internet. No se pueden restaurar las compras.");
-      return;
+       throw Exception('No hay conexión a Internet.');
     }
 
     try {
       await _inAppPurchase.restorePurchases();
-      print("Se ha enviado la solicitud para restaurar las compras.");
+      throw Exception("Se ha enviado la solicitud para restaurar las compras.");
     } catch (e) {
-      print("Error al restaurar las compras: $e");
+      throw Exception("Error al restaurar las compras: $e");
     }
   }
 }

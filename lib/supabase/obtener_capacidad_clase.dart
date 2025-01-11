@@ -6,8 +6,7 @@ class ObtenerCapacidadClase {
   Future<int> capacidadClase(int claseId) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     if (usuarioActivo == null) {
-      print("Usuario no autenticado");
-      return 0;
+      throw Exception("Usuario no autenticado");
     }
 
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo.id);
@@ -19,11 +18,9 @@ class ObtenerCapacidadClase {
 
     for (final clase in clases) {
       if (clase.id == claseId) {
-        print("Capacidad de la clase (${clase.id}): ${clase.capacidad}");
         return clase.capacidad;
       }
     }
-    print("Clase no encontrada para el ID: $claseId");
     return 0;
   }
 

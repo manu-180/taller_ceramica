@@ -120,10 +120,8 @@ if (mounted) {
       final mailsLimpios = clase.mails.map((mail) => mail.trim()).toList();
       final menorA24 = Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual);
 
-      print("Clase ID: ${clase.id}, Capacidad: $capacidad, Mails: ${mailsLimpios.length}, MenorA24: $menorA24");
 
       if (mailsLimpios.length < capacidad && !menorA24) {
-        print("Clase disponible: ${clase.dia} ${clase.fecha} ${clase.hora}");
         final partesFecha = dia.split(' - ')[1].split('/');
         final diaMes = int.parse(partesFecha[1]);
 
