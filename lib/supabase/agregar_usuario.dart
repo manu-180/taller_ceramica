@@ -45,7 +45,7 @@ class AgregarUsuario {
 
               EnviarWpp().enviarMensajesViejo(
                 "$user se ha sumado existosamente a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                'whatsapp:+5491134272488',
+                'whatsapp:+5491132820164',
               );
             }
             if (!parametro) {
@@ -57,7 +57,7 @@ class AgregarUsuario {
               //   );
               EnviarWpp().enviarMensajesViejo(
                 "has insertado existosamente a $user de las la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                'whatsapp:+5491134272488',
+                'whatsapp:+5491132820164',
               );
             }
           }
@@ -160,7 +160,7 @@ class AgregarUsuario {
       //           );
       EnviarWpp().enviarMensajesViejo(
         "has insertado existosamente a $user de las 4 clasea del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-        'whatsapp:+5491134272488',
+        'whatsapp:+5491132820164',
       );
     }
   }

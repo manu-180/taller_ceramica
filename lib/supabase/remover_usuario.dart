@@ -39,7 +39,7 @@ class RemoverUsuario {
 
             EnviarWpp().enviarMensajesViejo(
               "$user ha canelado existosamente la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-              'whatsapp:+5491134272488',
+              'whatsapp:+5491132820164',
             );
           }
           if (parametro) {
@@ -50,7 +50,7 @@ class RemoverUsuario {
             //     );
             EnviarWpp().enviarMensajesViejo(
               "has removido existosamente a $user de las la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-              'whatsapp:+54911',
+              'whatsapp:+5491132820164',
             );
           }
         }
@@ -104,7 +104,7 @@ class RemoverUsuario {
 
     EnviarWpp().enviarMensajesViejo(
       "has removido existosamente a $user de las 4 clases",
-      'whatsapp:+5491134272488',
+      'whatsapp:+5491132820164',
     );
   }
 }

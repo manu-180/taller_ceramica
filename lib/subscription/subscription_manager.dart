@@ -144,11 +144,8 @@ class SubscriptionManager {
        throw Exception('No hay conexión a Internet.');
     }
 
-    try {
       await _inAppPurchase.restorePurchases();
       throw Exception("Se ha enviado la solicitud para restaurar las compras.");
-    } catch (e) {
-      throw Exception("Error al restaurar las compras: $e");
-    }
+    
   }
 }
