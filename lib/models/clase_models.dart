@@ -8,6 +8,8 @@ class ClaseModels {
   int lugaresDisponibles;
   final int mes;
   final int capacidad;
+  final List<String> espera;
+
 
   ClaseModels({
     required this.id,
@@ -19,6 +21,7 @@ class ClaseModels {
     required this.lugaresDisponibles,
     required this.mes,
     required this.capacidad,
+    required this.espera,
   });
 
   @override
@@ -38,6 +41,7 @@ class ClaseModels {
       lugaresDisponibles: map['lugar_disponible'],
       mes: map['mes'],
       capacidad: map['capacidad'],
+      espera: List<String>.from(map['espera'] ?? []),
     );
   }
 
@@ -53,6 +57,7 @@ class ClaseModels {
       'lugar_disponible': lugaresDisponibles,
       'mes': mes,
       'capacidad': capacidad,
+      'espera': espera,
     };
   }
 
@@ -67,6 +72,7 @@ class ClaseModels {
     int? lugaresDisponibles,
     int? mes,
     int? capacidad,
+    List<String>? espera,
   }) {
     return ClaseModels(
       id: id ?? this.id,
@@ -78,6 +84,7 @@ class ClaseModels {
       lugaresDisponibles: lugaresDisponibles ?? this.lugaresDisponibles,
       mes: mes ?? this.mes,
       capacidad: capacidad ?? this.capacidad,
+      espera: espera ?? List.from(this.espera),
     );
   }
 }

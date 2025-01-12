@@ -21,8 +21,7 @@ class AgregarUsuario {
             supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
         .obtenerUsuarios();
 
-    final data =
-        await supabaseClient.from(taller).select().eq('id', idClase).single();
+    final data = await supabaseClient.from(taller).select().eq('id', idClase).single();
 
     final clase = ClaseModels.fromMap(data);
 
@@ -145,4 +144,23 @@ class AgregarUsuario {
       );
     }
   }
+
+  Future<void> agregarUsuarioAListaDeEspera(int id, String user) async {
+  final usuarioActivo = Supabase.instance.client.auth.currentUser;
+  final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+
+    final data = await supabaseClient.from(taller).select().eq('id', id).single();
+    final clase = ClaseModels.fromMap(data);
+
+    if (!clase.espera.contains(user) ) {
+      clase.espera.add(user);
+
+      await supabaseClient
+          .from(taller)
+          .update({"espera": clase.espera})
+          .eq('id', id);
+  } 
+}
+
+
 }

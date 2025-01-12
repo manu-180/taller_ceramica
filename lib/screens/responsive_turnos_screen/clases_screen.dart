@@ -147,6 +147,7 @@ if (mounted) {
   }
 
   Future<void> inicializarDatos() async {
+    
     try {
       final mes = await ObtenerMes().obtenerMes();
       setState(() {
@@ -160,6 +161,40 @@ if (mounted) {
       debugPrint('Error al inicializar los datos: $e');
     }
   }
+
+  Future<void> mostrarAlertaListaEspera({
+  required BuildContext context,
+  ClaseModels? clase,
+}) async {
+  final usuarioActivo = Supabase.instance.client.auth.currentUser;
+  return showDialog<void>(
+    // ignore: use_build_context_synchronously
+    context: context,
+    barrierDismissible: false, 
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Lista de Espera'),
+        content: Text('¿Quieres agregarte a la lista de espera?'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancelar'),
+            onPressed: () {
+              Navigator.of(context).pop(); 
+            },
+          ),
+          FilledButton(
+            child: const Text('Aceptar'),
+            onPressed: () {
+              AgregarUsuario(supabase).agregarUsuarioAListaDeEspera(clase!.id, usuarioActivo!.userMetadata?['fullname']);
+              Navigator.of(context).pop(); 
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   void cambiarSemanaAdelante() {
   final indiceActual = semanas.indexOf(semanaSeleccionada);
@@ -262,7 +297,7 @@ void cambiarSemanaAtras() {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el diálogo
+                Navigator.of(context).pop();
               },
               child: const Text('Cancelar'),
             ),
@@ -275,7 +310,7 @@ void cambiarSemanaAtras() {
                     ModificarAlertTrigger().resetearAlertTrigger(
                         user.userMetadata?['fullname'] ?? '');
                   }
-                  Navigator.of(context).pop(); // Cerrar el diálogo
+                  Navigator.of(context).pop(); 
                 },
                 child: const Text('Aceptar'),
               ),
@@ -466,56 +501,61 @@ void cambiarSemanaAtras() {
       SizedBox(
         width: screenWidth * 0.7,
         height: screenWidth * 0.12,
-        child: ElevatedButton(
-          onPressed: esAdmin
-              ? () async {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          clase.mails.isEmpty
-                              ? "No hay alumnos inscriptos a esta clase"
-                              : "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
+        child: GestureDetector(
+          child: ElevatedButton(
+            onPressed: esAdmin
+                ? () async {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            clase.mails.isEmpty
+                                ? "No hay alumnos inscriptos a esta clase"
+                                : "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
+                          ),
+                          duration: const Duration(seconds: 5),
+                          behavior: SnackBarBehavior.floating,
+                          margin: const EdgeInsets.all(10),
                         ),
-                        duration: const Duration(seconds: 5),
-                        behavior: SnackBarBehavior.floating,
-                        margin: const EdgeInsets.all(10),
-                      ),
-                    );
+                      );
+                    }
                   }
-                }
-              : ((estaLlena ||
-                      Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
-                      clase.lugaresDisponibles <= 0))
-                  ? null
-                  : () async {
-                      if (context.mounted) {
-                        mostrarConfirmacion(context, clase);
-                      }
-                    },
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
-              estaLlena ||
-                      Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
-                      clase.lugaresDisponibles <= 0
-                  ? Colors.grey.shade400
-                  : Colors.green,
-            ),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(screenWidth * 0.03)),
-            ),
-          ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Text(
-                diaYHora,
-                style: const TextStyle(fontSize: 11, color: Colors.white),
+                : ((estaLlena ||
+                        Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
+                        clase.lugaresDisponibles <= 0))
+                    ? null
+                    : () async {
+                        if (context.mounted) {
+                          mostrarConfirmacion(context, clase);
+                        }
+                      },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                estaLlena ||
+                        Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
+                        clase.lugaresDisponibles <= 0
+                    ? Colors.grey.shade400
+                    : Colors.green,
               ),
-            ],
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(screenWidth * 0.03)),
+              ),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Text(
+                  diaYHora,
+                  style: const TextStyle(fontSize: 11, color: Colors.white),
+                ),
+              ],
+            ),
           ),
+          onLongPress: () {
+            mostrarAlertaListaEspera(context: context, clase: clase);
+          },
         ),
       ),
       const SizedBox(height: 18),
