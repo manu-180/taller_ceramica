@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/is_admin.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
+import 'package:taller_ceramica/l10n/app_localizations.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -45,7 +46,7 @@ class CustomAppBarState extends State<CustomAppBar> {
       final usuarioActivo = Supabase.instance.client.auth.currentUser;
       if (usuarioActivo == null) {
         setState(() {
-          errorMessage = 'No hay usuario activo';
+          errorMessage = AppLocalizations.of(context).translate('noActiveUser');
           isLoading = false;
           showLoader = false;
         });
@@ -77,7 +78,8 @@ class CustomAppBarState extends State<CustomAppBar> {
       });
     } catch (e) {
       setState(() {
-        errorMessage = 'Error al verificar el estado de administrador';
+        errorMessage =
+            AppLocalizations.of(context).translate('adminCheckError');
       });
     }
   }
@@ -104,7 +106,7 @@ class CustomAppBarState extends State<CustomAppBar> {
     if (errorMessage != null) {
       return AppBar(
         title: Text(
-          'Error: $errorMessage',
+          '${AppLocalizations.of(context).translate('errorLabel')}: $errorMessage',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: color.primary,
@@ -115,21 +117,46 @@ class CustomAppBarState extends State<CustomAppBar> {
     final user = Supabase.instance.client.auth.currentUser;
 
     final adminRoutes = [
-      {'value': '/turnos/${taller ?? ''}', 'label': 'Clases'},
-      {'value': '/misclases/${taller ?? ''}', 'label': 'Mis clases'},
+      {
+        'value': '/turnos/${taller ?? ''}',
+        'label': AppLocalizations.of(context).translate('classesLabel'),
+      },
+      {
+        'value': '/misclases/${taller ?? ''}',
+        'label': AppLocalizations.of(context).translate('myClassesLabel'),
+      },
       {
         'value': '/gestionhorarios/${taller ?? ''}',
-        'label': 'Gestión de horarios'
+        'label': AppLocalizations.of(context).translate('manageSchedulesLabel'),
       },
-      {'value': '/gestionclases/${taller ?? ''}', 'label': 'Gestión de clases'},
-      {'value': '/usuarios/${taller ?? ''}', 'label': 'Alumnos/as'},
-      {'value': '/configuracion/${taller ?? ''}', 'label': 'Configuración'},
-      {'value': '/prueba', 'label': 'prueba'},
+      {
+        'value': '/gestionclases/${taller ?? ''}',
+        'label': AppLocalizations.of(context).translate('manageClassesLabel'),
+      },
+      {
+        'value': '/usuarios/${taller ?? ''}',
+        'label': AppLocalizations.of(context).translate('studentsLabel'),
+      },
+      {
+        'value': '/configuracion/${taller ?? ''}',
+        'label': AppLocalizations.of(context).translate('settingsLabel'),
+      },
+      {'value': '/prueba', 'label': AppLocalizations.of(context).translate('testLabel')},
     ];
+
     final userRoutes = [
-      {'value': '/turnos/${taller ?? ''}', 'label': 'Clases'},
-      {'value': '/misclases/${taller ?? ''}', 'label': 'Mis clases'},
-      {'value': '/configuracion/${taller ?? ''}', 'label': 'Configuración'},
+      {
+        'value': '/turnos/${taller ?? ''}',
+        'label': AppLocalizations.of(context).translate('classesLabel'),
+      },
+      {
+        'value': '/misclases/${taller ?? ''}',
+        'label': AppLocalizations.of(context).translate('myClassesLabel'),
+      },
+      {
+        'value': '/configuracion/${taller ?? ''}',
+        'label': AppLocalizations.of(context).translate('settingsLabel'),
+      },
     ];
 
     final menuItems = (isAdmin) ? adminRoutes : userRoutes;
@@ -148,7 +175,7 @@ class CustomAppBarState extends State<CustomAppBar> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Taller de',
+                  AppLocalizations.of(context).translate('workshopOfLabel'),
                   style: TextStyle(
                     fontSize: size.width * 0.05,
                     fontWeight: FontWeight.bold,
@@ -156,7 +183,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                   ),
                 ),
                 Text(
-                  'Cerámica',
+                  AppLocalizations.of(context).translate('ceramicsLabel'),
                   style: TextStyle(
                     fontSize: size.width * 0.05,
                     fontWeight: FontWeight.bold,
@@ -210,7 +237,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                         context.push('/');
                       },
                       child: Text(
-                        'Iniciar',
+                        AppLocalizations.of(context).translate('loginLabel'),
                         style: TextStyle(fontSize: size.width * 0.034),
                       ),
                     ),
@@ -235,7 +262,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                         }
                       },
                       child: Text(
-                        'Cerrar sesión',
+                        AppLocalizations.of(context).translate('logoutLabel'),
                         style: TextStyle(fontSize: size.width * 0.032),
                       ),
                     ),

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
+import 'package:taller_ceramica/l10n/app_localizations.dart';
 
 class CambiarPassword extends StatefulWidget {
   const CambiarPassword({super.key});
@@ -37,7 +38,7 @@ class _CambiarPasswordState extends State<CambiarPassword> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      'Cambia tu contraseña:',
+                      AppLocalizations.of(context).translate('changePasswordTitle'),
                       style: TextStyle(
                         fontSize: 19,
                         fontWeight: FontWeight.bold,
@@ -51,7 +52,8 @@ class _CambiarPasswordState extends State<CambiarPassword> {
                 TextField(
                   controller: passwordController,
                   decoration: InputDecoration(
-                    labelText: 'Nueva Contraseña',
+                    labelText: AppLocalizations.of(context)
+                        .translate('newPasswordLabel'),
                     border: const OutlineInputBorder(),
                     errorText: passwordError.isEmpty ? null : passwordError,
                   ),
@@ -59,7 +61,8 @@ class _CambiarPasswordState extends State<CambiarPassword> {
                   onChanged: (value) {
                     setState(() {
                       passwordError = value.length < 6
-                          ? 'La contraseña debe tener al menos 6 caracteres.'
+                          ? AppLocalizations.of(context)
+                              .translate('passwordLengthError')
                           : '';
                     });
                   },
@@ -68,7 +71,8 @@ class _CambiarPasswordState extends State<CambiarPassword> {
                 TextField(
                   controller: confirmPasswordController,
                   decoration: InputDecoration(
-                    labelText: 'Confirmar Contraseña',
+                    labelText: AppLocalizations.of(context)
+                        .translate('confirmPasswordLabel'),
                     border: const OutlineInputBorder(),
                     errorText: confirmPasswordError.isEmpty
                         ? null
@@ -78,7 +82,8 @@ class _CambiarPasswordState extends State<CambiarPassword> {
                   onChanged: (value) {
                     setState(() {
                       confirmPasswordError = value != passwordController.text
-                          ? 'La contraseña no coincide.'
+                          ? AppLocalizations.of(context)
+                              .translate('passwordMismatchError')
                           : '';
                     });
                   },
@@ -93,10 +98,11 @@ class _CambiarPasswordState extends State<CambiarPassword> {
                     // Validaciones
                     if (nuevaPassword.isEmpty || confirmarPassword.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        SnackBar(
                           content: Text(
-                            'Todos los campos son obligatorios.',
-                            style: TextStyle(color: Colors.white),
+                            AppLocalizations.of(context)
+                                .translate('allFieldsRequiredError'),
+                            style: const TextStyle(color: Colors.white),
                           ),
                           backgroundColor: Colors.red,
                         ),
@@ -106,10 +112,11 @@ class _CambiarPasswordState extends State<CambiarPassword> {
 
                     if (nuevaPassword.length < 6) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        SnackBar(
                           content: Text(
-                            'La contraseña debe tener al menos 6 caracteres.',
-                            style: TextStyle(color: Colors.white),
+                            AppLocalizations.of(context)
+                                .translate('passwordLengthError'),
+                            style: const TextStyle(color: Colors.white),
                           ),
                           backgroundColor: Colors.red,
                         ),
@@ -119,10 +126,11 @@ class _CambiarPasswordState extends State<CambiarPassword> {
 
                     if (nuevaPassword != confirmarPassword) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        SnackBar(
                           content: Text(
-                            'Las contraseñas no coinciden.',
-                            style: TextStyle(color: Colors.white),
+                            AppLocalizations.of(context)
+                                .translate('passwordMismatchError'),
+                            style: const TextStyle(color: Colors.white),
                           ),
                           backgroundColor: Colors.red,
                         ),
@@ -136,10 +144,11 @@ class _CambiarPasswordState extends State<CambiarPassword> {
                           .updateUser(UserAttributes(password: nuevaPassword));
 
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        SnackBar(
                           content: Text(
-                            'Contraseña actualizada exitosamente.',
-                            style: TextStyle(color: Colors.white),
+                            AppLocalizations.of(context)
+                                .translate('passwordUpdatedSuccess'),
+                            style: const TextStyle(color: Colors.white),
                           ),
                           backgroundColor: Colors.green,
                         ),
@@ -148,7 +157,8 @@ class _CambiarPasswordState extends State<CambiarPassword> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Error al cambiar la contraseña: $e',
+                            AppLocalizations.of(context)
+                                .translate('passwordUpdateError', params: {'error': e.toString()}),
                             style: const TextStyle(color: Colors.white),
                           ),
                           backgroundColor: Colors.red,
@@ -156,7 +166,10 @@ class _CambiarPasswordState extends State<CambiarPassword> {
                       );
                     }
                   },
-                  child: const Text('Actualizar Contraseña'),
+                  child: Text(
+                    AppLocalizations.of(context)
+                        .translate('updatePasswordButton'),
+                  ),
                 ),
               ],
             ),

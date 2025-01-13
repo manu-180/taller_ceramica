@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/l10n/app_localizations.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
 import 'package:taller_ceramica/supabase/clases/eliminar_clase.dart';
 import 'package:taller_ceramica/supabase/modificar_datos/modificar_lugar_disponible.dart';
@@ -125,482 +126,527 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
 
   // Diálogo de confirmación
   Future<bool?> mostrarDialogoConfirmacion(
-      BuildContext context, String mensaje) {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Confirmación"),
-          content: Text(mensaje),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text("No"),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text("Sí"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+    BuildContext context, String mensaje) {
+  final localizations = AppLocalizations.of(context);
+  return showDialog<bool>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(localizations.translate('confirmationDialogTitle')),
+        content: Text(mensaje),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(localizations.translate('noButton')),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(localizations.translate('yesButton')),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   String obtenerDia(DateTime fecha) {
+    final localizations = AppLocalizations.of(context);
     switch (fecha.weekday) {
       case DateTime.monday:
-        return 'lunes';
+        return localizations.translate('monday');
       case DateTime.tuesday:
-        return 'martes';
+        return localizations.translate('tuesday');
       case DateTime.wednesday:
-        return 'miercoles';
+        return localizations.translate('wednesday');
       case DateTime.thursday:
-        return 'jueves';
+        return localizations.translate('thursday');
       case DateTime.friday:
-        return 'viernes';
+        return localizations.translate('friday');
       case DateTime.saturday:
-        return 'sabado';
+        return localizations.translate('saturday');
       case DateTime.sunday:
-        return 'domingo';
+        return localizations.translate('sunday');
       default:
-        return 'Desconocido';
+        return localizations.translate('unknownDay');
     }
   }
 
   Future<void> mostrarDialogoAgregarClase(String dia) async {
-    final size = MediaQuery.of(context).size;
-    final usuarioActivo = Supabase.instance.client.auth.currentUser;
-    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+  final size = MediaQuery.of(context).size;
+  final usuarioActivo = Supabase.instance.client.auth.currentUser;
+  final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
 
-    final horaController = TextEditingController();
-    final capacidadController = TextEditingController();
+  final horaController = TextEditingController();
+  final capacidadController = TextEditingController();
 
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setStateDialog) {
-            return AlertDialog(
-              title: Text("Agregar nueva clase todos los $dia"),
-              content: isProcessing
-                  ? null
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextField(
-                          controller: horaController,
-                          decoration: const InputDecoration(
-                            hintText: 'Hora de la clase (HH:mm)',
-                          ),
+  final localizations = AppLocalizations.of(context);
+
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setStateDialog) {
+          return AlertDialog(
+            title: Text(
+              localizations.translate('addNewClassDialogTitle', params: {
+                'day': dia,
+              }),
+            ),
+            content: isProcessing
+                ? null
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        controller: horaController,
+                        decoration: InputDecoration(
+                          hintText: localizations.translate('classTimeHint'),
                         ),
-                        TextField(
-                          controller: capacidadController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            hintText: 'Capacidad max. de alumnos',
-                          ),
-                        ),
-                      ],
-                    ),
-              actions: [
-                if (isProcessing)
-                  ElevatedButton.icon(
-                    onPressed: null,
-                    icon: SizedBox(
-                      width: size.width * 0.05,
-                      height: size.width * 0.05,
-                      child: CircularProgressIndicator(
-                        strokeWidth: size.width * 0.006,
                       ),
+                      TextField(
+                        controller: capacidadController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: localizations.translate('classCapacityHint'),
+                        ),
+                      ),
+                    ],
+                  ),
+            actions: [
+              if (isProcessing)
+                ElevatedButton.icon(
+                  onPressed: null,
+                  icon: SizedBox(
+                    width: size.width * 0.05,
+                    height: size.width * 0.05,
+                    child: CircularProgressIndicator(
+                      strokeWidth: size.width * 0.006,
                     ),
-                    label: const Text("Cargando clases"),
-                  )
-                else ...[
-                  ElevatedButton(
-                    onPressed: () async {
-                      setStateDialog(() {
-                        isProcessing = true;
-                      });
+                  ),
+                  label: Text(
+                    localizations.translate('loadingClassesLabel'),
+                  ),
+                )
+              else ...[
+                // Botón de cancelar
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(
+                    localizations.translate('cancelButtonLabel'),
+                  ),
+                ),
+                // Botón de agregar como FilledButton
+                FilledButton(
+                  onPressed: () async {
+                    setStateDialog(() {
+                      isProcessing = true;
+                    });
 
-                      try {
-                        final hora = horaController.text.trim();
-                        if (hora.isEmpty || fechaSeleccionada == null) {
-                          throw Exception(
-                              "Debe ingresar una hora y fecha válida.");
-                        }
-
-                        final capacidadText = capacidadController.text.trim();
-                        final capacidad = int.tryParse(capacidadText);
-
-                        if (capacidad == null) {
-                          throw Exception(
-                              "Debe ingresar un valor numérico para la capacidad maxima.");
-                        }
-
-                        final horaFormatoValido =
-                            RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
-                        if (!horaFormatoValido) {
-                          throw Exception(
-                              "Formato de hora inválido. Usa HH:mm (ej: 14:30).");
-                        }
-
-                        final partesHora = hora.split(':');
-                        final hh = int.tryParse(partesHora[0]) ?? -1;
-                        final mm = int.tryParse(partesHora[1]) ?? -1;
-
-                        if (hh < 0 || hh > 23 || mm < 0 || mm > 59) {
-                          throw Exception(
-                              "La hora debe estar entre 00:00 y 23:59.");
-                        }
-
-                        final fechaBase =
-                            DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
-                        final firstDayOfMonth =
-                            DateTime(fechaBase.year, fechaBase.month, 1);
-                        final dayOfWeekSelected = fechaBase.weekday;
-
-                        final difference =
-                            (7 + dayOfWeekSelected - firstDayOfMonth.weekday) %
-                                7;
-
-                        final firstTargetDate =
-                            firstDayOfMonth.add(Duration(days: difference));
-
-                        // Creamos 5 clases, una cada 7 días
-                        for (int i = 0; i < 5; i++) {
-                          final fechaSemana =
-                              firstTargetDate.add(Duration(days: 7 * i));
-                          final fechaStr =
-                              DateFormat('dd/MM/yyyy').format(fechaSemana);
-                          final diaSemana = obtenerDia(fechaSemana);
-
-                          final existingClass = await supabase
-                              .from(taller)
-                              .select()
-                              .eq('fecha', fechaStr)
-                              .eq('hora', hora)
-                              .maybeSingle();
-
-                          if (existingClass != null) {
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'La clase del $fechaStr a las $hora ya existe.',
-                                ),
-                              ),
-                            );
-                            continue;
-                          } else {
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    'Clase del $fechaStr a las $hora agregada con éxito.'),
-                              ),
-                            );
-                          }
-
-                          await supabase.from(taller).insert({
-                            'semana': EncontrarSemana().obtenerSemana(fechaStr),
-                            'dia': diaSemana,
-                            'fecha': fechaStr,
-                            'hora': hora,
-                            'mails': [],
-                            'lugar_disponible': capacidad,
-                            'mes': mes,
-                            'capacidad': capacidad,
-                          });
-                        }
-
-                        await cargarDatos();
-
-                        if (fechaSeleccionada != null) {
-                          setState(() {
-                            clasesFiltradas = clasesDisponibles.where((clase) {
-                              return clase.fecha == fechaSeleccionada;
-                            }).toList();
-                          });
-                        }
-
-                        Navigator.of(context).pop();
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(e.toString()),
-                          ),
+                    try {
+                      final hora = horaController.text.trim();
+                      if (hora.isEmpty || fechaSeleccionada == null) {
+                        throw Exception(
+                          localizations.translate('invalidTimeOrDateError'),
                         );
-                      } finally {
-                        setStateDialog(() {
-                          isProcessing = false;
+                      }
+
+                      final capacidadText = capacidadController.text.trim();
+                      final capacidad = int.tryParse(capacidadText);
+
+                      if (capacidad == null) {
+                        throw Exception(
+                          localizations.translate('invalidCapacityError'),
+                        );
+                      }
+
+                      final horaFormatoValido =
+                          RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
+                      if (!horaFormatoValido) {
+                        throw Exception(
+                          localizations.translate('invalidTimeFormatError'),
+                        );
+                      }
+
+                      final partesHora = hora.split(':');
+                      final hh = int.tryParse(partesHora[0]) ?? -1;
+                      final mm = int.tryParse(partesHora[1]) ?? -1;
+
+                      if (hh < 0 || hh > 23 || mm < 0 || mm > 59) {
+                        throw Exception(
+                          localizations.translate('timeOutOfRangeError'),
+                        );
+                      }
+
+                      final fechaBase =
+                          DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
+                      final firstDayOfMonth =
+                          DateTime(fechaBase.year, fechaBase.month, 1);
+                      final dayOfWeekSelected = fechaBase.weekday;
+
+                      final difference = (7 +
+                              dayOfWeekSelected -
+                              firstDayOfMonth.weekday) %
+                          7;
+
+                      final firstTargetDate =
+                          firstDayOfMonth.add(Duration(days: difference));
+
+                      // Create 5 classes, one every 7 days
+                      for (int i = 0; i < 5; i++) {
+                        final fechaSemana =
+                            firstTargetDate.add(Duration(days: 7 * i));
+                        final fechaStr =
+                            DateFormat('dd/MM/yyyy').format(fechaSemana);
+                        final diaSemana = obtenerDia(fechaSemana);
+
+                        final existingClass = await supabase
+                            .from(taller)
+                            .select()
+                            .eq('fecha', fechaStr)
+                            .eq('hora', hora)
+                            .maybeSingle();
+
+                        if (existingClass != null) {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                localizations.translate('classAlreadyExists',
+                                    params: {'date': fechaStr, 'time': hora}),
+                              ),
+                            ),
+                          );
+                          continue;
+                        } else {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                localizations.translate('classAddedSuccess',
+                                    params: {'date': fechaStr, 'time': hora}),
+                              ),
+                            ),
+                          );
+                        }
+
+                        await supabase.from(taller).insert({
+                          'semana': EncontrarSemana().obtenerSemana(fechaStr),
+                          'dia': diaSemana,
+                          'fecha': fechaStr,
+                          'hora': hora,
+                          'mails': [],
+                          'lugar_disponible': capacidad,
+                          'mes': mes,
+                          'capacidad': capacidad,
                         });
                       }
-                    },
-                    child: const Text("Agregar"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text("Cancelar"),
-                  ),
-                ],
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
 
-  Future<void> mostrarDialogoModificarCapacidad(ClaseModels clase) async {
-    final usuarioActivo = Supabase.instance.client.auth.currentUser;
-    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+                      await cargarDatos();
 
-    final capacityController =
-        TextEditingController(text: clase.capacidad.toString());
+                      if (fechaSeleccionada != null) {
+                        setState(() {
+                          clasesFiltradas = clasesDisponibles.where((clase) {
+                            return clase.fecha == fechaSeleccionada;
+                          }).toList();
+                        });
+                      }
 
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Modificar capacidad de la clase"),
-          content: TextField(
-            controller: capacityController,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: "Capacidad máxima",
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Cancelar"),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final newCapacityString = capacityController.text.trim();
-                final newCapacity = int.tryParse(newCapacityString);
-
-                if (newCapacity == null) {
-                  Navigator.of(context).pop();
-                  ScaffoldMessenger.of(this.context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Por favor ingresa un valor numérico válido para la capacidad.",
-                      ),
-                    ),
-                  );
-                  return;
-                }
-
-                await supabase.from(taller).update({
-                  'capacidad': newCapacity,
-                  'lugar_disponible': newCapacity - clase.mails.length,
-                }).eq('id', clase.id);
-
-                setState(() {
-                  final index =
-                      clasesFiltradas.indexWhere((c) => c.id == clase.id);
-                  if (index != -1) {
-                    // Creamos una nueva instancia con la capacidad actualizada
-                    final updatedClase = clase.copyWith(
-                      capacidad: newCapacity,
-                      lugaresDisponibles: newCapacity - clase.mails.length,
-                      // si deseas que lugaresDisponibles sea igual a la nueva capacidad
-                    );
-
-                    // Reemplazamos la versión vieja en la lista
-                    clasesFiltradas[index] = updatedClase;
-                  }
-                });
-
-                Navigator.of(context).pop(); // Cierra el diálogo
-              },
-              child: const Text("Guardar"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void cambiarFecha(bool siguiente) {
-    setState(() {
-      if (fechaSeleccionada != null) {
-        final int indexActual = fechasDisponibles.indexOf(fechaSeleccionada!);
-        if (siguiente) {
-          fechaSeleccionada =
-              fechasDisponibles[(indexActual + 1) % fechasDisponibles.length];
-        } else {
-          fechaSeleccionada = fechasDisponibles[
-              (indexActual - 1 + fechasDisponibles.length) %
-                  fechasDisponibles.length];
-        }
-        seleccionarFecha(fechaSeleccionada!);
-      } else {
-        fechaSeleccionada = fechasDisponibles[0];
-        seleccionarFecha(fechaSeleccionada!);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final color = Theme.of(context).primaryColor;
-    final colors = Theme.of(context).colorScheme;
-
-    return Scaffold(
-      appBar:
-          ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-                child: BoxText(
-                  text:
-                      "En esta sección podrás gestionar las clases disponibles. Agregar o remover lugares, eliminar clases y agregar nuevas clases.",
-                ),
-              ),
-              const SizedBox(height: 10),
-              MostrarDiaSegunFecha(
-                text: fechaSeleccionada ?? '-',
-                colors: colors,
-                color: color,
-                cambiarFecha: cambiarFecha,
-              ),
-              const SizedBox(height: 20),
-              DropdownButton<String>(
-                value: fechaSeleccionada,
-                hint: const Text('Selecciona una fecha'),
-                onChanged: (value) {
-                  if (value != null) {
-                    seleccionarFecha(value);
-                  }
-                },
-                items: fechasDisponibles.map((fecha) {
-                  return DropdownMenuItem(
-                    value: fecha,
-                    child: Text(fecha),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 20),
-              if (!isLoading &&
-                  fechaSeleccionada != null &&
-                  clasesFiltradas.isNotEmpty)
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: clasesFiltradas.length,
-                    itemBuilder: (context, index) {
-                      final clase = clasesFiltradas[index];
-                      return Card(
-                        // InkWell para detectar el longPress
-                        child: InkWell(
-                          onLongPress: () {
-                            // Al hacer longPress, abrimos el diálogo para cambiar capacidad
-                            mostrarDialogoModificarCapacidad(clase);
-                          },
-                          child: ListTile(
-                            title: Text(
-                              '${clase.hora} - Lugares disponibles: ${clase.lugaresDisponibles}',
-                            ),
-                            subtitle: Text(
-                              'Capacidad máxima: ${clase.capacidad}',
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.add),
-                                  onPressed: () async {
-                                    bool? respuesta =
-                                        await mostrarDialogoConfirmacion(
-                                      context,
-                                      "¿Quieres agregar un lugar disponible a esta clase?",
-                                    );
-                                    if (respuesta == true) {
-                                      agregarLugar(clase.id);
-                                      ModificarLugarDisponible()
-                                          .agregarLugarDisponible(clase.id);
-                                    }
-                                  },
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.remove),
-                                  onPressed: () async {
-                                    bool? respuesta =
-                                        await mostrarDialogoConfirmacion(
-                                      context,
-                                      "¿Quieres remover un lugar disponible de esta clase?",
-                                    );
-                                    if (respuesta == true &&
-                                        clase.lugaresDisponibles > 0) {
-                                      quitarLugar(clase.id);
-                                      ModificarLugarDisponible()
-                                          .removerLugarDisponible(clase.id);
-                                    }
-                                  },
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                  onPressed: () async {
-                                    bool? respuesta =
-                                        await mostrarDialogoConfirmacion(
-                                      context,
-                                      "¿Estás seguro/a que quieres eliminar esta clase?",
-                                    );
-                                    if (respuesta == true) {
-                                      setState(() {
-                                        clasesFiltradas.removeAt(index);
-                                        EliminarClase().eliminarClase(clase.id);
-                                      });
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
+                      Navigator.of(context).pop();
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(e.toString()),
                         ),
                       );
-                    },
+                    } finally {
+                      setStateDialog(() {
+                        isProcessing = false;
+                      });
+                    }
+                  },
+                  child: Text(
+                    localizations.translate('addButtonLabel'),
                   ),
                 ),
+              ],
             ],
+          );
+        },
+      );
+    },
+  );
+}
+
+
+
+  Future<void> mostrarDialogoModificarCapacidad(ClaseModels clase) async {
+  final usuarioActivo = Supabase.instance.client.auth.currentUser;
+  final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+
+  final capacityController =
+      TextEditingController(text: clase.capacidad.toString());
+
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          AppLocalizations.of(context).translate('modifyClassCapacity'),
+        ),
+        content: TextField(
+          controller: capacityController,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context).translate('maxCapacityLabel'),
           ),
         ),
-      ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              AppLocalizations.of(context).translate('cancelButtonLabel'),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final newCapacityString = capacityController.text.trim();
+              final newCapacity = int.tryParse(newCapacityString);
 
-      // Botón flotante para crear una nueva clase
-      floatingActionButton: SizedBox(
-        width: 200,
-        child: FloatingActionButton(
-          backgroundColor: colors.secondaryContainer,
-          onPressed: () {
-            if (fechaSeleccionada == null) {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Por favor, selecciona una fecha antes de agregar clases.',
+              if (newCapacity == null) {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(this.context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      AppLocalizations.of(context).translate('invalidCapacityError'),
+                    ),
                   ),
+                );
+                return;
+              }
+
+              await supabase.from(taller).update({
+                'capacidad': newCapacity,
+                'lugar_disponible': newCapacity - clase.mails.length,
+              }).eq('id', clase.id);
+
+              setState(() {
+                final index =
+                    clasesFiltradas.indexWhere((c) => c.id == clase.id);
+                if (index != -1) {
+                  final updatedClase = clase.copyWith(
+                    capacidad: newCapacity,
+                    lugaresDisponibles: newCapacity - clase.mails.length,
+                  );
+
+                  clasesFiltradas[index] = updatedClase;
+                }
+              });
+
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              AppLocalizations.of(context).translate('saveButtonLabel'),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void cambiarFecha(bool siguiente) {
+  setState(() {
+    if (fechaSeleccionada != null) {
+      final int indexActual = fechasDisponibles.indexOf(fechaSeleccionada!);
+      if (siguiente) {
+        fechaSeleccionada =
+            fechasDisponibles[(indexActual + 1) % fechasDisponibles.length];
+      } else {
+        fechaSeleccionada = fechasDisponibles[
+            (indexActual - 1 + fechasDisponibles.length) %
+                fechasDisponibles.length];
+      }
+      seleccionarFecha(fechaSeleccionada!);
+    } else {
+      fechaSeleccionada = fechasDisponibles[0];
+      seleccionarFecha(fechaSeleccionada!);
+    }
+  });
+}
+
+@override
+Widget build(BuildContext context) {
+  final color = Theme.of(context).primaryColor;
+  final colors = Theme.of(context).colorScheme;
+
+  return Scaffold(
+    appBar:
+        ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
+    body: Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 600),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+              child: BoxText(
+                text: AppLocalizations.of(context).translate('manageClassesInfo'),
+              ),
+            ),
+            const SizedBox(height: 10),
+            MostrarDiaSegunFecha(
+              text: fechaSeleccionada ?? '-',
+              colors: colors,
+              color: color,
+              cambiarFecha: cambiarFecha,
+            ),
+            const SizedBox(height: 20),
+            DropdownButton<String>(
+              value: fechaSeleccionada,
+              hint: Text(
+                AppLocalizations.of(context).translate('selectDateHint'),
+              ),
+              onChanged: (value) {
+                if (value != null) {
+                  seleccionarFecha(value);
+                }
+              },
+              items: fechasDisponibles.map((fecha) {
+                return DropdownMenuItem(
+                  value: fecha,
+                  child: Text(fecha),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 20),
+            if (!isLoading &&
+                fechaSeleccionada != null &&
+                clasesFiltradas.isNotEmpty)
+              Expanded(
+                child: ListView.builder(
+                  itemCount: clasesFiltradas.length,
+                  itemBuilder: (context, index) {
+                    final clase = clasesFiltradas[index];
+                    return Card(
+                      child: InkWell(
+                        onLongPress: () {
+                          mostrarDialogoModificarCapacidad(clase);
+                        },
+                        child: ListTile(
+                          title: Text(
+    AppLocalizations.of(context).translate(
+      'classInfo',
+      params: {
+        'time': clase.hora,
+        'availablePlaces': clase.lugaresDisponibles.toString(),
+      },
+    ),
+  ),
+                          subtitle: Text(
+    AppLocalizations.of(context).translate(
+      'maxCapacityInfo',
+      params: {
+        'maxCapacity': clase.capacidad.toString(),
+      },
+    ),
+  ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () async {
+                                  bool? respuesta =
+                                      await mostrarDialogoConfirmacion(
+                                    context,
+                                    AppLocalizations.of(context)
+                                        .translate('addPlaceConfirmation'),
+                                  );
+                                  if (respuesta == true) {
+                                    agregarLugar(clase.id);
+                                    ModificarLugarDisponible()
+                                        .agregarLugarDisponible(clase.id);
+                                  }
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.remove),
+                                onPressed: () async {
+                                  bool? respuesta =
+                                      await mostrarDialogoConfirmacion(
+                                    context,
+                                    AppLocalizations.of(context)
+                                        .translate('removePlaceConfirmation'),
+                                  );
+                                  if (respuesta == true &&
+                                      clase.lugaresDisponibles > 0) {
+                                    quitarLugar(clase.id);
+                                    ModificarLugarDisponible()
+                                        .removerLugarDisponible(clase.id);
+                                  }
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () async {
+                                  bool? respuesta =
+                                      await mostrarDialogoConfirmacion(
+                                    context,
+                                    AppLocalizations.of(context)
+                                        .translate('deleteClassConfirmation'),
+                                  );
+                                  if (respuesta == true) {
+                                    setState(() {
+                                      clasesFiltradas.removeAt(index);
+                                      EliminarClase().eliminarClase(clase.id);
+                                    });
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              );
-              return;
-            }
-            mostrarDialogoAgregarClase(
-              DiaConFecha().obtenerDiaDeLaSemana(fechaSeleccionada!),
-            );
-          },
-          child: const Text("Crear una clase nueva"),
+              ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+
+    floatingActionButton: SizedBox(
+      width: 200,
+      child: FloatingActionButton(
+        backgroundColor: colors.secondaryContainer,
+        onPressed: () {
+          if (fechaSeleccionada == null) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  AppLocalizations.of(context)
+                      .translate('selectDateBeforeAdding'),
+                ),
+              ),
+            );
+            return;
+          }
+          mostrarDialogoAgregarClase(
+            DiaConFecha().obtenerDiaDeLaSemana(fechaSeleccionada!,AppLocalizations.of(context)),
+          );
+        },
+        child: Text(
+          AppLocalizations.of(context).translate('createNewClassButton'),
+        ),
+      ),
+    ),
+  );
+}
 }

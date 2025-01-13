@@ -10,6 +10,7 @@ import 'package:taller_ceramica/widgets/box_text.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
+import 'package:taller_ceramica/l10n/app_localizations.dart';
 
 class Configuracion extends ConsumerStatefulWidget {
   const Configuracion({super.key, this.taller});
@@ -53,12 +54,12 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
 
     final List<Map<String, String>> options = [
       {
-        'title': 'Cambiar contraseña',
+        'title': AppLocalizations.of(context).translate('changePassword'),
         'route': '/cambiarpassword',
       },
       if (taller != null)
         {
-          'title': 'Cambiar nombre de usuario',
+          'title': AppLocalizations.of(context).translate('changeUsername'),
           'route': '/cambiarfullname/$taller', // Ruta dinámica
         },
     ];
@@ -77,7 +78,7 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                           size: 80, color: Colors.grey),
                       const SizedBox(height: 20),
                       Text(
-                        'Para cambiar la configuración debes iniciar sesión!',
+                        AppLocalizations.of(context).translate('loginRequired'),
                         style: TextStyle(
                           fontSize: 19,
                           fontWeight: FontWeight.bold,
@@ -91,17 +92,17 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                 )
               : ListView(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
                       child: BoxText(
-                          text:
-                              "En esta sección podrás cambiar el color de la aplicación y el modo de visualización"),
+                          text: AppLocalizations.of(context)
+                              .translate('settingsIntro')),
                     ),
                     const SizedBox(height: 20),
                     ExpansionTile(
-                      title: const Text(
-                        'Elige un color',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      title: Text(
+                        AppLocalizations.of(context).translate('chooseColor'),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       children: [
                         ListView.builder(
@@ -146,7 +147,13 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                           },
                         ),
                         ListTile(
-                          title: Text(isDark ? 'Modo claro' : 'Modo oscuro'),
+                          title: Text(
+                            isDark
+                                ? AppLocalizations.of(context)
+                                    .translate('lightMode')
+                                : AppLocalizations.of(context)
+                                    .translate('darkMode'),
+                          ),
                           onTap: () {
                             ref
                                 .read(themeNotifyProvider.notifier)
@@ -159,8 +166,10 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                       ],
                     ),
                     ExpansionTile(
-                      title: const Text('Actualizar datos',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      title: Text(
+                        AppLocalizations.of(context).translate('updateData'),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       children: [
                         ListView.builder(
                           shrinkWrap: true,

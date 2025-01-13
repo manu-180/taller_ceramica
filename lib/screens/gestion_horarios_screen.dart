@@ -14,9 +14,8 @@ import 'package:taller_ceramica/widgets/box_text.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/mostrar_dia_segun_fecha.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
+import 'package:taller_ceramica/l10n/app_localizations.dart';
 
-// IMPORTANTE: asume que tienes un archivo DiaConFecha con un método para obtener el día.
-// Si no, reemplaza la lógica en _obtenerDia(fecha)
 import 'package:taller_ceramica/utils/dia_con_fecha.dart';
 
 class GestionHorariosScreen extends StatefulWidget {
@@ -80,18 +79,15 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
         clasesTable: taller,
       ).obtenerUsuarios();
 
-      // Filtra solo las clases que terminan en /2025 (p.ej. dd/mm/2025)
       final datosDiciembre = datos.where((clase) {
         final fecha = clase.fecha;
         return fecha.endsWith('/2025');
       }).toList();
 
-      // Filtra usuarios que estén asociados a "taller"
       final usuariosFiltrados = usuarios.where((usuario) {
         return usuario.taller == taller;
       }).toList();
 
-      // Extrae sus nombres
       final nombresFiltrados =
           usuariosFiltrados.map((usuario) => usuario.fullname).toList();
 
@@ -115,12 +111,10 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   void seleccionarFecha(String fecha) {
     setState(() {
       fechaSeleccionada = fecha;
-      // Filtra las clases que coinciden con esa fecha
       horariosFiltrados = horariosDisponibles
           .where((clase) => clase.fecha == fechaSeleccionada)
           .toList();
 
-      // Ordena por hora ascendente
       horariosFiltrados.sort((a, b) {
         final formatoFecha = DateFormat('dd/MM/yyyy');
         final fechaA = formatoFecha.parse(a.fecha);
@@ -143,33 +137,30 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
         final int indexActual = fechasDisponibles.indexOf(fechaSeleccionada!);
 
         if (siguiente) {
-          // Ir a la siguiente fecha y volver al inicio si es la última
           fechaSeleccionada =
               fechasDisponibles[(indexActual + 1) % fechasDisponibles.length];
         } else {
-          // Ir a la fecha anterior y volver al final si es la primera
           fechaSeleccionada = fechasDisponibles[
               (indexActual - 1 + fechasDisponibles.length) %
                   fechasDisponibles.length];
         }
         seleccionarFecha(fechaSeleccionada!);
       } else {
-        // Si aún no hay fechaSeleccionada, arranca con la primera
         fechaSeleccionada = fechasDisponibles[0];
         seleccionarFecha(fechaSeleccionada!);
       }
     });
   }
 
-  /// Función para obtener el día de la semana desde la fecha seleccionada.
-  /// Asume que tienes la clase [DiaConFecha] que ofrece obtenerDiaDeLaSemana(String fecha).
   String _obtenerDia(String? fecha) {
     if (fecha == null || fecha.isEmpty) return '';
-    return DiaConFecha().obtenerDiaDeLaSemana(fecha);
+    return DiaConFecha().obtenerDiaDeLaSemana(fecha, AppLocalizations.of(context));
   }
 
   Future<void> mostrarDialogo(
       String tipoAccion, ClaseModels clase, ColorScheme color) async {
+    final localizations = AppLocalizations.of(context);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -178,9 +169,9 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setStateDialog) {
             return AlertDialog(
-              title: Text(tipoAccion == "insertar"
-                  ? "Seleccionar usuario para insertar"
-                  : "Seleccionar usuario para remover"),
+              title: Text(localizations.translate(tipoAccion == "insertar"
+                  ? 'selectUserToAdd'
+                  : 'selectUserToRemove')),
               content: SizedBox(
                 width: double.maxFinite,
                 child: Column(
@@ -188,8 +179,8 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                   children: [
                     TextField(
                       controller: usuarioController,
-                      decoration: const InputDecoration(
-                        hintText: 'Escribe el nombre del usuario',
+                      decoration: InputDecoration(
+                        hintText: localizations.translate('searchUserHint'),
                       ),
                       onChanged: (texto) {
                         setStateDialog(() {
@@ -224,16 +215,15 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                               ),
                             ),
                           )
-                        : const Center(
-                            child: Text("No se encontraron usuarios."),
+                        : Center(
+                            child: Text(localizations.translate('noUsersFound')),
                           ),
                     const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(tipoAccion == "insertar"
-                            ? "Insertar x4"
-                            : "Remover x4"),
+                        Text(localizations.translate(
+                            tipoAccion == "insertar" ? 'insertX4' : 'removeX4')),
                         Switch(
                           value: insertarX4,
                           onChanged: (value) {
@@ -250,22 +240,17 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                       children: [
                         ElevatedButton(
                           onPressed: () async {
-                            // 1. Si no hay usuario seleccionado, salimos
                             if (usuarioSeleccionado.isEmpty) return;
 
-                            // 2. Cerramos el cartel de inmediato
                             Navigator.of(context).pop();
 
-                            // 3. Ahora ejecutamos el proceso asíncrono en segundo plano
                             if (tipoAccion == "insertar") {
                               if (insertarX4) {
-                                // Inserta en 4 clases
                                 await AgregarUsuario(supabase)
                                     .agregarUsuarioEnCuatroClases(
                                   clase,
                                   usuarioSeleccionado,
                                   (ClaseModels claseActualizada) {
-                                    // 4. Si la pantalla principal todavía está montada, actualizamos
                                     if (mounted) {
                                       setState(() {
                                         final idx = horariosDisponibles
@@ -289,7 +274,6 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                   },
                                 );
                               } else {
-                                // Inserta en una sola clase
                                 await AgregarUsuario(supabase)
                                     .agregarUsuarioAClase(
                                   clase.id,
@@ -297,7 +281,6 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                   true,
                                   clase,
                                 );
-                                // 4. Actualizamos la pantalla principal si sigue montada
                                 if (mounted) {
                                   setState(() {
                                     clase.mails.add(usuarioSeleccionado);
@@ -306,13 +289,11 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                               }
                             } else if (tipoAccion == "remover") {
                               if (insertarX4) {
-                                // Remueve de 4 clases
                                 await RemoverUsuario(supabase)
                                     .removerUsuarioDeMuchasClase(
                                   clase,
                                   usuarioSeleccionado,
                                   (ClaseModels claseActualizada) {
-                                    // Este callback se llama cada vez que se hace un "remove"
                                     if (mounted) {
                                       setState(() {
                                         final idx = horariosDisponibles
@@ -336,7 +317,6 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                   },
                                 );
                               } else {
-                                // Remueve de una sola clase
                                 await RemoverUsuario(supabase)
                                     .removerUsuarioDeClase(
                                   clase.id,
@@ -351,15 +331,14 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                               }
                             }
                           },
-                          child: Text(
-                            tipoAccion == "insertar" ? "Insertar" : "Remover",
-                          ),
+                          child: Text(localizations.translate(
+                              tipoAccion == "insertar" ? 'addButton' : 'removeButton')),
                         ),
                         ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: const Text("Cancelar"),
+                          child: Text(localizations.translate('cancelButton')),
                         ),
                       ],
                     ),
@@ -378,6 +357,8 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
     final size = MediaQuery.of(context).size;
     final color = Theme.of(context).primaryColor;
     final colors = Theme.of(context).colorScheme;
+    final localizations = AppLocalizations.of(context);
+
     final partesFecha = fechaSeleccionada?.split('/');
     final diaMes = '${partesFecha?[0]}/${partesFecha?[1]}';
 
@@ -390,11 +371,10 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: BoxText(
-                    text:
-                        "En esta sesión podrás gestionar tus horarios. Ver quiénes asisten a tus clases y agregar o remover usuarios de las mismas",
+                    text: localizations.translate('manageSchedulesInfo'),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -407,7 +387,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                 const SizedBox(height: 20),
                 DropdownButton<String>(
                   value: fechaSeleccionada,
-                  hint: const Text('Selecciona una fecha'),
+                  hint: Text(localizations.translate('selectDateHint')),
                   onChanged: (value) {
                     if (value != null) {
                       seleccionarFecha(value);
@@ -467,9 +447,9 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                                 ),
                                               ),
                                               const SizedBox(width: 10),
-                                              const Text(
-                                                "- Alumnos :",
-                                                style: TextStyle(
+                                              Text(
+                                                localizations.translate('studentsLabel'),
+                                                style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               )
@@ -496,9 +476,9 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                                     colors,
                                                   );
                                                 },
-                                                child: const Text(
-                                                  "Agregar Usuario",
-                                                  style: TextStyle(
+                                                child: Text(
+                                                  localizations.translate('addUserButton'),
+                                                  style: const TextStyle(
                                                     fontSize: 10,
                                                   ),
                                                 ),
@@ -516,9 +496,9 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                                     colors,
                                                   );
                                                 },
-                                                child: const Text(
-                                                  "Remover Usuario",
-                                                  style: TextStyle(
+                                                child: Text(
+                                                  localizations.translate('removeUserButton'),
+                                                  style: const TextStyle(
                                                     fontSize: 10,
                                                   ),
                                                 ),
@@ -534,32 +514,39 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                             },
                           )
                         : Center(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: size.width * 0.2),
-                              child: SizedBox(
-                                width: size.width * 0.65,
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.info,
-                                      color: color,
-                                      size: size.width * 0.12,
-                                    ),
-                                    SizedBox(height: size.width * 0.02),
-                                    // TEXTO cuando no hay clases
-                                    Text(
-                                      'No hay clases cargadas el ${_obtenerDia(fechaSeleccionada)} $diaMes',
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold,
-                                        color: colors.primary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+    child: Padding(
+      padding: EdgeInsets.only(top: size.width * 0.2),
+      child: SizedBox(
+        width: size.width * 0.65,
+        child: Column(
+          children: [
+            Icon(
+              Icons.info,
+              color: color,
+              size: size.width * 0.12,
+            ),
+            SizedBox(height: size.width * 0.02),
+            // TEXTO cuando no hay clases
+            Text(
+              AppLocalizations.of(context).translate(
+                'noClassesLoaded',
+                params: {
+                  'day': _obtenerDia(fechaSeleccionada),
+                  'date': diaMes,
+                },
+              ),
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: colors.primary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  ),
+
                   ),
               ],
             ),

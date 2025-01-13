@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
+import 'package:taller_ceramica/l10n/app_localizations.dart'; // Importación para traducción
 
 class TabletAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
@@ -18,7 +19,6 @@ class TabletAppBar extends StatefulWidget implements PreferredSizeWidget {
 class TabletAppBarState extends State<TabletAppBar> {
   bool _isMenuOpen = false;
 
-  /// Variables para cargar el taller
   String? taller;
   bool isLoading = true;
   bool showLoader = false;
@@ -28,7 +28,6 @@ class TabletAppBarState extends State<TabletAppBar> {
   void initState() {
     super.initState();
 
-    // Pasado 1 segundo, si todavía está cargando, muestro loader
     Future.delayed(const Duration(seconds: 1), () {
       if (mounted && isLoading) {
         setState(() {
@@ -45,7 +44,7 @@ class TabletAppBarState extends State<TabletAppBar> {
       final usuarioActivo = Supabase.instance.client.auth.currentUser;
       if (usuarioActivo == null) {
         setState(() {
-          errorMessage = 'No hay usuario activo';
+          errorMessage = AppLocalizations.of(context).translate('noActiveUser');
           isLoading = false;
           showLoader = false;
         });
@@ -74,19 +73,17 @@ class TabletAppBarState extends State<TabletAppBar> {
     final color = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
 
-    // 1) Todavía no pasó 1s y seguimos cargando => AppBar vacío o con texto mínimo
     if (isLoading && !showLoader) {
       return AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: color.primary,
-        title: const Text(
-          'Cargando...',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          AppLocalizations.of(context).translate('loading'),
+          style: const TextStyle(color: Colors.white),
         ),
       );
     }
 
-    // 2) Pasó 1s y todavía seguimos isLoading => AppBar con un CircularProgressIndicator
     if (isLoading && showLoader) {
       return AppBar(
         automaticallyImplyLeading: false,
@@ -95,19 +92,17 @@ class TabletAppBarState extends State<TabletAppBar> {
       );
     }
 
-    // 3) Si ocurrió algún error => AppBar con fondo rojo
     if (errorMessage != null) {
       return AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.red,
         title: Text(
-          'Error: $errorMessage',
+          '${AppLocalizations.of(context).translate('errorLabel')}: $errorMessage',
           style: const TextStyle(color: Colors.white),
         ),
       );
     }
 
-    // 4) Ya tenemos el taller => construimos el AppBar “real”
     return StreamBuilder<User?>(
       stream: Supabase.instance.client.auth.onAuthStateChange
           .map((event) => event.session?.user),
@@ -115,26 +110,47 @@ class TabletAppBarState extends State<TabletAppBar> {
         final user = snapshot.data;
         final userId = user?.id;
 
-        // Rutas con el taller concatenado
         final adminRoutes = [
-          {'value': '/turnos${taller ?? ''}', 'label': 'Clases'},
-          {'value': '/misclases${taller ?? ''}', 'label': 'Mis clases'},
+          {
+            'value': '/turnos${taller ?? ''}',
+            'label': AppLocalizations.of(context).translate('classesLabel')
+          },
+          {
+            'value': '/misclases${taller ?? ''}',
+            'label': AppLocalizations.of(context).translate('myClassesLabel')
+          },
           {
             'value': '/gestionhorarios${taller ?? ''}',
-            'label': 'Gestión de horarios'
+            'label': AppLocalizations.of(context)
+                .translate('manageSchedulesLabel')
           },
           {
             'value': '/gestionclases${taller ?? ''}',
-            'label': 'Gestión de clases'
+            'label': AppLocalizations.of(context).translate('manageClassesLabel')
           },
-          {'value': '/usuarios${taller ?? ''}', 'label': 'Alumnos/as'},
-          {'value': '/configuracion${taller ?? ''}', 'label': 'Configuración'},
+          {
+            'value': '/usuarios${taller ?? ''}',
+            'label': AppLocalizations.of(context).translate('studentsLabel')
+          },
+          {
+            'value': '/configuracion${taller ?? ''}',
+            'label': AppLocalizations.of(context).translate('settingsLabel')
+          },
         ];
 
         final userRoutes = [
-          {'value': '/turnos${taller ?? ''}', 'label': 'Clases'},
-          {'value': '/misclases${taller ?? ''}', 'label': 'Mis clases'},
-          {'value': '/configuracion${taller ?? ''}', 'label': 'Configuración'},
+          {
+            'value': '/turnos${taller ?? ''}',
+            'label': AppLocalizations.of(context).translate('classesLabel')
+          },
+          {
+            'value': '/misclases${taller ?? ''}',
+            'label': AppLocalizations.of(context).translate('myClassesLabel')
+          },
+          {
+            'value': '/configuracion${taller ?? ''}',
+            'label': AppLocalizations.of(context).translate('settingsLabel')
+          },
         ];
 
         final menuItems = (userId == "56f74db7-61ed-418f-a047-b94224a639ed" ||
@@ -157,7 +173,15 @@ class TabletAppBarState extends State<TabletAppBar> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Taller de Cerámica ',
+                      AppLocalizations.of(context).translate('workshopOfLabel'),
+                      style: TextStyle(
+                        fontSize: size.width * 0.02,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      AppLocalizations.of(context).translate('ceramicsLabel'),
                       style: TextStyle(
                         fontSize: size.width * 0.02,
                         fontWeight: FontWeight.bold,
@@ -198,7 +222,6 @@ class TabletAppBarState extends State<TabletAppBar> {
                 offset: Offset(-size.width * 0.03, size.height * 0.10),
               ),
               const Spacer(),
-              // Botones de login / logout
               user == null
                   ? SizedBox(
                       height: size.width * 0.03,
@@ -208,7 +231,7 @@ class TabletAppBarState extends State<TabletAppBar> {
                           context.push('/iniciar-sesion${taller ?? ''}');
                         },
                         child: Text(
-                          'Iniciar sesión',
+                          AppLocalizations.of(context).translate('loginLabel'),
                           style: TextStyle(fontSize: size.width * 0.015),
                         ),
                       ),
@@ -227,7 +250,7 @@ class TabletAppBarState extends State<TabletAppBar> {
                           }
                         },
                         child: Text(
-                          'Cerrar sesión',
+                          AppLocalizations.of(context).translate('logoutLabel'),
                           style: TextStyle(fontSize: size.width * 0.015),
                         ),
                       ),

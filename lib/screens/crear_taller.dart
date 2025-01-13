@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:taller_ceramica/l10n/app_localizations.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
@@ -42,7 +43,6 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
       lugar_disponible INTEGER NOT NULL DEFAULT 0,
       mes INTEGER NOT NULL DEFAULT $mesActual,
       capacidad INTEGER NOT NULL DEFAULT 0
-
     );
   '''
     });
@@ -55,10 +55,12 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Taller de Ceramica',
-          style: TextStyle(color: Colors.white),
+  iconTheme: IconThemeData(
+    color: Colors.white, 
+  ),
+        title: Text(
+          AppLocalizations.of(context).translate('appTitle'),
+          style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: color.primary,
       ),
@@ -70,8 +72,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                 Padding(
                   padding: EdgeInsets.all(size.width * 0.05),
                   child: BoxText(
-                      text:
-                          "Antes de crear tu taller, te invitamos a leer brevemente más información sobre cómo funciona nuestra aplicación. Esto te ayudará a aprovechar al máximo todas sus funcionalidades."),
+                      text: AppLocalizations.of(context)
+                          .translate('createWorkshopIntro')),
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
@@ -79,31 +81,17 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text(
-                              '¿Qué puede hacer nuestra aplicación?'),
+                          title: Text(
+                              AppLocalizations.of(context).translate('infoTitle')),
                           content: SingleChildScrollView(
-                            child: const Text(
-                                'Nuestra aplicación está diseñada para revolucionar la gestión de tu taller de cerámica. ¡Descubre todo lo que puedes lograr con ella!\n\n'
-                                '**Para los alumnos:**\n'
-                                '- Explora todas las clases disponibles con botones en verde para inscribirte fácilmente. ¡Es sencillo y rápido inscribirte en tus clases favoritas!\n'
-                                '- Gestiona tus clases: revisa las que tienes inscritas y cancélalas si es necesario. Si cancelas con un día de anticipación, obtendrás un crédito para recuperarla más adelante. ¡Fácil y justo!\n\n'
-                                '**Para los administradores:**\n'
-                                '- Gestiona a tus alumnos como un experto: asigna créditos para inscribirse, elimina usuarios de clases o agrégalos, ¡incluso si la clase ya está llena! Todo al alcance de tu mano.\n'
-                                '- Visualiza tus clases de manera eficiente: selecciona una fecha y obtén una vista detallada de quiénes asistirán. Podrás hacer ajustes de manera rápida y sencilla.\n'
-                                '- Crea nuevas clases o elimínalas sin complicaciones, asegurando que tu taller esté siempre organizado y funcionando a la perfección.\n\n'
-                                '**¿Lo mejor?** Mientras los alumnos se manejan de forma autónoma, tú recibirás notificaciones automáticas por WhatsApp con cada inscripción, manteniéndote al tanto sin esfuerzo.\n\n'
-                                '**Personalización para todos los usuarios:**\n'
-                                '- Cambia el color del tema de la aplicación desde la pantalla de configuración, dándole tu propio estilo.\n'
-                                '- Actualiza los datos de tu cuenta de manera sencilla y sin complicaciones.\n\n'
-                                '**Importante:**\n'
-                                'Ten en cuenta que la aplicación incluye un mes de prueba gratuito. ¡No necesitas ingresar ningún medio de pago para disfrutar de esta experiencia inicial!\n'
-                                'Una vez finalizado el mes, si decides seguir disfrutando de todas las funcionalidades, deberás pagar una suscripción de \$40. ¡Es el momento de llevar tu taller al siguiente nivel!\n\n'
-                                '¡Empieza hoy mismo y transforma la forma en que gestionas tu taller de cerámica!'),
+                            child: Text(
+                                AppLocalizations.of(context).translate('infoContent')),
                           ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(),
-                              child: const Text('Cerrar'),
+                              child: Text(
+                                  AppLocalizations.of(context).translate('closeButton')),
                             ),
                           ],
                         );
@@ -111,7 +99,7 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                     );
                   },
                   icon: const Icon(Icons.info_outline), // Icono en el botón
-                  label: const Text('Más Información'),
+                  label: Text(AppLocalizations.of(context).translate('moreInfoButton')),
                 ),
                 SizedBox(
                   height: size.width * 0.05,
@@ -129,9 +117,10 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                       children: [
                         TextField(
                           controller: fullnameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Nombre y apellido',
-                            border: OutlineInputBorder(),
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                .translate('fullNameLabel'),
+                            border: const OutlineInputBorder(),
                           ),
                           keyboardType: TextInputType.name,
                         ),
@@ -139,7 +128,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                         TextField(
                           controller: emailController,
                           decoration: InputDecoration(
-                            labelText: 'Correo Electrónico',
+                            labelText: AppLocalizations.of(context)
+                                .translate('emailLabel'),
                             border: const OutlineInputBorder(),
                             errorText: mailError.isEmpty ? null : mailError,
                           ),
@@ -148,7 +138,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                             setState(() {
                               mailError = !emailRegex
                                       .hasMatch(emailController.text.trim())
-                                  ? 'El correo electrónico es inválido.'
+                                  ? AppLocalizations.of(context)
+                                      .translate('invalidEmailError')
                                   : '';
                             });
                           },
@@ -157,7 +148,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                         TextField(
                           controller: tallerController,
                           decoration: InputDecoration(
-                            labelText: 'Nombre del taller',
+                            labelText: AppLocalizations.of(context)
+                                .translate('workshopNameLabel'),
                             border: const OutlineInputBorder(),
                             errorText: tallerError.isEmpty ? null : tallerError,
                           ),
@@ -165,7 +157,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                           onChanged: (value) {
                             setState(() {
                               tallerError = tallerController.text.trim().isEmpty
-                                  ? 'El nombre del taller no puede estar vacío.'
+                                  ? AppLocalizations.of(context)
+                                      .translate('emptyWorkshopNameError')
                                   : '';
                             });
                           },
@@ -174,7 +167,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                         TextField(
                           controller: passwordController,
                           decoration: InputDecoration(
-                            labelText: 'Contraseña',
+                            labelText: AppLocalizations.of(context)
+                                .translate('passwordLabel'),
                             border: const OutlineInputBorder(),
                             errorText:
                                 passwordError.isEmpty ? null : passwordError,
@@ -183,7 +177,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                           onChanged: (value) {
                             setState(() {
                               passwordError = value.length < 6
-                                  ? 'La contraseña debe tener al menos 6 caracteres.'
+                                  ? AppLocalizations.of(context)
+                                      .translate('passwordLengthError')
                                   : '';
                             });
                           },
@@ -192,7 +187,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                         TextField(
                           controller: confirmPasswordController,
                           decoration: InputDecoration(
-                            labelText: 'Confirmar Contraseña',
+                            labelText: AppLocalizations.of(context)
+                                .translate('confirmPasswordLabel'),
                             border: const OutlineInputBorder(),
                             errorText: confirmPasswordError.isEmpty
                                 ? null
@@ -203,7 +199,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                             setState(() {
                               confirmPasswordError =
                                   value != passwordController.text
-                                      ? 'La contraseña no coincide.'
+                                      ? AppLocalizations.of(context)
+                                          .translate('passwordMismatchError')
                                       : '';
                             });
                           },
@@ -214,8 +211,9 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                           children: [
                             ElevatedButton(
                                 onPressed: () => context.go("/"),
-                                child: Text("Volver atras")),
-                            SizedBox(width: 15),
+                                child: Text(AppLocalizations.of(context)
+                                    .translate('goBackButton'))),
+                            const SizedBox(width: 15),
                             FilledButton(
                               onPressed: isLoading
                                   ? null
@@ -244,11 +242,12 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                           isLoading = false;
                                         });
                                         ScaffoldMessenger.of(context)
-                                            .showSnackBar(const SnackBar(
+                                            .showSnackBar(SnackBar(
                                           content: Text(
-                                            'Todos los campos son obligatorios.',
+                                            AppLocalizations.of(context)
+                                                .translate('allFieldsRequiredError'),
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                const TextStyle(color: Colors.white),
                                           ),
                                           backgroundColor: Colors.red,
                                         ));
@@ -260,11 +259,12 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                           isLoading = false;
                                         });
                                         ScaffoldMessenger.of(context)
-                                            .showSnackBar(const SnackBar(
+                                            .showSnackBar(SnackBar(
                                           content: Text(
-                                            'La contraseña debe tener al menos 6 caracteres.',
+                                            AppLocalizations.of(context)
+                                                .translate('passwordLengthError'),
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                const TextStyle(color: Colors.white),
                                           ),
                                           backgroundColor: Colors.red,
                                         ));
@@ -276,11 +276,12 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                           isLoading = false;
                                         });
                                         ScaffoldMessenger.of(context)
-                                            .showSnackBar(const SnackBar(
+                                            .showSnackBar(SnackBar(
                                           content: Text(
-                                            'La contraseña no coincide.',
+                                            AppLocalizations.of(context)
+                                                .translate('passwordMismatchError'),
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                const TextStyle(color: Colors.white),
                                           ),
                                           backgroundColor: Colors.red,
                                         ));
@@ -323,21 +324,16 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                           context.go("/");
                                         }
 
-                                        //  EnviarWpp().sendWhatsAppMessage(
-                                        // "HXd8748cc9c7d60600cfda07262b4710df",
-                                        // 'whatsapp:+5491134272488',
-                                        // [Capitalize().capitalize(fullname), taller, email]
-                                        //   );
-
                                         setState(() {
                                           isLoading = false;
                                         });
                                         if (context.mounted) {
                                           ScaffoldMessenger.of(context)
-                                              .showSnackBar(const SnackBar(
+                                              .showSnackBar(SnackBar(
                                             content: Text(
-                                              '¡Taller creado exitosamente!',
-                                              style: TextStyle(
+                                              AppLocalizations.of(context)
+                                                  .translate('workshopCreatedSuccess'),
+                                              style: const TextStyle(
                                                   color: Colors.white),
                                             ),
                                             backgroundColor: Colors.green,
@@ -351,7 +347,9 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
                                             content: Text(
-                                              'Error al crear el taller: $e',
+                                              AppLocalizations.of(context)
+                                                  .translate('workshopCreationError',
+                                                      params: {'error': e.toString()}),
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),
@@ -365,7 +363,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                           Colors.white),
                                     )
-                                  : const Text('Registrar Taller'),
+                                  : Text(AppLocalizations.of(context)
+                                      .translate('registerWorkshopButton')),
                             ),
                           ],
                         ),

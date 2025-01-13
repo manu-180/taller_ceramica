@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/utils/dia_con_fecha.dart';
 import 'package:taller_ceramica/widgets/custom_box.dart';
+import 'package:taller_ceramica/l10n/app_localizations.dart'; // Importar traducciones
 
 class MostrarDiaSegunFecha extends StatelessWidget {
   const MostrarDiaSegunFecha({
@@ -45,11 +46,14 @@ class MostrarDiaSegunFecha extends StatelessWidget {
         ),
         SizedBox(width: screenWidth * 0.05),
         CustomBox(
-            width: screenWidth > 600 ? screenWidth * 0.15 : screenWidth * 0.35,
-            color1: colors.secondaryContainer,
-            color2: colors.primary.withAlpha(60),
-            text:
-                text.isEmpty ? "-" : DiaConFecha().obtenerDiaDeLaSemana(text)),
+          width: screenWidth > 600 ? screenWidth * 0.15 : screenWidth * 0.35,
+          color1: colors.secondaryContainer,
+          color2: colors.primary.withAlpha(60),
+          text: text.isEmpty
+              ? AppLocalizations.of(context).translate('selectDate')
+              : DiaConFecha().obtenerDiaDeLaSemana(
+                  text, AppLocalizations.of(context)), // Pasar el contexto
+        ),
         SizedBox(width: screenWidth * 0.05),
         Container(
           decoration: BoxDecoration(

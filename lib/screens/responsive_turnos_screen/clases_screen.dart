@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:taller_ceramica/l10n/app_localizations.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/is_admin.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_capacidad_clase.dart';
@@ -93,10 +94,13 @@ class _ClasesScreenState extends State<ClasesScreen> {
 
     final diasConClasesDisponibles = await obtenerDiasConClasesDisponibles();
     if (diasConClasesDisponibles.isEmpty) {
-      avisoDeClasesDisponibles = "No hay clases disponibles esta semana.";
-    } else {
       avisoDeClasesDisponibles =
-          "Hay clases disponibles el ${diasConClasesDisponibles.join(', ')}.";
+          AppLocalizations.of(context).translate('noAvailableClasses');
+    } else {
+      avisoDeClasesDisponibles = AppLocalizations.of(context)
+          .translate('availableClasses', params: {
+        'days': diasConClasesDisponibles.join(', ')
+      });
     }
 
     if (mounted) {
@@ -114,9 +118,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
       final clases = entry.value;
 
       for (var clase in clases) {
-        // Consultar la capacidad desde la caché
         final capacidad = capacidadCache[clase.id] ?? 0;
-
         final mailsLimpios = clase.mails.map((mail) => mail.trim()).toList();
         final menorA24 =
             Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual);
@@ -165,22 +167,23 @@ class _ClasesScreenState extends State<ClasesScreen> {
   }) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     return showDialog<void>(
-      // ignore: use_build_context_synchronously
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Lista de Espera'),
-          content: Text('¿Quieres agregarte a la lista de espera?'),
+          title: Text(AppLocalizations.of(context).translate('waitlistTitle')),
+          content:
+              Text(AppLocalizations.of(context).translate('waitlistContent')),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancelar'),
+              child:
+                  Text(AppLocalizations.of(context).translate('cancelButton')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FilledButton(
-              child: const Text('Aceptar'),
+              child: Text(AppLocalizations.of(context).translate('acceptButton')),
               onPressed: () {
                 AgregarUsuario(supabase).agregarUsuarioAListaDeEspera(
                     clase!.id, usuarioActivo!.userMetadata?['fullname']);
@@ -226,7 +229,8 @@ class _ClasesScreenState extends State<ClasesScreen> {
     bool mostrarBotonAceptar = false;
 
     if (user == null) {
-      mensaje = "Debes iniciar sesión para inscribirte a una clase";
+      mensaje = AppLocalizations.of(context)
+          .translate('loginToEnrollMessage');
       if (context.mounted) {
         _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
       }
@@ -236,7 +240,8 @@ class _ClasesScreenState extends State<ClasesScreen> {
     final mailsLimpios = clase.mails.map((mail) => mail.trim()).toList();
 
     if (mailsLimpios.contains(user.userMetadata?['fullname'])) {
-      mensaje = 'Revisa en "mis clases"';
+      mensaje = AppLocalizations.of(context)
+          .translate('alreadyEnrolledMessage');
       if (context.mounted) {
         _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
       }
@@ -251,8 +256,8 @@ class _ClasesScreenState extends State<ClasesScreen> {
     if (!context.mounted) return;
 
     if (triggerAlert > 0 && clasesDisponibles == 0) {
-      mensaje =
-          'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación';
+      mensaje = AppLocalizations.of(context)
+          .translate('cannotRecoverClassMessage');
       if (context.mounted) {
         _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
       }
@@ -260,15 +265,18 @@ class _ClasesScreenState extends State<ClasesScreen> {
     }
 
     if (clasesDisponibles == 0) {
-      mensaje = "No tienes créditos disponibles para inscribirte a esta clase";
+      mensaje = AppLocalizations.of(context)
+          .translate('noCreditsAvailableMessage');
       if (context.mounted) {
         _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
       }
       return;
     }
 
-    mensaje =
-        '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
+    mensaje = AppLocalizations.of(context).translate(
+      'confirmEnrollMessage',
+      params: {'day': clase.dia, 'time': clase.hora},
+    );
     mostrarBotonAceptar = true;
 
     if (context.mounted) {
@@ -279,7 +287,6 @@ class _ClasesScreenState extends State<ClasesScreen> {
   void _mostrarDialogo(
       BuildContext context, String mensaje, bool mostrarBotonAceptar,
       [ClaseModels? clase, dynamic user]) {
-    // Verificar si el widget sigue montado antes de usar el contexto
     if (!context.mounted) return;
 
     showDialog(
@@ -298,7 +305,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancelar'),
+              child: Text(AppLocalizations.of(context).translate('cancelButton')),
             ),
             if (mostrarBotonAceptar)
               ElevatedButton(
@@ -311,7 +318,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
                   }
                   Navigator.of(context).pop();
                 },
-                child: const Text('Aceptar'),
+                child: Text(AppLocalizations.of(context).translate('acceptButton')),
               ),
           ],
         );
@@ -329,18 +336,21 @@ class _ClasesScreenState extends State<ClasesScreen> {
   }
 
   String _obtenerTituloDialogo(String mensaje) {
-    if (mensaje == "Debes iniciar sesión para inscribirte a una clase") {
-      return "Inicia sesión";
-    } else if (mensaje == 'Revisa en "mis clases"') {
-      return "Ya estás inscrito en esta clase";
+    if (mensaje ==
+        AppLocalizations.of(context).translate('loginRequiredMessage')) {
+      return AppLocalizations.of(context).translate('loginTitle');
     } else if (mensaje ==
-            "No tienes créditos disponibles para inscribirte a esta clase" ||
+        AppLocalizations.of(context).translate('checkInMyClassesMessage')) {
+      return AppLocalizations.of(context).translate('alreadyEnrolledTitle');
+    } else if (mensaje ==
+            AppLocalizations.of(context).translate('noCreditsMessage') ||
         mensaje ==
-            'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación' ||
-        mensaje == 'No puedes inscribirte a esta clase') {
-      return "No puedes inscribirte a esta clase";
+            AppLocalizations.of(context).translate('cannotRecoverMessage') ||
+        mensaje ==
+            AppLocalizations.of(context).translate('cannotEnrollMessage')) {
+      return AppLocalizations.of(context).translate('cannotEnrollTitle');
     } else {
-      return "Confirmar Inscripción";
+      return AppLocalizations.of(context).translate('confirmEnrollmentTitle');
     }
   }
 
@@ -356,8 +366,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
     final colors = Theme.of(context).colorScheme;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    // Relativo a la pantalla
-    double paddingSize = screenWidth * 0.05; // 5% del ancho de la pantalla
+    double paddingSize = screenWidth * 0.05;
 
     return Scaffold(
       appBar: ResponsiveAppBar(isTablet: screenWidth > 600),
@@ -372,7 +381,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
-                "En esta sesión podrás ver los horarios disponibles para las clases de cerámica. ¡Reserva tu lugar ahora!",
+                AppLocalizations.of(context).translate('classScheduleInfo'),
                 style: Theme.of(context)
                     .textTheme
                     .bodyLarge
@@ -452,7 +461,11 @@ class _ClasesScreenState extends State<ClasesScreen> {
                                           strokeWidth: 2.2,
                                         );
                                       } else if (snapshot.hasError) {
-                                        return Text('Error: ${snapshot.error}');
+                                        return Text(AppLocalizations.of(context)
+                                            .translate('errorMessage',
+                                                params: {
+                                              'error': snapshot.error.toString()
+                                            }));
                                       } else {
                                         return snapshot.data ??
                                             const SizedBox();
@@ -490,88 +503,88 @@ class _ClasesScreenState extends State<ClasesScreen> {
   }
 
   Future<Widget> construirBotonHorario(
-      ClaseModels clase, Map<int, int> capacidadCache) async {
-    final partesFecha = clase.fecha.split('/');
-    final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
-    final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
+    ClaseModels clase, Map<int, int> capacidadCache) async {
+  final partesFecha = clase.fecha.split('/');
+  final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
+  final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
 
-    // Usar la capacidad desde la caché
-    final capacidad = capacidadCache[clase.id] ?? 0;
-    final estaLlena = clase.mails.length >= capacidad;
+  final capacidad = capacidadCache[clase.id] ?? 0;
+  final estaLlena = clase.mails.length >= capacidad;
 
-    final screenWidth = MediaQuery.of(context).size.width;
+  final screenWidth = MediaQuery.of(context).size.width;
+  final esAdmin = await IsAdmin().admin();
 
-    // Verifica si el usuario es administrador
-    final esAdmin = await IsAdmin().admin();
-
-    return Column(
-      children: [
-        SizedBox(
-          width: screenWidth * 0.7,
-          height: screenWidth * 0.12,
-          child: GestureDetector(
-            child: ElevatedButton(
-              onPressed: esAdmin
-                  ? () async {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              clase.mails.isEmpty
-                                  ? "No hay alumnos inscriptos a esta clase"
-                                  : "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
-                            ),
-                            duration: const Duration(seconds: 5),
-                            behavior: SnackBarBehavior.floating,
-                            margin: const EdgeInsets.all(10),
+  return Column(
+    children: [
+      SizedBox(
+        width: screenWidth * 0.7,
+        height: screenWidth * 0.12,
+        child: GestureDetector(
+          child: ElevatedButton(
+            onPressed: esAdmin
+                ? () async {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            clase.mails.isEmpty
+                                ? AppLocalizations.of(context).translate('noStudents')
+                                : AppLocalizations.of(context).translate(
+                                    'studentsInClass',
+                                    params: {'students': clase.mails.join(', ')},
+                                  ),
                           ),
-                        );
-                      }
+                          duration: const Duration(seconds: 5),
+                          behavior: SnackBarBehavior.floating,
+                          margin: const EdgeInsets.all(10),
+                        ),
+                      );
                     }
-                  : ((estaLlena ||
-                          Calcular24hs().esMenorA0Horas(
-                              clase.fecha, clase.hora, mesActual) ||
-                          clase.lugaresDisponibles <= 0))
-                      ? null
-                      : () async {
-                          if (context.mounted) {
-                            mostrarConfirmacion(context, clase);
-                          }
-                        },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  estaLlena ||
-                          Calcular24hs().esMenorA0Horas(
-                              clase.fecha, clase.hora, mesActual) ||
-                          clase.lugaresDisponibles <= 0
-                      ? Colors.grey.shade400
-                      : Colors.green,
-                ),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(screenWidth * 0.03)),
-                ),
+                  }
+                : ((estaLlena ||
+                        Calcular24hs().esMenorA0Horas(
+                            clase.fecha, clase.hora, mesActual) ||
+                        clase.lugaresDisponibles <= 0))
+                    ? null
+                    : () async {
+                        if (context.mounted) {
+                          mostrarConfirmacion(context, clase);
+                        }
+                      },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                estaLlena ||
+                        Calcular24hs().esMenorA0Horas(
+                            clase.fecha, clase.hora, mesActual) ||
+                        clase.lugaresDisponibles <= 0
+                    ? Colors.grey.shade400
+                    : Colors.green,
               ),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Text(
-                    diaYHora,
-                    style: const TextStyle(fontSize: 11, color: Colors.white),
-                  ),
-                ],
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(screenWidth * 0.03)),
               ),
             ),
-            onLongPress: () {
-              mostrarAlertaListaEspera(context: context, clase: clase);
-            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Text(
+                  diaYHora,
+                  style: const TextStyle(fontSize: 11, color: Colors.white),
+                ),
+              ],
+            ),
           ),
+          onLongPress: () {
+            mostrarAlertaListaEspera(context: context, clase: clase);
+          },
         ),
-        const SizedBox(height: 18),
-      ],
-    );
-  }
+      ),
+      const SizedBox(height: 18),
+    ],
+  );
+}
 }
 
 class _AvisoDeClasesDisponibles extends StatelessWidget {
@@ -607,15 +620,14 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
           Icon(
             Icons.info,
             color: color,
-            size: screenWidth * 0.08, // 8% del ancho para el tamaño del ícono
+            size: screenWidth * 0.08,
           ),
-          SizedBox(width: screenWidth * 0.03), // 3% del ancho para el espaciado
+          SizedBox(width: screenWidth * 0.03),
           Expanded(
             child: Text(
               text,
               style: TextStyle(
-                fontSize:
-                    screenWidth * 0.04, // 4% del ancho para el tamaño de fuente
+                fontSize: screenWidth * 0.04,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -692,15 +704,12 @@ class _DiaSelection extends StatelessWidget {
       itemCount: diasUnicos.length,
       itemBuilder: (context, index) {
         final clase = diasUnicos[index];
-
-        // Procesar clase.fecha para mostrar solo día y mes
         final partesFecha = clase.fecha.split('/');
         final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
         final diaMesAnio = '${clase.dia} - ${clase.fecha}';
 
         final diaFecha = '${clase.dia} - $diaMes';
 
-        // Filtrar fechasDisponibles para mostrar solo las fechas del mes actual
         final filteredFechas = fechasDisponibles.where((dateString) {
           final partes = dateString.split('/');
           final fecha = DateTime(
