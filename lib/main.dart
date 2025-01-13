@@ -53,6 +53,7 @@ class MyApp extends ConsumerWidget {
       supportedLocales: const [
         Locale('en'), // Inglés
         Locale('es'), // Español
+        // Locale("fr")
       ],
       localeResolutionCallback: (locale, supportedLocales) {
         // Selecciona automáticamente el idioma soportado más cercano
