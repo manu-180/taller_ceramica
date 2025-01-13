@@ -96,7 +96,7 @@ class RemoverUsuario {
     }
   }
 
-   Future<void> removerUsuarioDeMuchasClase(
+  Future<void> removerUsuarioDeMuchasClase(
     ClaseModels clase,
     String user,
     void Function(ClaseModels claseActualizada)? callback, // callback opcional
@@ -114,7 +114,10 @@ class RemoverUsuario {
         if (item.mails.contains(user)) {
           item.mails.remove(user);
 
-          await supabaseClient.from(taller).update(item.toMap()).eq('id', item.id);
+          await supabaseClient
+              .from(taller)
+              .update(item.toMap())
+              .eq('id', item.id);
 
           ModificarLugarDisponible().agregarLugarDisponible(item.id);
 

@@ -13,8 +13,12 @@ class AlumnosEnClase {
     // Consulta a Supabase para obtener las clases donde el alumno está inscrito
     final data = await supabase
         .from(taller) // Nombre de la tabla de clases
-        .select('dia, fecha, hora, mails') // Selecciona solo las columnas necesarias
-        .contains(columna, jsonEncode([alumno])); // Filtra clases donde "mails" contiene al alumno
+        .select(
+            'dia, fecha, hora, mails') // Selecciona solo las columnas necesarias
+        .contains(
+            columna,
+            jsonEncode(
+                [alumno])); // Filtra clases donde "mails" contiene al alumno
 
     // Lista para almacenar las clases como objetos con fecha/hora ordenables
     final List<Map<String, dynamic>> clasesProcesadas = [];

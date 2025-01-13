@@ -31,7 +31,8 @@ class HomeScreen extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(size.width * 0.04, size.height * 0.04, size.width * 0.04, 0),
+                padding: EdgeInsets.fromLTRB(size.width * 0.04,
+                    size.height * 0.04, size.width * 0.04, 0),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,8 +107,12 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(height: 10),
                       Text(
                         isMujer
-                            ? localizations.translate('welcomeFemale').replaceAll('\$taller', taller ?? '')
-                            : localizations.translate('welcomeMale').replaceAll('\$taller', taller ?? ''),
+                            ? localizations
+                                .translate('welcomeFemale')
+                                .replaceAll('\$taller', taller ?? '')
+                            : localizations
+                                .translate('welcomeMale')
+                                .replaceAll('\$taller', taller ?? ''),
                         style: TextStyle(
                           fontSize: 33,
                           fontWeight: FontWeight.bold,
@@ -119,8 +124,12 @@ class HomeScreen extends StatelessWidget {
                         text: user == null
                             ? localizations.translate('helloAnonymous')
                             : isMujer
-                                ? localizations.translate('helloFemale').replaceAll('\$firstName', firstName)
-                                : localizations.translate('helloMale').replaceAll('\$firstName', firstName),
+                                ? localizations
+                                    .translate('helloFemale')
+                                    .replaceAll('\$firstName', firstName)
+                                : localizations
+                                    .translate('helloMale')
+                                    .replaceAll('\$firstName', firstName),
                       ),
                       const SizedBox(height: 20),
                       _buildLoadingImage(

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/supabase/utiles/redirijir_usuario_al_taller.dart';
+import 'package:taller_ceramica/l10n/app_localizations.dart';
 import 'dart:convert';
 
 class Home extends StatefulWidget {
@@ -71,12 +72,13 @@ class HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
+    final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Taller de Ceramica',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          localizations.translate('workshopTitle'),
+          style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: color.primary,
         automaticallyImplyLeading: false,
@@ -95,7 +97,7 @@ class HomeState extends State<Home> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    "Si eres administrador y aún no has creado tu cuenta, ¡es el momento de iniciar tu propio taller!.\nSi eres alumno, deberás solicitar al administrador que cree tu cuenta para comenzar.",
+                    localizations.translate('homeScreenIntro'),
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge
@@ -115,7 +117,7 @@ class HomeState extends State<Home> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            'Inicia sesión : ',
+                            localizations.translate('loginPrompt'),
                             style: TextStyle(
                               fontSize: 19,
                               fontWeight: FontWeight.bold,
@@ -129,7 +131,7 @@ class HomeState extends State<Home> {
                       TextField(
                         controller: emailController,
                         decoration: InputDecoration(
-                          labelText: 'Correo Electrónico',
+                          labelText: localizations.translate('emailLabel'),
                           border: const OutlineInputBorder(),
                           errorText: mailError.isEmpty ? null : mailError,
                         ),
@@ -138,7 +140,7 @@ class HomeState extends State<Home> {
                           setState(() {
                             mailError = !emailRegex
                                     .hasMatch(emailController.text.trim())
-                                ? 'El correo electrónico es invalido.'
+                                ? localizations.translate('invalidEmail')
                                 : '';
                           });
                         },
@@ -148,7 +150,7 @@ class HomeState extends State<Home> {
                       TextField(
                         controller: passwordController,
                         decoration: InputDecoration(
-                          labelText: 'Contraseña',
+                          labelText: localizations.translate('passwordLabel'),
                           border: const OutlineInputBorder(),
                           errorText:
                               passwordError.isEmpty ? null : passwordError,
@@ -157,7 +159,7 @@ class HomeState extends State<Home> {
                         onChanged: (value) {
                           setState(() {
                             passwordError = value.length < 6
-                                ? 'La contraseña debe tener al menos 6 caracteres.'
+                                ? localizations.translate('passwordTooShort')
                                 : '';
                           });
                         },
@@ -168,10 +170,12 @@ class HomeState extends State<Home> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ElevatedButton(
-                                onPressed: () {
-                                  context.push("/creartaller");
-                                },
-                                child: const Text("Crear Taller")),
+                              onPressed: () {
+                                context.push("/creartaller");
+                              },
+                              child: Text(localizations
+                                  .translate('createWorkshopButton')),
+                            ),
                             const SizedBox(width: 20),
                             FilledButton(
                               onPressed: () async {
@@ -182,8 +186,9 @@ class HomeState extends State<Home> {
                                   ScaffoldMessenger.of(context)
                                       .hideCurrentSnackBar();
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('El correo no es válido'),
+                                    SnackBar(
+                                      content: Text(localizations
+                                          .translate('invalidEmail')),
                                       backgroundColor: Colors.red,
                                     ),
                                   );
@@ -194,9 +199,9 @@ class HomeState extends State<Home> {
                                   ScaffoldMessenger.of(context)
                                       .hideCurrentSnackBar();
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          'La contraseña debe tener al menos 6 caracteres'),
+                                    SnackBar(
+                                      content: Text(localizations
+                                          .translate('passwordTooShort')),
                                       backgroundColor: Colors.red,
                                     ),
                                   );
@@ -219,7 +224,6 @@ class HomeState extends State<Home> {
                                     final sessionData =
                                         response.session!.toJson();
 
-                                    // Convertir sessionData en una cadena JSON antes de guardarlo
                                     await prefs.setString(
                                         'session', jsonEncode(sessionData));
                                   }
@@ -234,8 +238,10 @@ class HomeState extends State<Home> {
                                         .hideCurrentSnackBar();
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text(
-                                            'Error de inicio de sesión: ${e.message}'),
+                                        content: Text(localizations
+                                            .translate('loginError', params: {
+                                          'error': e.message ?? ''
+                                        })),
                                         backgroundColor: Colors.red,
                                       ),
                                     );
@@ -246,9 +252,9 @@ class HomeState extends State<Home> {
                                     ScaffoldMessenger.of(context)
                                         .hideCurrentSnackBar();
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content:
-                                            Text('Ocurrió un error inesperado'),
+                                      SnackBar(
+                                        content: Text(localizations
+                                            .translate('unexpectedError')),
                                         backgroundColor: Colors.red,
                                       ),
                                     );
@@ -256,7 +262,8 @@ class HomeState extends State<Home> {
                                   return;
                                 }
                               },
-                              child: const Text('Iniciar Sesión'),
+                              child:
+                                  Text(localizations.translate('loginButton')),
                             ),
                           ],
                         ),

@@ -38,14 +38,15 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
         clasesTable: taller,
       ).obtenerUsuarios();
       final fullnameExiste = listausuarios.any((usuario) =>
-          usuario.fullname.toLowerCase() == _fullnameController.text.toLowerCase());
+          usuario.fullname.toLowerCase() ==
+          _fullnameController.text.toLowerCase());
 
       if (fullnameExiste) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(AppLocalizations.of(context)
-                  .translate('nameAlreadyExists')),
+              content: Text(
+                  AppLocalizations.of(context).translate('nameAlreadyExists')),
             ),
           );
         }
@@ -71,8 +72,8 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)
-                .translate('nameUpdatedSuccess')),
+            content: Text(
+                AppLocalizations.of(context).translate('nameUpdatedSuccess')),
           ),
         );
         _fullnameController.clear();
@@ -112,8 +113,8 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
                 controller: _fullnameController,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  labelText: AppLocalizations.of(context)
-                      .translate('fullNameLabel'),
+                  labelText:
+                      AppLocalizations.of(context).translate('fullNameLabel'),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {

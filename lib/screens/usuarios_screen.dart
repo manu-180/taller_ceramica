@@ -52,7 +52,9 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
     await EliminarDeBD().deleteCurrentUser(userUid);
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(AppLocalizations.of(context).translate('userDeletedSuccess'))),
+      SnackBar(
+          content: Text(
+              AppLocalizations.of(context).translate('userDeletedSuccess'))),
     );
     await cargarUsuarios();
   }
@@ -62,13 +64,17 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
     if (resultado) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).translate('creditsAddedSuccess'))),
+        SnackBar(
+            content: Text(
+                AppLocalizations.of(context).translate('creditsAddedSuccess'))),
       );
       await cargarUsuarios();
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).translate('errorAddingCredits'))),
+        SnackBar(
+            content: Text(
+                AppLocalizations.of(context).translate('errorAddingCredits'))),
       );
     }
   }
@@ -78,13 +84,17 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
     if (resultado) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).translate('creditsRemovedSuccess'))),
+        SnackBar(
+            content: Text(AppLocalizations.of(context)
+                .translate('creditsRemovedSuccess'))),
       );
       await cargarUsuarios();
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).translate('errorRemovingCredits'))),
+        SnackBar(
+            content: Text(AppLocalizations.of(context)
+                .translate('errorRemovingCredits'))),
       );
     }
   }
@@ -190,7 +200,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                   onPressed: () {
                     Navigator.of(context).pop(true);
                   },
-                  child: Text(AppLocalizations.of(context).translate('confirm')),
+                  child:
+                      Text(AppLocalizations.of(context).translate('confirm')),
                 ),
               ],
             );
@@ -209,7 +220,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
+      appBar:
+          ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Center(
@@ -220,7 +232,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
                       child: BoxText(
-                        text: AppLocalizations.of(context).translate('usersSectionDescription'),
+                        text: AppLocalizations.of(context)
+                            .translate('usersSectionDescription'),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -230,53 +243,68 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                         itemBuilder: (context, index) {
                           final usuario = usuarios[index];
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
                             child: Card(
-                              surfaceTintColor: usuario.admin ? Colors.amber : Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              surfaceTintColor:
+                                  usuario.admin ? Colors.amber : Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
                               child: ListTile(
                                 title: Text('${usuario.fullname}'),
                                 subtitle: Text(
-  usuario.clasesDisponibles == 1
-      ? "${usuario.clasesDisponibles} ${AppLocalizations.of(context).translate('singleCredit')}"
-      : "${usuario.clasesDisponibles} ${AppLocalizations.of(context).translate('multipleCredits')}",
-),
-
-
+                                  usuario.clasesDisponibles == 1
+                                      ? "${usuario.clasesDisponibles} ${AppLocalizations.of(context).translate('singleCredit')}"
+                                      : "${usuario.clasesDisponibles} ${AppLocalizations.of(context).translate('multipleCredits')}",
+                                ),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
-                                      icon: const Icon(Icons.delete, color: Colors.red),
+                                      icon: const Icon(Icons.delete,
+                                          color: Colors.red),
                                       onPressed: () => mostrarDialogoEliminar(
                                         context: context,
-                                        titulo: AppLocalizations.of(context).translate('deleteUser'),
-                                        contenido: AppLocalizations.of(context).translate('confirmDeleteUser'),
-                                        onConfirmar: () => eliminarUsuario(usuario.id, usuario.userUid),
+                                        titulo: AppLocalizations.of(context)
+                                            .translate('deleteUser'),
+                                        contenido: AppLocalizations.of(context)
+                                            .translate('confirmDeleteUser'),
+                                        onConfirmar: () => eliminarUsuario(
+                                            usuario.id, usuario.userUid),
                                       ),
                                     ),
                                     IconButton(
-                                      icon: const Icon(Icons.add, color: Colors.green),
-                                      onPressed: () => mostrarDialogoConContador(
+                                      icon: const Icon(Icons.add,
+                                          color: Colors.green),
+                                      onPressed: () =>
+                                          mostrarDialogoConContador(
                                         context: context,
-                                        titulo: AppLocalizations.of(context).translate('addCredits'),
-                                        contenido: AppLocalizations.of(context).translate('selectCreditsToAdd'),
+                                        titulo: AppLocalizations.of(context)
+                                            .translate('addCredits'),
+                                        contenido: AppLocalizations.of(context)
+                                            .translate('selectCreditsToAdd'),
                                         onConfirmar: (cantidad) async {
                                           for (int i = 0; i < cantidad; i++) {
-                                            await agregarCredito(usuario.fullname);
+                                            await agregarCredito(
+                                                usuario.fullname);
                                           }
                                         },
                                       ),
                                     ),
                                     IconButton(
-                                      icon: const Icon(Icons.remove, color: Colors.orange),
-                                      onPressed: () => mostrarDialogoConContador(
+                                      icon: const Icon(Icons.remove,
+                                          color: Colors.orange),
+                                      onPressed: () =>
+                                          mostrarDialogoConContador(
                                         context: context,
-                                        titulo: AppLocalizations.of(context).translate('removeCredits'),
-                                        contenido: AppLocalizations.of(context).translate('selectCreditsToRemove'),
+                                        titulo: AppLocalizations.of(context)
+                                            .translate('removeCredits'),
+                                        contenido: AppLocalizations.of(context)
+                                            .translate('selectCreditsToRemove'),
                                         onConfirmar: (cantidad) async {
                                           for (int i = 0; i < cantidad; i++) {
-                                            await removerCredito(usuario.fullname);
+                                            await removerCredito(
+                                                usuario.fullname);
                                           }
                                         },
                                       ),
@@ -298,7 +326,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
         child: FloatingActionButton(
           onPressed: () async {
             final usuarioActivo = Supabase.instance.client.auth.currentUser;
-            final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+            final taller =
+                await ObtenerTaller().retornarTaller(usuarioActivo!.id);
             context.push('/crear-usuario/$taller');
           },
           child: Text(

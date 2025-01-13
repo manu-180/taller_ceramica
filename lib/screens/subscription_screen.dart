@@ -113,14 +113,16 @@ class SubscriptionScreenState extends State<SubscriptionScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(AppLocalizations.of(context)
-                  .translate('purchaseSuccess'))),
+              content: Text(
+                  AppLocalizations.of(context).translate('purchaseSuccess'))),
         );
       } else if (purchase.status == PurchaseStatus.error) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text(AppLocalizations.of(context)
-                  .translate('purchaseError', params: {'error': purchase.error?.message ?? 'Unknown error'}))),
+                  .translate('purchaseError', params: {
+            'error': purchase.error?.message ?? 'Unknown error'
+          }))),
         );
       }
     }
@@ -221,8 +223,8 @@ class SubscriptionScreenState extends State<SubscriptionScreen> {
                   ),
                 )
           : Center(
-              child: Text(AppLocalizations.of(context)
-                  .translate('storeNotAvailable')),
+              child: Text(
+                  AppLocalizations.of(context).translate('storeNotAvailable')),
             ),
     );
   }

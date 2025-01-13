@@ -7,6 +7,7 @@ import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_total_info.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
+import 'package:taller_ceramica/l10n/app_localizations.dart';
 import '../utils/utils_barril.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-  final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}\$');
 
   String passwordError = '';
   String confirmPasswordError = '';
@@ -35,6 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final color = Theme.of(context).colorScheme;
     final user = Supabase.instance.client.auth.currentUser;
     final size = MediaQuery.of(context).size;
+    final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       appBar:
@@ -52,7 +54,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  "En esta pantalla podés crear usuarios para tus alumnos y asignarles sus clases.\nEs importante hacerlo de esta manera para que, al iniciar sesión, sean reconocidos por el programa y redirigidos automáticamente a tu taller.",
+                  localizations.translate('signupScreenIntro'),
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge
@@ -74,7 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              'Crea tu usuario y contraseña : ',
+                              localizations.translate('createUserPrompt'),
                               style: TextStyle(
                                 fontSize: 19,
                                 fontWeight: FontWeight.bold,
@@ -87,9 +89,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(height: size.height * 0.02),
                         TextField(
                           controller: fullnameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Nombre y apellido',
-                            border: OutlineInputBorder(),
+                          decoration: InputDecoration(
+                            labelText: localizations.translate('fullNameLabel'),
+                            border: const OutlineInputBorder(),
                           ),
                           keyboardType: TextInputType.name,
                         ),
@@ -97,7 +99,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextField(
                           controller: emailController,
                           decoration: InputDecoration(
-                            labelText: 'Correo Electrónico',
+                            labelText: localizations.translate('emailLabel'),
                             border: const OutlineInputBorder(),
                             errorText: mailError.isEmpty ? null : mailError,
                           ),
@@ -106,7 +108,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             setState(() {
                               mailError = !emailRegex
                                       .hasMatch(emailController.text.trim())
-                                  ? 'El correo electrónico es invalido.'
+                                  ? localizations.translate('invalidEmail')
                                   : '';
                             });
                           },
@@ -115,7 +117,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextField(
                           controller: passwordController,
                           decoration: InputDecoration(
-                            labelText: 'Contraseña',
+                            labelText: localizations.translate('passwordLabel'),
                             border: const OutlineInputBorder(),
                             errorText:
                                 passwordError.isEmpty ? null : passwordError,
@@ -124,7 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           onChanged: (value) {
                             setState(() {
                               passwordError = value.length < 6
-                                  ? 'La contraseña debe tener al menos 6 caracteres.'
+                                  ? localizations.translate('passwordTooShort')
                                   : '';
                             });
                           },
@@ -133,7 +135,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextField(
                           controller: confirmPasswordController,
                           decoration: InputDecoration(
-                            labelText: 'Confirmar Contraseña',
+                            labelText:
+                                localizations.translate('confirmPasswordLabel'),
                             border: const OutlineInputBorder(),
                             errorText: confirmPasswordError.isEmpty
                                 ? null
@@ -142,10 +145,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           obscureText: true,
                           onChanged: (value) {
                             setState(() {
-                              confirmPasswordError =
-                                  value != passwordController.text
-                                      ? 'La contraseña no coincide.'
-                                      : '';
+                              confirmPasswordError = value !=
+                                      passwordController.text
+                                  ? localizations.translate('passwordMismatch')
+                                  : '';
                             });
                           },
                         ),
@@ -173,11 +176,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ScaffoldMessenger.of(context)
                                   .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Todos los campos son obligatorios.',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                SnackBar(
+                                  content: Text(localizations
+                                      .translate('allFieldsRequired')),
                                   backgroundColor: Colors.red,
                                 ),
                               );
@@ -191,11 +192,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ScaffoldMessenger.of(context)
                                   .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'La contraseña debe tener al menos 6 caracteres.',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                SnackBar(
+                                  content: Text(localizations
+                                      .translate('passwordTooShort')),
                                   backgroundColor: Colors.red,
                                 ),
                               );
@@ -209,11 +208,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ScaffoldMessenger.of(context)
                                   .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'La contraseña no coincide.',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                SnackBar(
+                                  content: Text(localizations
+                                      .translate('passwordMismatch')),
                                   backgroundColor: Colors.red,
                                 ),
                               );
@@ -245,11 +242,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ScaffoldMessenger.of(context)
                                     .hideCurrentSnackBar();
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'El correo electrónico ya está registrado. Usa otro.',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
+                                  SnackBar(
+                                    content: Text(localizations
+                                        .translate('emailAlreadyRegistered')),
                                     backgroundColor: Colors.red,
                                   ),
                                 );
@@ -263,11 +258,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ScaffoldMessenger.of(context)
                                     .hideCurrentSnackBar();
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'El nombre completo ya existe. Usa uno diferente para no generar conflictos.',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
+                                  SnackBar(
+                                    content: Text(localizations
+                                        .translate('fullnameAlreadyExists')),
                                     backgroundColor: Colors.red,
                                   ),
                                 );
@@ -296,11 +289,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     .retornarTaller(user!.id),
                               });
 
-                              // EnviarWpp().sendWhatsAppMessage(
-                              //           "HXe3ce917c3f0fe4bcaafe1275ec68d107",
-                              //           'whatsapp:+5491134272488',
-                              //           [Capitalize().capitalize(fullname)]
-                              //             );
                               setState(() {
                                 isLoading = false;
                                 showSuccessMessage = true;
@@ -309,11 +297,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ScaffoldMessenger.of(context)
                                   .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    '¡Registro exitoso!',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                SnackBar(
+                                  content: Text(localizations
+                                      .translate('registroSuccess')),
                                   backgroundColor: Colors.green,
                                 ),
                               );
@@ -331,10 +317,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(
-                                    'Error de registro: ${e.message}',
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
+                                  content: Text(localizations.translate(
+                                      'registrationError',
+                                      params: {'error': e.message ?? ''})),
                                   backgroundColor: Colors.red,
                                 ),
                               );
@@ -346,23 +331,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(
-                                    'Ocurrió un error inesperado: ($e).',
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
+                                  content: Text(localizations.translate(
+                                      'unexpectedError',
+                                      params: {'error': e.toString()})),
                                   backgroundColor: Colors.red,
                                 ),
                               );
                             }
                           },
-                          child: const Text('Registrar'),
+                          child:
+                              Text(localizations.translate('registerButton')),
                         ),
-                        // Aquí mostramos el mensaje de éxito
                         if (showSuccessMessage) ...[
                           const SizedBox(height: 30),
-                          const BoxText(
-                              text:
-                                  "¡Registro exitoso! Viejita no te olvides de que tenes que cerrar la sesion para poder volver a loguear tu cuenta ."),
+                          Text(localizations.translate('successMessage')),
                         ],
                         if (isLoading) ...[
                           const SizedBox(height: 30),

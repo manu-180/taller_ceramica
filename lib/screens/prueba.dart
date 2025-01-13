@@ -23,7 +23,6 @@ class Prueba extends StatelessWidget {
               translatedText, // Texto traducido dinámicamente
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-          
           ],
         ),
       ),
