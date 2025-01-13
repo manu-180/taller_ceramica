@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/l10n/app_localizations.dart'; // Importa tu clase de localización
 
@@ -22,8 +23,15 @@ class Prueba extends StatelessWidget {
               translatedText, // Texto traducido dinámicamente
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+          
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.push("/subscription");
+        },
+        child: const Icon(Icons.arrow_back),
       ),
     );
   }

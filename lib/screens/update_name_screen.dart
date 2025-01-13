@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/l10n/app_localizations.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_total_info.dart';
 import 'package:taller_ceramica/supabase/usuarios/update_user.dart';
@@ -37,16 +38,18 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
         clasesTable: taller,
       ).obtenerUsuarios();
       final fullnameExiste = listausuarios.any((usuario) =>
-          usuario.fullname.toLowerCase() ==
-          _fullnameController.text.toLowerCase());
+          usuario.fullname.toLowerCase() == _fullnameController.text.toLowerCase());
 
       if (fullnameExiste) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Este nombre ya existe, elige otro.')),
+            SnackBar(
+              content: Text(AppLocalizations.of(context)
+                  .translate('nameAlreadyExists')),
+            ),
           );
         }
-        throw 'El nombre ingresado ya está en uso.';
+        throw AppLocalizations.of(context).translate('nameAlreadyExists');
       }
 
       await Supabase.instance.client.auth.updateUser(
@@ -67,7 +70,10 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Nombre actualizado con éxito.')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)
+                .translate('nameUpdatedSuccess')),
+          ),
         );
         _fullnameController.clear();
       }
@@ -94,7 +100,7 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Ingresa tu nuevo nombre:',
+                AppLocalizations.of(context).translate('enterNewName'),
                 style: TextStyle(
                   fontSize: 19,
                   fontWeight: FontWeight.bold,
@@ -104,13 +110,15 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
               const SizedBox(height: 30),
               TextFormField(
                 controller: _fullnameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Nombre completo',
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: AppLocalizations.of(context)
+                      .translate('fullNameLabel'),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Por favor, ingresa un nombre válido.';
+                    return AppLocalizations.of(context)
+                        .translate('validNameError');
                   }
                   return null;
                 },
@@ -128,7 +136,8 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
                   onPressed: _isLoading ? null : _updateName,
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Actualizar nombre'),
+                      : Text(AppLocalizations.of(context)
+                          .translate('updateNameButton')),
                 ),
               ),
               const SizedBox(height: 16),

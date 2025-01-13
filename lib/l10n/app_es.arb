@@ -26,5 +26,15 @@
   "creditsRemovedSuccess": "Crédito removido exitosamente",
   "createNewUser": "Crear nuevo usuario",
   "singleCredit": "({credit} crédito)",
-  "multipleCredits": "({credits} créditos)"
+  "multipleCredits": "({credits} créditos)",
+  "enterNewName": "Ingresa tu nuevo nombre:",
+  "fullNameLabel": "Nombre completo",
+  "validNameError": "Por favor, ingresa un nombre válido.",
+  "nameAlreadyExists": "Este nombre ya existe, elige otro.",
+  "nameUpdatedSuccess": "Nombre actualizado con éxito.",
+  "updateNameButton": "Actualizar nombre",
+  "storeNotAvailable": "La tienda no está disponible.",
+  "noProductsAvailable": "No hay productos disponibles.",
+  "purchaseError": "Error al procesar la compra: {error}",
+  "purchaseSuccess": "Compra completada con éxito."
 }

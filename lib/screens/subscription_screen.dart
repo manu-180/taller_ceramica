@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:taller_ceramica/l10n/app_localizations.dart';
 import 'dart:async';
 
 import 'package:taller_ceramica/main.dart';
@@ -77,13 +78,15 @@ class SubscriptionScreenState extends State<SubscriptionScreen> {
     try {
       final PurchaseParam purchaseParam =
           PurchaseParam(productDetails: productDetails);
-      debugPrint('Intentando comprar: ${productDetails.id}');
+      debugPrint('Attempting to purchase: ${productDetails.id}');
       _inAppPurchase.buyConsumable(
           purchaseParam: purchaseParam, autoConsume: false);
     } catch (e) {
-      debugPrint('Error al iniciar la compra: $e');
+      debugPrint('Error initiating purchase: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al procesar la compra: $e')),
+        SnackBar(
+            content: Text(AppLocalizations.of(context)
+                .translate('purchaseError', params: {'error': e.toString()}))),
       );
     }
   }
@@ -107,10 +110,17 @@ class SubscriptionScreenState extends State<SubscriptionScreen> {
           startDate: startDate,
           isActive: isActive,
         );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(AppLocalizations.of(context)
+                  .translate('purchaseSuccess'))),
+        );
       } else if (purchase.status == PurchaseStatus.error) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Error en la compra: ${purchase.error?.message}')),
+              content: Text(AppLocalizations.of(context)
+                  .translate('purchaseError', params: {'error': purchase.error?.message ?? 'Unknown error'}))),
         );
       }
     }
@@ -129,7 +139,10 @@ class SubscriptionScreenState extends State<SubscriptionScreen> {
       appBar: ResponsiveAppBar(isTablet: size.width > 600),
       body: _isAvailable
           ? _products.isEmpty
-              ? const Center(child: Text("No hay productos disponibles."))
+              ? Center(
+                  child: Text(AppLocalizations.of(context)
+                      .translate('noProductsAvailable')),
+                )
               : SingleChildScrollView(
                   child: Center(
                     child: Padding(
@@ -207,8 +220,9 @@ class SubscriptionScreenState extends State<SubscriptionScreen> {
                     ),
                   ),
                 )
-          : const Center(
-              child: Text("La tienda no está disponible."),
+          : Center(
+              child: Text(AppLocalizations.of(context)
+                  .translate('storeNotAvailable')),
             ),
     );
   }
