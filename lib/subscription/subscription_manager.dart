@@ -43,7 +43,6 @@ class SubscriptionManager {
     await Supabase.instance.client
         .from('subscriptions')
         .update({'is_active': isSubscribed}).eq('user_id', usuarioActivo.id);
-
   }
 
   Future<void> checkAndUpdateSubscription() async {
@@ -69,33 +68,32 @@ class SubscriptionManager {
         }
       }
     }
-final currentUser = Supabase.instance.client.auth.currentUser;
+    final currentUser = Supabase.instance.client.auth.currentUser;
 
-if (currentUser != null) {
-  try {
-    // Intenta ejecutar la actualización
-    final response = await supabase
-        .from('subscriptions')
-        .update({'is_active': isSubscribed})
-        .eq('user_id', currentUser.id);
+    if (currentUser != null) {
+      try {
+        // Intenta ejecutar la actualización
+        final response = await supabase
+            .from('subscriptions')
+            .update({'is_active': isSubscribed}).eq('user_id', currentUser.id);
 
-    // Verifica si hubo errores en la respuesta
-    if (response.error != null) {
-      print("Error al actualizar la suscripción: ${response.error!.message}");
-      // Puedes mostrar un mensaje al usuario o registrar el error
-    } else {
-      print("Suscripción actualizada correctamente.");
+        // Verifica si hubo errores en la respuesta
+        if (response.error != null) {
+          print(
+              "Error al actualizar la suscripción: ${response.error!.message}");
+          // Puedes mostrar un mensaje al usuario o registrar el error
+        } else {
+          print("Suscripción actualizada correctamente.");
+        }
+      } catch (e) {
+        // Captura cualquier error que ocurra
+        print("Excepción al actualizar la suscripción: $e");
+
+        // Aquí puedes manejar el error sin detener la aplicación.
+        // Por ejemplo, notificar al usuario:
+        // Mostrar un mensaje, enviar un log, etc.
+      }
     }
-  } catch (e) {
-    // Captura cualquier error que ocurra
-    print("Excepción al actualizar la suscripción: $e");
-
-    // Aquí puedes manejar el error sin detener la aplicación.
-    // Por ejemplo, notificar al usuario:
-    // Mostrar un mensaje, enviar un log, etc.
-  }
-}
-
   }
 
   /// Escucha las actualizaciones de compras
@@ -108,7 +106,7 @@ if (currentUser != null) {
             if (!_purchases.any((p) => p.productID == purchase.productID)) {
               _purchases.add(purchase);
             }
-          } 
+          }
         }
       },
     );
@@ -152,10 +150,9 @@ if (currentUser != null) {
 
   Future<void> restorePurchases() async {
     if (!await Internet().hayConexionInternet()) {
-       throw Exception('No hay conexión a Internet.');
+      throw Exception('No hay conexión a Internet.');
     }
 
-      await _inAppPurchase.restorePurchases();
-    
+    await _inAppPurchase.restorePurchases();
   }
 }

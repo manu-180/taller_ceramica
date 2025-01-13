@@ -21,13 +21,14 @@ class AgregarUsuario {
             supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
         .obtenerUsuarios();
 
-    final data = await supabaseClient.from(taller).select().eq('id', idClase).single();
+    final data =
+        await supabaseClient.from(taller).select().eq('id', idClase).single();
 
     final clase = ClaseModels.fromMap(data);
 
     for (final usuario in usuarios) {
       if (usuario.fullname == user) {
-        if (usuario.clasesDisponibles > 0 || parametro) {
+        if (usuario.clasesDisponibles! > 0 || parametro) {
           if (!clase.mails.contains(user)) {
             clase.mails.add(user);
             await supabaseClient
@@ -103,31 +104,27 @@ class AgregarUsuario {
       return dateA.compareTo(dateB);
     });
 
-
     int count = 0;
 
     for (final item in data) {
       final partes = item.fecha.split('/');
       if (partes.length == 3) {
+        if (item.dia == clase.dia && item.hora == clase.hora) {
+          if (!item.mails.contains(user) && count < 4) {
+            item.mails.add(user);
 
+            await supabaseClient
+                .from(taller)
+                .update(item.toMap())
+                .eq('id', item.id);
 
-          if (item.dia == clase.dia && item.hora == clase.hora) {
-            if (!item.mails.contains(user) && count < 4) {
-              item.mails.add(user);
+            ModificarLugarDisponible().removerLugarDisponible(item.id);
 
-              await supabaseClient
-                  .from(taller)
-                  .update(item.toMap())
-                  .eq('id', item.id);
+            callback(item);
 
-              ModificarLugarDisponible().removerLugarDisponible(item.id);
-
-              callback(item);
-
-              count++;
-            }
+            count++;
           }
-        
+        }
       }
     }
 
@@ -146,21 +143,19 @@ class AgregarUsuario {
   }
 
   Future<void> agregarUsuarioAListaDeEspera(int id, String user) async {
-  final usuarioActivo = Supabase.instance.client.auth.currentUser;
-  final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
 
-    final data = await supabaseClient.from(taller).select().eq('id', id).single();
+    final data =
+        await supabaseClient.from(taller).select().eq('id', id).single();
     final clase = ClaseModels.fromMap(data);
 
-    if (!clase.espera.contains(user) ) {
+    if (!clase.espera.contains(user)) {
       clase.espera.add(user);
 
       await supabaseClient
           .from(taller)
-          .update({"espera": clase.espera})
-          .eq('id', id);
-  } 
-}
-
-
+          .update({"espera": clase.espera}).eq('id', id);
+    }
+  }
 }

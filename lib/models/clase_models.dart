@@ -10,7 +10,6 @@ class ClaseModels {
   final int capacidad;
   final List<String> espera;
 
-
   ClaseModels({
     required this.id,
     required this.semana,

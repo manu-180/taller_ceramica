@@ -25,7 +25,61 @@ class HomeScreen extends StatelessWidget {
         future: IsMujer().mujer(fullName),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return  Center(child: Padding(
+              padding: EdgeInsets.fromLTRB(size.width * 0.04, size.height * 0.04, size.width * 0.04, 0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    
+                    ShimmerLoading(
+                        color: color.primary.withAlpha(180),
+                        width: size.width * 0.86,
+                        height: size.height * 0.042,
+                        brillo: Color(0xFFF5F5F5)),
+                        SizedBox(height: size.height *0.015,),
+                        ShimmerLoading(
+                        color: color.primary.withAlpha(180),
+                        width: size.width * 0.67 ,
+                        height: size.height * 0.042,
+                        brillo: Color(0xFFF5F5F5)),
+                        SizedBox(height: size.height *0.015,),
+                        ShimmerLoading(
+                        color: color.primary.withAlpha(180),
+                        width: size.width * 0.3 ,
+                        height: size.height * 0.042,
+                        brillo: Color(0xFFF5F5F5)),
+                    SizedBox(height: size.height *0.034,),
+                    ShimmerLoading(
+                        color: color.primary.withAlpha(40),
+                        width: size.width ,
+                        height: size.height * 0.15,
+                        brillo: Color(0xFFF5F5F5)),
+                    SizedBox(height: size.height *0.023,),
+                    ShimmerLoading(
+                        color: Color(0xFFE0E0E0),
+                        width: size.width ,
+                        height: size.height * 0.351,
+                        brillo: Color(0xFFF5F5F5)),
+                    SizedBox(height: size.height *0.03,),
+                    ShimmerLoading(
+                        color: color.primary.withAlpha(180),
+                        width: size.width * 0.6,
+                        height: size.height * 0.04,
+                        brillo: Color(0xFFF5F5F5)),
+                    SizedBox(height: size.height *0.019,),
+                    ShimmerLoading(
+                        color: color.primary.withAlpha(40),
+                        width: size.width ,
+                        height: size.height * 0.1,
+                        brillo: Color(0xFFF5F5F5)),
+                    
+                    
+                    
+                  ],
+                ),
+              ),
+            ));
           } else if (snapshot.hasError) {
             return const Center(child: Text('Error al cargar los datos'));
           } else {
@@ -126,7 +180,7 @@ class HomeScreen extends StatelessWidget {
             child: Center(
               child: ShimmerLoading(
                   color: Color(0xFFE0E0E0),
-                  width: width,
+                  width: double.infinity,
                   height: height,
                   brillo: Color(0xFFF5F5F5)),
             ),

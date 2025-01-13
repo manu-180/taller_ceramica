@@ -47,7 +47,8 @@ class _ClasesScreenState extends State<ClasesScreen> {
       isLoading = true;
     });
 
-    final capacidades = await ObtenerCapacidadClase().cargarTodasLasCapacidades();
+    final capacidades =
+        await ObtenerCapacidadClase().cargarTodasLasCapacidades();
     for (var capacidad in capacidades) {
       capacidadCache[capacidad['id']] = capacidad['capacidad'];
     }
@@ -91,53 +92,50 @@ class _ClasesScreenState extends State<ClasesScreen> {
     }
 
     final diasConClasesDisponibles = await obtenerDiasConClasesDisponibles();
-if (diasConClasesDisponibles.isEmpty) {
-  avisoDeClasesDisponibles = "No hay clases disponibles esta semana.";
-} else {
-  avisoDeClasesDisponibles =
-      "Hay clases disponibles el ${diasConClasesDisponibles.join(', ')}.";
-}
+    if (diasConClasesDisponibles.isEmpty) {
+      avisoDeClasesDisponibles = "No hay clases disponibles esta semana.";
+    } else {
+      avisoDeClasesDisponibles =
+          "Hay clases disponibles el ${diasConClasesDisponibles.join(', ')}.";
+    }
 
-if (mounted) {
-  setState(() {
-    isLoading = false;
-  });
-}
-
-  }
-
-  Future<List<String>> obtenerDiasConClasesDisponibles() async {
-  final diasConClases = <String>{};
-
-  for (var entry in horariosPorDia.entries) {
-    final dia = entry.key;
-    final clases = entry.value;
-
-    for (var clase in clases) {
-      // Consultar la capacidad desde la caché
-      final capacidad = capacidadCache[clase.id] ?? 0;
-
-      final mailsLimpios = clase.mails.map((mail) => mail.trim()).toList();
-      final menorA24 = Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual);
-
-
-      if (mailsLimpios.length < capacidad && !menorA24) {
-        final partesFecha = dia.split(' - ')[1].split('/');
-        final diaMes = int.parse(partesFecha[1]);
-
-        if (diaMes == mesActual) {
-          final diaSolo = dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
-          diasConClases.add(diaSolo);
-        }
-      }
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
-  return diasConClases.toList();
-}
+  Future<List<String>> obtenerDiasConClasesDisponibles() async {
+    final diasConClases = <String>{};
 
+    for (var entry in horariosPorDia.entries) {
+      final dia = entry.key;
+      final clases = entry.value;
 
+      for (var clase in clases) {
+        // Consultar la capacidad desde la caché
+        final capacidad = capacidadCache[clase.id] ?? 0;
 
+        final mailsLimpios = clase.mails.map((mail) => mail.trim()).toList();
+        final menorA24 =
+            Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual);
+
+        if (mailsLimpios.length < capacidad && !menorA24) {
+          final partesFecha = dia.split(' - ')[1].split('/');
+          final diaMes = int.parse(partesFecha[1]);
+
+          if (diaMes == mesActual) {
+            final diaSolo =
+                dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
+            diasConClases.add(diaSolo);
+          }
+        }
+      }
+    }
+
+    return diasConClases.toList();
+  }
 
   @override
   void initState() {
@@ -147,7 +145,6 @@ if (mounted) {
   }
 
   Future<void> inicializarDatos() async {
-    
     try {
       final mes = await ObtenerMes().obtenerMes();
       setState(() {
@@ -163,119 +160,121 @@ if (mounted) {
   }
 
   Future<void> mostrarAlertaListaEspera({
-  required BuildContext context,
-  ClaseModels? clase,
-}) async {
-  final usuarioActivo = Supabase.instance.client.auth.currentUser;
-  return showDialog<void>(
-    // ignore: use_build_context_synchronously
-    context: context,
-    barrierDismissible: false, 
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Lista de Espera'),
-        content: Text('¿Quieres agregarte a la lista de espera?'),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Cancelar'),
-            onPressed: () {
-              Navigator.of(context).pop(); 
-            },
-          ),
-          FilledButton(
-            child: const Text('Aceptar'),
-            onPressed: () {
-              AgregarUsuario(supabase).agregarUsuarioAListaDeEspera(clase!.id, usuarioActivo!.userMetadata?['fullname']);
-              Navigator.of(context).pop(); 
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-
+    required BuildContext context,
+    ClaseModels? clase,
+  }) async {
+    final usuarioActivo = Supabase.instance.client.auth.currentUser;
+    return showDialog<void>(
+      // ignore: use_build_context_synchronously
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Lista de Espera'),
+          content: Text('¿Quieres agregarte a la lista de espera?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FilledButton(
+              child: const Text('Aceptar'),
+              onPressed: () {
+                AgregarUsuario(supabase).agregarUsuarioAListaDeEspera(
+                    clase!.id, usuarioActivo!.userMetadata?['fullname']);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void cambiarSemanaAdelante() {
-  final indiceActual = semanas.indexOf(semanaSeleccionada);
-  final nuevoIndice = (indiceActual + 1) % semanas.length;
+    final indiceActual = semanas.indexOf(semanaSeleccionada);
+    final nuevoIndice = (indiceActual + 1) % semanas.length;
 
-  setState(() {
-    semanaSeleccionada = semanas[nuevoIndice];
-    isLoading = true;
-    avisoDeClasesDisponibles = null;
-  });
+    setState(() {
+      semanaSeleccionada = semanas[nuevoIndice];
+      isLoading = true;
+      avisoDeClasesDisponibles = null;
+    });
 
-  cargarDatos();
-}
+    cargarDatos();
+  }
 
-void cambiarSemanaAtras() {
-  final indiceActual = semanas.indexOf(semanaSeleccionada);
-  final nuevoIndice = (indiceActual - 1 + semanas.length) % semanas.length;
+  void cambiarSemanaAtras() {
+    final indiceActual = semanas.indexOf(semanaSeleccionada);
+    final nuevoIndice = (indiceActual - 1 + semanas.length) % semanas.length;
 
-  setState(() {
-    semanaSeleccionada = semanas[nuevoIndice];
-    isLoading = true;
-    avisoDeClasesDisponibles = null;
-  });
+    setState(() {
+      semanaSeleccionada = semanas[nuevoIndice];
+      isLoading = true;
+      avisoDeClasesDisponibles = null;
+    });
 
-  cargarDatos();
-}
+    cargarDatos();
+  }
 
+  void mostrarConfirmacion(BuildContext context, ClaseModels clase) async {
+    final user = Supabase.instance.client.auth.currentUser;
 
-   void mostrarConfirmacion(BuildContext context, ClaseModels clase) async {
-  final user = Supabase.instance.client.auth.currentUser;
+    String mensaje;
+    bool mostrarBotonAceptar = false;
 
-  String mensaje;
-  bool mostrarBotonAceptar = false;
-
-  if (user == null) {
-    mensaje = "Debes iniciar sesión para inscribirte a una clase";
-    if (context.mounted) {
-      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+    if (user == null) {
+      mensaje = "Debes iniciar sesión para inscribirte a una clase";
+      if (context.mounted) {
+        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      }
+      return;
     }
-    return;
-  }
 
-  final mailsLimpios = clase.mails.map((mail) => mail.trim()).toList();
+    final mailsLimpios = clase.mails.map((mail) => mail.trim()).toList();
 
-  if (mailsLimpios.contains(user.userMetadata?['fullname'])) {
-    mensaje = 'Revisa en "mis clases"';
-    if (context.mounted) {
-      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+    if (mailsLimpios.contains(user.userMetadata?['fullname'])) {
+      mensaje = 'Revisa en "mis clases"';
+      if (context.mounted) {
+        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      }
+      return;
     }
-    return;
-  }
 
-  final triggerAlert = await ObtenerAlertTrigger().alertTrigger(user.userMetadata?['fullname']);
-  final clasesDisponibles = await ObtenerClasesDisponibles().clasesDisponibles(user.userMetadata?['fullname']);
+    final triggerAlert = await ObtenerAlertTrigger()
+        .alertTrigger(user.userMetadata?['fullname']);
+    final clasesDisponibles = await ObtenerClasesDisponibles()
+        .clasesDisponibles(user.userMetadata?['fullname']);
 
-  if (!context.mounted) return;
+    if (!context.mounted) return;
 
-  if (triggerAlert > 0 && clasesDisponibles == 0) {
-    mensaje = 'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación';
-    if (context.mounted) {
-      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+    if (triggerAlert > 0 && clasesDisponibles == 0) {
+      mensaje =
+          'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación';
+      if (context.mounted) {
+        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      }
+      return;
     }
-    return;
-  }
 
-  if (clasesDisponibles == 0) {
-    mensaje = "No tienes créditos disponibles para inscribirte a esta clase";
-    if (context.mounted) {
-      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+    if (clasesDisponibles == 0) {
+      mensaje = "No tienes créditos disponibles para inscribirte a esta clase";
+      if (context.mounted) {
+        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      }
+      return;
     }
-    return;
+
+    mensaje =
+        '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
+    mostrarBotonAceptar = true;
+
+    if (context.mounted) {
+      _mostrarDialogo(context, mensaje, mostrarBotonAceptar, clase, user);
+    }
   }
-
-  mensaje = '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
-  mostrarBotonAceptar = true;
-
-  if (context.mounted) {
-    _mostrarDialogo(context, mensaje, mostrarBotonAceptar, clase, user);
-  }
-}
-
 
   void _mostrarDialogo(
       BuildContext context, String mensaje, bool mostrarBotonAceptar,
@@ -310,7 +309,7 @@ void cambiarSemanaAtras() {
                     ModificarAlertTrigger().resetearAlertTrigger(
                         user.userMetadata?['fullname'] ?? '');
                   }
-                  Navigator.of(context).pop(); 
+                  Navigator.of(context).pop();
                 },
                 child: const Text('Aceptar'),
               ),
@@ -411,7 +410,12 @@ void cambiarSemanaAtras() {
                                           ),
                                         ),
                                         child: Center(
-                                          child: ClipRRect(borderRadius: BorderRadius.circular(20), child: LinearProgressIndicator(minHeight: 2.2,)),
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              child: LinearProgressIndicator(
+                                                minHeight: 2.2,
+                                              )),
                                         ),
                                       ),
                                     ),
@@ -439,11 +443,14 @@ void cambiarSemanaAtras() {
                                   final clase =
                                       horariosPorDia[diaSeleccionado]![index];
                                   return FutureBuilder<Widget>(
-                                    future: construirBotonHorario(clase, capacidadCache),
+                                    future: construirBotonHorario(
+                                        clase, capacidadCache),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
-                                        return const CircularProgressIndicator(strokeWidth: 2.2,);
+                                        return const CircularProgressIndicator(
+                                          strokeWidth: 2.2,
+                                        );
                                       } else if (snapshot.hasError) {
                                         return Text('Error: ${snapshot.error}');
                                       } else {
@@ -461,107 +468,111 @@ void cambiarSemanaAtras() {
             ),
           ),
           Padding(
-  padding: EdgeInsets.symmetric(horizontal: paddingSize, vertical: 20),
-  child: avisoDeClasesDisponibles != null && !isLoading
-      ? _AvisoDeClasesDisponibles(
-          colors: colors,
-          color: color,
-          text: avisoDeClasesDisponibles!,
-        )
-      : ShimmerLoading(
-          brillo: colors.primary.withAlpha(40),
-          color: colors.primary.withAlpha(120),
-          height: screenWidth * 0.19,
-          width: screenWidth * 0.9,
-        ),
-),
-
+            padding:
+                EdgeInsets.symmetric(horizontal: paddingSize, vertical: 20),
+            child: avisoDeClasesDisponibles != null && !isLoading
+                ? _AvisoDeClasesDisponibles(
+                    colors: colors,
+                    color: color,
+                    text: avisoDeClasesDisponibles!,
+                  )
+                : ShimmerLoading(
+                    brillo: colors.primary.withAlpha(40),
+                    color: colors.primary.withAlpha(120),
+                    height: screenWidth * 0.19,
+                    width: screenWidth * 0.9,
+                  ),
+          ),
           const SizedBox(height: 30),
         ],
       ),
     );
   }
 
-  Future<Widget> construirBotonHorario(ClaseModels clase, Map<int, int> capacidadCache) async {
-  final partesFecha = clase.fecha.split('/');
-  final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
-  final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
+  Future<Widget> construirBotonHorario(
+      ClaseModels clase, Map<int, int> capacidadCache) async {
+    final partesFecha = clase.fecha.split('/');
+    final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
+    final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
 
-  // Usar la capacidad desde la caché
-  final capacidad = capacidadCache[clase.id] ?? 0;
-  final estaLlena = clase.mails.length >= capacidad;
+    // Usar la capacidad desde la caché
+    final capacidad = capacidadCache[clase.id] ?? 0;
+    final estaLlena = clase.mails.length >= capacidad;
 
-  final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
 
-  // Verifica si el usuario es administrador
-  final esAdmin = await IsAdmin().admin();
+    // Verifica si el usuario es administrador
+    final esAdmin = await IsAdmin().admin();
 
-  return Column(
-    children: [
-      SizedBox(
-        width: screenWidth * 0.7,
-        height: screenWidth * 0.12,
-        child: GestureDetector(
-          child: ElevatedButton(
-            onPressed: esAdmin
-                ? () async {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            clase.mails.isEmpty
-                                ? "No hay alumnos inscriptos a esta clase"
-                                : "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
+    return Column(
+      children: [
+        SizedBox(
+          width: screenWidth * 0.7,
+          height: screenWidth * 0.12,
+          child: GestureDetector(
+            child: ElevatedButton(
+              onPressed: esAdmin
+                  ? () async {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              clase.mails.isEmpty
+                                  ? "No hay alumnos inscriptos a esta clase"
+                                  : "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
+                            ),
+                            duration: const Duration(seconds: 5),
+                            behavior: SnackBarBehavior.floating,
+                            margin: const EdgeInsets.all(10),
                           ),
-                          duration: const Duration(seconds: 5),
-                          behavior: SnackBarBehavior.floating,
-                          margin: const EdgeInsets.all(10),
-                        ),
-                      );
+                        );
+                      }
                     }
-                  }
-                : ((estaLlena ||
-                        Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
-                        clase.lugaresDisponibles <= 0))
-                    ? null
-                    : () async {
-                        if (context.mounted) {
-                          mostrarConfirmacion(context, clase);
-                        }
-                      },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
-                estaLlena ||
-                        Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual) ||
-                        clase.lugaresDisponibles <= 0
-                    ? Colors.grey.shade400
-                    : Colors.green,
-              ),
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(screenWidth * 0.03)),
-              ),
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Text(
-                  diaYHora,
-                  style: const TextStyle(fontSize: 11, color: Colors.white),
+                  : ((estaLlena ||
+                          Calcular24hs().esMenorA0Horas(
+                              clase.fecha, clase.hora, mesActual) ||
+                          clase.lugaresDisponibles <= 0))
+                      ? null
+                      : () async {
+                          if (context.mounted) {
+                            mostrarConfirmacion(context, clase);
+                          }
+                        },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  estaLlena ||
+                          Calcular24hs().esMenorA0Horas(
+                              clase.fecha, clase.hora, mesActual) ||
+                          clase.lugaresDisponibles <= 0
+                      ? Colors.grey.shade400
+                      : Colors.green,
                 ),
-              ],
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(screenWidth * 0.03)),
+                ),
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Text(
+                    diaYHora,
+                    style: const TextStyle(fontSize: 11, color: Colors.white),
+                  ),
+                ],
+              ),
             ),
+            onLongPress: () {
+              mostrarAlertaListaEspera(context: context, clase: clase);
+            },
           ),
-          onLongPress: () {
-            mostrarAlertaListaEspera(context: context, clase: clase);
-          },
         ),
-      ),
-      const SizedBox(height: 18),
-    ],
-  );
-  }}
+        const SizedBox(height: 18),
+      ],
+    );
+  }
+}
 
 class _AvisoDeClasesDisponibles extends StatelessWidget {
   const _AvisoDeClasesDisponibles({
@@ -615,7 +626,6 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
     );
   }
 }
-
 
 class _SemanaNavigation extends StatelessWidget {
   final String semanaSeleccionada;

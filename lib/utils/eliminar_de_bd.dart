@@ -11,6 +11,6 @@ class EliminarDeBD {
       dotenv.env['SERVICE_ROLE_KEY'] ?? '',
     );
 
-        await supabase.auth.admin.deleteUser(userUid);
+    await supabase.auth.admin.deleteUser(userUid);
   }
 }

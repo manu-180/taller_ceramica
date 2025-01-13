@@ -63,7 +63,6 @@ class ActualizarFechasDatabase {
               mes: 0,
               capacidad: 0,
               espera: [],
-
             ),
           );
 

@@ -247,7 +247,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                     : "(${usuario.clasesDisponibles} créditos)"),
                                 onTap: () async {
                                   final lista = await AlumnosEnClase()
-                                      .clasesAlumno(usuario.fullname);
+                                      .clasesAlumno(usuario.fullname, "mails");
                                   ScaffoldMessenger.of(context)
                                       .hideCurrentSnackBar();
                                   ScaffoldMessenger.of(context).showSnackBar(

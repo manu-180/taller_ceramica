@@ -162,7 +162,7 @@ class MisClasesScreenState extends ConsumerState<MisClasesScreen> {
       return clase.espera.contains(fullname);
     }).toList();
 
-    clasesUsuario.sort((a, b) {
+    listaEspera.sort((a, b) {
       final fechaHoraA = '${a.fecha} ${a.hora}';
       final fechaHoraB = '${b.fecha} ${b.hora}';
 
@@ -343,7 +343,7 @@ Widget build(BuildContext context) {
                                             ),
                                             subtitle: Text("Tu lugar en espera: ${clase.espera.indexOf(user.userMetadata?['fullname']) + 1}", style: const TextStyle(
                                                 color:Colors.blue,
-                                                  fontSize: 11),),
+                                                  fontSize: 10),),
                                             trailing: ElevatedButton(
                                               onPressed: () {
                                                 mostrarCancelacion(

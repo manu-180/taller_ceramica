@@ -12,13 +12,12 @@ class ObtenerMes {
 
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo.id);
 
-    final response = await ObtenerTotalInfo(
-            supabase: supabase, clasesTable: taller, usuariosTable: "usuarios")
-        .obtenerClases();
+    final data = await supabase
+    .from(taller)
+    .select("mes")
+    .limit(1)
+    .single();
 
-    for (var clase in response) {
-      return clase.mes;
-    }
-    return 1;
+    return data["mes"];
   }
 }

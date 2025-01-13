@@ -234,7 +234,8 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                         final capacidad = int.tryParse(capacidadText);
 
                         if (capacidad == null) {
-                          throw Exception("Debe ingresar un valor numérico para la capacidad maxima.");
+                          throw Exception(
+                              "Debe ingresar un valor numérico para la capacidad maxima.");
                         }
 
                         final horaFormatoValido =
@@ -259,10 +260,9 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                             DateTime(fechaBase.year, fechaBase.month, 1);
                         final dayOfWeekSelected = fechaBase.weekday;
 
-                        final difference = (7 +
-                                dayOfWeekSelected -
-                                firstDayOfMonth.weekday) %
-                            7;
+                        final difference =
+                            (7 + dayOfWeekSelected - firstDayOfMonth.weekday) %
+                                7;
 
                         final firstTargetDate =
                             firstDayOfMonth.add(Duration(days: difference));
@@ -293,12 +293,14 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                             );
                             continue;
                           } else {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Clase del $fechaStr a las $hora agregada con éxito.'),
-                          ),
-                        );}
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    'Clase del $fechaStr a las $hora agregada con éxito.'),
+                              ),
+                            );
+                          }
 
                           await supabase.from(taller).insert({
                             'semana': EncontrarSemana().obtenerSemana(fechaStr),
@@ -312,19 +314,16 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                           });
                         }
 
-                        
-                        
-
                         await cargarDatos();
 
                         if (fechaSeleccionada != null) {
-    setState(() {
-      clasesFiltradas = clasesDisponibles.where((clase) {
-        return clase.fecha == fechaSeleccionada;
-      }).toList();
-    });
-  }
-                        
+                          setState(() {
+                            clasesFiltradas = clasesDisponibles.where((clase) {
+                              return clase.fecha == fechaSeleccionada;
+                            }).toList();
+                          });
+                        }
+
                         Navigator.of(context).pop();
                       } catch (e) {
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -395,7 +394,6 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                   return;
                 }
 
-                
                 await supabase.from(taller).update({
                   'capacidad': newCapacity,
                   'lugar_disponible': newCapacity - clase.mails.length,
@@ -408,7 +406,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                     // Creamos una nueva instancia con la capacidad actualizada
                     final updatedClase = clase.copyWith(
                       capacidad: newCapacity,
-                      lugaresDisponibles: newCapacity - clase.mails.length, 
+                      lugaresDisponibles: newCapacity - clase.mails.length,
                       // si deseas que lugaresDisponibles sea igual a la nueva capacidad
                     );
 
@@ -491,7 +489,6 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                 }).toList(),
               ),
               const SizedBox(height: 20),
-
               if (!isLoading &&
                   fechaSeleccionada != null &&
                   clasesFiltradas.isNotEmpty)

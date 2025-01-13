@@ -13,8 +13,6 @@ export 'package:taller_ceramica/supabase/modificar_datos/modificar_credito.dart'
 export 'package:taller_ceramica/supabase/modificar_datos/modificar_lugar_disponible.dart';
 export 'package:taller_ceramica/supabase/obtener_datos/obtener_alert_trigger.dart';
 export 'package:taller_ceramica/supabase/obtener_datos/obtener_clases_disponibles.dart';
-export 'package:taller_ceramica/supabase/obtener_datos/obtener_id.dart';
-export 'package:taller_ceramica/supabase/obtener_datos/obtener_lugares_de_clases.dart';
 export 'package:taller_ceramica/supabase/obtener_datos/obtener_total_info.dart';
 export 'package:taller_ceramica/supabase/clases/remover_usuario.dart';
 export 'package:taller_ceramica/supabase/usuarios/update_user.dart';

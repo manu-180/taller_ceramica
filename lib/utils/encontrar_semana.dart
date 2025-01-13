@@ -9,7 +9,8 @@ class EncontrarSemana {
 
     // Encontrar el primer domingo del mes
     int diasHastaPrimerDomingo = (7 - primerDiaMes.weekday) % 7;
-    DateTime primerDomingo = primerDiaMes.add(Duration(days: diasHastaPrimerDomingo));
+    DateTime primerDomingo =
+        primerDiaMes.add(Duration(days: diasHastaPrimerDomingo));
 
     // Calcular los días desde el primer domingo
     int diasDesdePrimerDomingo = fecha.difference(primerDomingo).inDays;
