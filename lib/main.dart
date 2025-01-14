@@ -51,12 +51,13 @@ class MyApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate, // Traducciones Cupertino
       ],
       supportedLocales: const [
-        Locale('en'), // Inglés
-        Locale('es'), // Español
-        // Locale("fr")
+        Locale('en'), 
+        Locale('es'), 
+        Locale("fr"),
+        Locale("pt")
       ],
       localeResolutionCallback: (locale, supportedLocales) {
-        // Selecciona automáticamente el idioma soportado más cercano
+        print("EL IDIOMA: $locale");
         if (locale == null) return supportedLocales.first;
         for (var supportedLocale in supportedLocales) {
           if (supportedLocale.languageCode == locale.languageCode) {

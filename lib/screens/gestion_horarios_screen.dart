@@ -476,10 +476,13 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                                     colors,
                                                   );
                                                 },
+                                                style: ElevatedButton.styleFrom(
+    padding: EdgeInsets.zero, 
+  ),
                                                 child: Text(
                                                   localizations.translate('addUserButton'),
-                                                  style: const TextStyle(
-                                                    fontSize: 10,
+                                                  style: TextStyle(
+                                                    fontSize: size.width * 0.025,
                                                   ),
                                                 ),
                                               ),
@@ -496,10 +499,13 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                                     colors,
                                                   );
                                                 },
+                                                style: ElevatedButton.styleFrom(
+    padding: EdgeInsets.zero, 
+  ),
                                                 child: Text(
                                                   localizations.translate('removeUserButton'),
-                                                  style: const TextStyle(
-                                                    fontSize: 10,
+                                                  style: TextStyle(
+                                                    fontSize: size.width * 0.025,
                                                   ),
                                                 ),
                                               ),

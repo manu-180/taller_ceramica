@@ -322,20 +322,22 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
               ),
             ),
       floatingActionButton: SizedBox(
-        width: size.width * 0.38,
-        child: FloatingActionButton(
-          onPressed: () async {
-            final usuarioActivo = Supabase.instance.client.auth.currentUser;
-            final taller =
-                await ObtenerTaller().retornarTaller(usuarioActivo!.id);
-            context.push('/crear-usuario/$taller');
-          },
-          child: Text(
-            AppLocalizations.of(context).translate('createNewUser'),
-            style: TextStyle(fontSize: size.width * 0.032),
-          ),
-        ),
+  width: size.width * 0.38,
+  child: FloatingActionButton(
+    onPressed: () async {
+      final usuarioActivo = Supabase.instance.client.auth.currentUser;
+      final taller =
+          await ObtenerTaller().retornarTaller(usuarioActivo!.id);
+      context.push('/crear-usuario/$taller');
+    },
+    child: Container(
+      alignment: Alignment.center, 
+      child: Text(
+        AppLocalizations.of(context).translate('createNewUser'),
+        style: TextStyle(fontSize: size.width * 0.030),
       ),
-    );
+    ),
+  ),)
+);
   }
 }

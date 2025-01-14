@@ -553,6 +553,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
                         }
                       },
             style: ButtonStyle(
+              
               backgroundColor: MaterialStateProperty.all(
                 estaLlena ||
                         Calcular24hs().esMenorA0Horas(
@@ -565,13 +566,15 @@ class _ClasesScreenState extends State<ClasesScreen> {
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(screenWidth * 0.03)),
               ),
+              padding: MaterialStateProperty.all(EdgeInsets.zero),
             ),
+            
             child: Stack(
               alignment: Alignment.center,
               children: [
                 Text(
                   diaYHora,
-                  style: const TextStyle(fontSize: 11, color: Colors.white),
+                  style: TextStyle(fontSize: screenWidth * 0.032, color: Colors.white),
                 ),
               ],
             ),
@@ -730,13 +733,15 @@ class _DiaSelection extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => seleccionarDia(diaMesAnio),
                   style: ElevatedButton.styleFrom(
+                    minimumSize: Size.zero, 
+                    padding: EdgeInsets.zero,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(screenWidth * 0.03),
                     ),
                   ),
                   child: Text(
                     diaFecha,
-                    style: TextStyle(fontSize: screenWidth * 0.033),
+                    style: TextStyle(fontSize: screenWidth * 0.032),
                   ),
                 ),
               ),
