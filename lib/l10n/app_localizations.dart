@@ -197,7 +197,10 @@ class AppLocalizations {
   "thursday": "Thursday",
   "friday": "Friday",
   "saturday": "Saturday",
-  "sunday": "Sunday"
+  "sunday": "Sunday",
+  "classAddedSuccess": "Class on \$date at \$time added successfully.",
+"classAlreadyExists": "The class on \$date at \$time already exists.",
+
     },
     'es': {
       'helloWorld': '¡Hola Mundo!',
@@ -609,7 +612,10 @@ class AppLocalizations {
 "manageClassesLabel": "Gérer les Cours",
 "studentsLabell": "Étudiants",
 "settingsLabel": "Paramètres",
-"testLabel": "Test"
+"testLabel": "Test",
+"classAddedSuccess": "Classe du \$date à \$time ajoutée avec succès.",
+"classAlreadyExists": "La classe du \$date à \$time existe déjà.",
+
 },
 "pt" : {
   "helloWorld": "Olá Mundo!",
@@ -797,7 +803,10 @@ class AppLocalizations {
   "thursday": "quinta-feira",
   "friday": "sexta-feira",
   "saturday": "sábado",
-  "sunday": "domingo"
+  "sunday": "domingo",
+  "classAddedSuccess": "Aula de \$date às \$time adicionada com sucesso.",
+"classAlreadyExists": "A aula de \$date às \$time já existe.",
+
 },
 "de" : {'helloWorld': 'Hallo Welt!',
 'errorLoadingData': 'Fehler beim Laden der Daten',
@@ -985,6 +994,9 @@ class AppLocalizations {
 'friday': 'Freitag',
 'saturday': 'Samstag',
 'sunday': 'Sonntag',
+"classAddedSuccess": "Klasse am \$date um \$time erfolgreich hinzugefügt.",
+"classAlreadyExists": "Die Klasse am \$date um \$time existiert bereits.",
+
 },
 "it" :{
   'helloWorld': 'Ciao Mondo!',
@@ -1173,6 +1185,9 @@ class AppLocalizations {
 'friday': 'Venerdì',
 'saturday': 'Sabato',
 'sunday': 'Domenica',
+"classAddedSuccess": "Classe del \$date alle \$time aggiunta con successo.",
+"classAlreadyExists": "La classe del \$date alle \$time esiste già.",
+
 
 }, 
 "zh" :{
@@ -1361,7 +1376,10 @@ class AppLocalizations {
   "thursday": "星期四",
   "friday": "星期五",
   "saturday": "星期六",
-  "sunday": "星期日"
+  "sunday": "星期日",
+  "classAddedSuccess": "已成功添加 \$date \$time 的课程。",
+"classAlreadyExists": "日期 \$date 时间 \$time 的课程已存在。",
+
 }
 
 
