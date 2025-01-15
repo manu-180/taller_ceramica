@@ -216,6 +216,7 @@
   "thursday": "jueves",
   "friday": "viernes",
   "saturday": "sábado",
-  "sunday": "domingo"
+  "sunday": "domingo",
+  "classAddedSuccess":'Clase del \$fechaStr a las \$hora agregada con éxito.'
 
 } 

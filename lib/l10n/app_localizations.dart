@@ -401,7 +401,9 @@ class AppLocalizations {
   "thursday": "jueves",
   "friday": "viernes",
   "saturday": "sábado",
-  "sunday": "domingo"
+  "sunday": "domingo",
+  "classAddedSuccess":'Clase del \$date a las \$time agregada con éxito.',
+  "classAlreadyExists":'La clase del \$date a las \$time ya existe.',
     },
     "fr": {
   "@@locale": "fr",

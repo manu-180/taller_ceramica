@@ -51,13 +51,13 @@ class MyApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate, // Traducciones Cupertino
       ],
       supportedLocales: const [
-    Locale('en'), // Inglés
-    Locale('es'), // Español
-    Locale('fr'), // Francés
-    Locale('de'), // Alemán
-    Locale('it'), // Italiano
-    Locale('pt'), // Portugués
-    Locale('zh'), // Chino Simplificado
+    Locale('en'), 
+    Locale('es'), 
+    Locale('fr'), 
+    Locale('de'), 
+    Locale('it'), 
+    Locale('pt'), 
+    Locale('zh'), 
     Locale('ja'), // Japonés
     Locale('ko'), // Coreano
     Locale('ar'), // Árabe

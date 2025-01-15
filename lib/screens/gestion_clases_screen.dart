@@ -9,6 +9,7 @@ import 'package:taller_ceramica/supabase/modificar_datos/modificar_lugar_disponi
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_total_info.dart';
+import 'package:taller_ceramica/utils/generar_id.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:intl/intl.dart';
@@ -229,147 +230,144 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                   ),
                 )
               else ...[
-                // Botón de cancelar
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
                     localizations.translate('cancelButtonLabel'),
                   ),
                 ),
-                // Botón de agregar como FilledButton
                 FilledButton(
-                  onPressed: () async {
-                    setStateDialog(() {
-                      isProcessing = true;
-                    });
+  onPressed: () async {
+    setStateDialog(() {
+      isProcessing = true;
+    });
 
-                    try {
-                      final hora = horaController.text.trim();
-                      if (hora.isEmpty || fechaSeleccionada == null) {
-                        throw Exception(
-                          localizations.translate('invalidTimeOrDateError'),
-                        );
-                      }
+    try {
+      final hora = horaController.text.trim();
+      if (hora.isEmpty || fechaSeleccionada == null) {
+        throw Exception(
+          localizations.translate('invalidTimeOrDateError'),
+        );
+      }
 
-                      final capacidadText = capacidadController.text.trim();
-                      final capacidad = int.tryParse(capacidadText);
+      final capacidadText = capacidadController.text.trim();
+      final capacidad = int.tryParse(capacidadText);
 
-                      if (capacidad == null) {
-                        throw Exception(
-                          localizations.translate('invalidCapacityError'),
-                        );
-                      }
+      if (capacidad == null) {
+        throw Exception(
+          localizations.translate('invalidCapacityError'),
+        );
+      }
 
-                      final horaFormatoValido =
-                          RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
-                      if (!horaFormatoValido) {
-                        throw Exception(
-                          localizations.translate('invalidTimeFormatError'),
-                        );
-                      }
+      final horaFormatoValido = RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
+      if (!horaFormatoValido) {
+        throw Exception(
+          localizations.translate('invalidTimeFormatError'),
+        );
+      }
 
-                      final partesHora = hora.split(':');
-                      final hh = int.tryParse(partesHora[0]) ?? -1;
-                      final mm = int.tryParse(partesHora[1]) ?? -1;
+      final partesHora = hora.split(':');
+      final hh = int.tryParse(partesHora[0]) ?? -1;
+      final mm = int.tryParse(partesHora[1]) ?? -1;
 
-                      if (hh < 0 || hh > 23 || mm < 0 || mm > 59) {
-                        throw Exception(
-                          localizations.translate('timeOutOfRangeError'),
-                        );
-                      }
+      if (hh < 0 || hh > 23 || mm < 0 || mm > 59) {
+        throw Exception(
+          localizations.translate('timeOutOfRangeError'),
+        );
+      }
 
-                      final fechaBase =
-                          DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
-                      final firstDayOfMonth =
-                          DateTime(fechaBase.year, fechaBase.month, 1);
-                      final dayOfWeekSelected = fechaBase.weekday;
+      final fechaBase =
+          DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
+      final firstDayOfMonth =
+          DateTime(fechaBase.year, fechaBase.month, 1);
+      final dayOfWeekSelected = fechaBase.weekday;
 
-                      final difference = (7 +
-                              dayOfWeekSelected -
-                              firstDayOfMonth.weekday) %
-                          7;
+      final difference = (7 + dayOfWeekSelected - firstDayOfMonth.weekday) % 7;
 
-                      final firstTargetDate =
-                          firstDayOfMonth.add(Duration(days: difference));
+      final firstTargetDate =
+          firstDayOfMonth.add(Duration(days: difference));
 
-                      // Create 5 classes, one every 7 days
-                      for (int i = 0; i < 5; i++) {
-                        final fechaSemana =
-                            firstTargetDate.add(Duration(days: 7 * i));
-                        final fechaStr =
-                            DateFormat('dd/MM/yyyy').format(fechaSemana);
-                        final diaSemana = obtenerDia(fechaSemana);
+      final mesActual = await ObtenerMes().obtenerMes();
 
-                        final existingClass = await supabase
-                            .from(taller)
-                            .select()
-                            .eq('fecha', fechaStr)
-                            .eq('hora', hora)
-                            .maybeSingle();
+      for (int i = 0; i < 5; i++) {
+        final fechaSemana =
+            firstTargetDate.add(Duration(days: 7 * i));
+        final fechaStr =
+            DateFormat('dd/MM/yyyy').format(fechaSemana);
+        final diaSemana = obtenerDia(fechaSemana);
 
-                        if (existingClass != null) {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                localizations.translate('classAlreadyExists',
-                                    params: {'date': fechaStr, 'time': hora}),
-                              ),
-                            ),
-                          );
-                          continue;
-                        } else {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                localizations.translate('classAddedSuccess',
-                                    params: {'date': fechaStr, 'time': hora}),
-                              ),
-                            ),
-                          );
-                        }
+        final existingClass = await supabase
+            .from(taller)
+            .select()
+            .eq('fecha', fechaStr)
+            .eq('hora', hora)
+            .maybeSingle();
 
-                        await supabase.from(taller).insert({
-                          'semana': EncontrarSemana().obtenerSemana(fechaStr),
-                          'dia': diaSemana,
-                          'fecha': fechaStr,
-                          'hora': hora,
-                          'mails': [],
-                          'lugar_disponible': capacidad,
-                          'mes': mes,
-                          'capacidad': capacidad,
-                        });
-                      }
+        if (existingClass != null) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                localizations.translate('classAlreadyExists',
+                    params: {'date': fechaStr, 'time': hora}),
+              ),
+            ),
+          );
+          continue;
+        } else {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                localizations.translate('classAddedSuccess',
+                    params: {'date': fechaStr, 'time': hora}),
+              ),
+            ),
+          );
+        }
 
-                      await cargarDatos();
+        await supabase.from(taller).insert({
+          "id": GenerarID().generarIdUnico(clasesDisponibles),
+          'semana': EncontrarSemana().obtenerSemana(fechaStr),
+          'dia': diaSemana,
+          'fecha': fechaStr,
+          'hora': hora,
+          'mails': [],
+          'lugar_disponible': capacidad,
+          'mes': mesActual, 
+          'capacidad': capacidad,
+        });
+      }
 
-                      if (fechaSeleccionada != null) {
-                        setState(() {
-                          clasesFiltradas = clasesDisponibles.where((clase) {
-                            return clase.fecha == fechaSeleccionada;
-                          }).toList();
-                        });
-                      }
+      await cargarDatos();
 
-                      Navigator.of(context).pop();
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.toString()),
-                        ),
-                      );
-                    } finally {
-                      setStateDialog(() {
-                        isProcessing = false;
-                      });
-                    }
-                  },
-                  child: Text(
-                    localizations.translate('addButtonLabel'),
-                  ),
-                ),
+      if (fechaSeleccionada != null) {
+        setState(() {
+          clasesFiltradas = clasesDisponibles.where((clase) {
+            return clase.fecha == fechaSeleccionada;
+          }).toList();
+        });
+      }
+
+      Navigator.of(context).pop();
+    } catch (e) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+    } finally {
+      setStateDialog(() {
+        isProcessing = false;
+      });
+    }
+  },
+  child: Text(
+    localizations.translate('addButtonLabel'),
+  ),
+)
+
               ],
             ],
           );
@@ -458,23 +456,27 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
 
 void cambiarFecha(bool siguiente) {
   setState(() {
-    if (fechaSeleccionada != null) {
-      final int indexActual = fechasDisponibles.indexOf(fechaSeleccionada!);
-      if (siguiente) {
-        fechaSeleccionada =
-            fechasDisponibles[(indexActual + 1) % fechasDisponibles.length];
+    if (fechasDisponibles.isNotEmpty) {
+      if (fechaSeleccionada != null) {
+        final int indexActual = fechasDisponibles.indexOf(fechaSeleccionada!);
+        if (siguiente) {
+          fechaSeleccionada =
+              fechasDisponibles[(indexActual + 1) % fechasDisponibles.length];
+        } else {
+          fechaSeleccionada = fechasDisponibles[
+              (indexActual - 1 + fechasDisponibles.length) %
+                  fechasDisponibles.length];
+        }
       } else {
-        fechaSeleccionada = fechasDisponibles[
-            (indexActual - 1 + fechasDisponibles.length) %
-                fechasDisponibles.length];
+        fechaSeleccionada = fechasDisponibles[0];
       }
       seleccionarFecha(fechaSeleccionada!);
     } else {
-      fechaSeleccionada = fechasDisponibles[0];
-      seleccionarFecha(fechaSeleccionada!);
+      debugPrint('La lista de fechas disponibles está vacía.');
     }
   });
 }
+
 
 @override
 Widget build(BuildContext context) {
