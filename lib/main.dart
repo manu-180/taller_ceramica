@@ -45,10 +45,10 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: themeNotify.getColor(),
       localizationsDelegates: const [
-        AppLocalizationsDelegate(), // Delegado personalizado para traducciones
-        GlobalMaterialLocalizations.delegate, // Traducciones Material Design
-        GlobalWidgetsLocalizations.delegate, // Traducciones de widgets
-        GlobalCupertinoLocalizations.delegate, // Traducciones Cupertino
+        AppLocalizationsDelegate(), 
+        GlobalMaterialLocalizations.delegate, 
+        GlobalWidgetsLocalizations.delegate, 
+        GlobalCupertinoLocalizations.delegate, 
       ],
       supportedLocales: const [
     Locale('en'), 
@@ -58,15 +58,15 @@ class MyApp extends ConsumerWidget {
     Locale('it'), 
     Locale('pt'), 
     Locale('zh'), 
-    Locale('ja'), // Japonés
-    Locale('ko'), // Coreano
-    Locale('ar'), // Árabe
-    Locale('hi'), // Hindi
-    Locale('ru'), // Ruso
-    Locale('tr'), // Turco
-    Locale('nl'), // Holandés
-    Locale('sv'), // Sueco
-    Locale('pl'), // Polaco
+    Locale('ja'), 
+    Locale('ko'), 
+    Locale('ar'), 
+    Locale('hi'), 
+    Locale('ru'),
+    Locale('tr'), 
+    Locale('nl'), 
+    Locale('sv'), 
+    Locale('pl'), 
 ],
       localeResolutionCallback: (locale, supportedLocales) {
   if (locale == null) {
