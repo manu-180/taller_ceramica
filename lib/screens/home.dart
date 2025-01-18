@@ -83,102 +83,94 @@ class HomeState extends State<Home> {
         backgroundColor: color.primary,
         automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
-        child: Center(
+      body: LayoutBuilder(
+  builder: (context, constraints) {
+    return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: constraints.maxHeight,
+        ),
+        child: IntrinsicHeight(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Texto fijo en la parte superior
               Padding(
-                padding: EdgeInsets.fromLTRB(
-                    size.width * 0.05, 60, size.width * 0.05, 0),
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: color.primary.withAlpha(50),
-                    borderRadius: BorderRadius.circular(10),
+                padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                child: Text(
+                  localizations.translate('homeScreenIntro'),
+                  style: TextStyle(
+                    fontSize: 21,
+                    fontWeight: FontWeight.bold,
+                    color: color.primary,
                   ),
-                  child: Text(
-                    localizations.translate('homeScreenIntro'),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(fontSize: size.width * 0.04),
-                  ),
+                  textAlign: TextAlign.center,
                 ),
               ),
-              SizedBox(height: size.height * 0.02),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 600),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+              SizedBox(height: size.height * 0.04),
+              // Expand para empujar inputs al centro
+              Expanded(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            localizations.translate('loginPrompt'),
-                            style: TextStyle(
-                              fontSize: 19,
-                              fontWeight: FontWeight.bold,
-                              color: color.primary,
+                          // Email Input
+                          TextField(
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              labelText: localizations.translate('emailLabel'),
+                              border: const OutlineInputBorder(),
+                              errorText: mailError.isEmpty ? null : mailError,
                             ),
-                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.emailAddress,
+                            onChanged: (value) {
+                              setState(() {
+                                mailError = !emailRegex
+                                        .hasMatch(emailController.text.trim())
+                                    ? localizations.translate('invalidEmail')
+                                    : '';
+                              });
+                            },
                           ),
-                        ],
-                      ),
-                      SizedBox(height: size.height * 0.02),
-                      TextField(
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          labelText: localizations.translate('emailLabel'),
-                          border: const OutlineInputBorder(),
-                          errorText: mailError.isEmpty ? null : mailError,
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        onChanged: (value) {
-                          setState(() {
-                            mailError = !emailRegex
-                                    .hasMatch(emailController.text.trim())
-                                ? localizations.translate('invalidEmail')
-                                : '';
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: passwordController,
-                        decoration: InputDecoration(
-                          labelText: localizations.translate('passwordLabel'),
-                          border: const OutlineInputBorder(),
-                          errorText:
-                              passwordError.isEmpty ? null : passwordError,
-                        ),
-                        obscureText: true,
-                        onChanged: (value) {
-                          setState(() {
-                            passwordError = value.length < 6
-                                ? localizations.translate('passwordTooShort')
-                                : '';
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                context.push("/creartaller");
-                              },
-                              child: Text(localizations
-                                  .translate('createWorkshopButton')),
+                          const SizedBox(height: 16),
+                          // Password Input
+                          TextField(
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                              labelText: localizations.translate('passwordLabel'),
+                              border: const OutlineInputBorder(),
+                              errorText:
+                                  passwordError.isEmpty ? null : passwordError,
                             ),
-                            const SizedBox(width: 20),
-                            FilledButton(
-                              onPressed: () async {
+                            obscureText: true,
+                            onChanged: (value) {
+                              setState(() {
+                                passwordError = value.length < 6
+                                    ? localizations.translate('passwordTooShort')
+                                    : '';
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 24),
+                          // Botones
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  context.push("/creartaller");
+                                },
+                                child: Text(localizations
+                                    .translate('createWorkshopButton')),
+                              ),
+                              const SizedBox(width: 20),
+                              FilledButton(
+                                onPressed: () async {
                                 final email = emailController.text.trim();
                                 final password = passwordController.text.trim();
 
@@ -262,13 +254,14 @@ class HomeState extends State<Home> {
                                   return;
                                 }
                               },
-                              child:
-                                  Text(localizations.translate('loginButton')),
-                            ),
-                          ],
-                        ),
+                                child:
+                                    Text(localizations.translate('loginButton')),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -276,6 +269,9 @@ class HomeState extends State<Home> {
           ),
         ),
       ),
+    );
+  },
+)
     );
   }
 }
