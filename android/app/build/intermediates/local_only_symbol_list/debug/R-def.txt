@@ -1,0 +1,21 @@
+R_DEF: Internal format may change without notice
+local
+color ic_launcher_background
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+drawable launch_background
+mipmap ic_launcher
+mipmap icon_background_48x48
+mipmap icon_background_72x72
+mipmap icon_background_corrected_144x144
+mipmap icon_background_corrected_192x192
+mipmap icon_background_corrected_96x96
+mipmap icon_foreground_corrected_144x144
+mipmap icon_foreground_corrected_192x192
+mipmap icon_foreground_corrected_48x48
+mipmap icon_foreground_corrected_72x72
+mipmap icon_foreground_corrected_96x96
+mipmap launcher_icon
+string app_name
+style LaunchTheme
+style NormalTheme

@@ -1,8 +1,13 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mailto/mailto.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
@@ -11,6 +16,8 @@ import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
 import 'package:taller_ceramica/l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 
 class Configuracion extends ConsumerStatefulWidget {
   const Configuracion({super.key, this.taller});
@@ -24,6 +31,8 @@ class Configuracion extends ConsumerStatefulWidget {
 class _ConfiguracionState extends ConsumerState<Configuracion> {
   User? user;
   String? taller;
+  bool _isExpanded = false;
+
 
   @override
   void initState() {
@@ -42,6 +51,40 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
       taller = tallerObtenido;
     });
   }
+
+
+
+void _launchWhatsApp() async {
+  final link = WhatsAppUnilink(
+    phoneNumber: '+5491134272488',
+    text: '¡Hola! Me gustaría más información.',
+  );
+
+  if (await canLaunchUrl(Uri.parse('$link'))) {
+    await launchUrl(Uri.parse('$link'), mode: LaunchMode.externalApplication);
+  } else {
+    debugPrint('No se pudo abrir WhatsApp. Verifica que está instalado.');
+  }
+}
+
+
+  void _launchEmail() async {
+  final Email email = Email(
+    body: 'Hola, quisiera más información.',
+    subject: 'Consulta',
+    recipients: ['manunv97@gmail.com'],
+    isHTML: false,
+  );
+
+  try {
+    await FlutterEmailSender.send(email);
+  } catch (error) {
+    debugPrint('Error al enviar el correo: $error');
+  }
+}
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -188,6 +231,65 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                   ],
                 ),
         ),
+      ),
+      floatingActionButton: Stack(
+        children: [
+          // Botones flotantes
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_isExpanded)
+                    TweenAnimationBuilder(
+                      duration: const Duration(milliseconds: 300),
+                      tween: Tween<double>(begin: 50, end: 0),
+                      curve: Curves.easeOut,
+                      builder: (context, value, child) => Transform.translate(
+                        offset: Offset(0, value),
+                        child: FloatingActionButton(
+                          onPressed: _launchWhatsApp,
+                          backgroundColor: Colors.green,
+                          heroTag: 'whatsapp',
+                          child: const Icon(FontAwesomeIcons.whatsapp),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 10),
+                  if (_isExpanded)
+                    TweenAnimationBuilder(
+                      duration: const Duration(milliseconds: 300),
+                      tween: Tween<double>(begin: 50, end: 0),
+                      curve: Curves.easeOut,
+                      builder: (context, value, child) => Transform.translate(
+                        offset: Offset(0, value),
+                        child: FloatingActionButton(
+                          onPressed: _launchEmail,
+                          backgroundColor: Colors.red,
+                          heroTag: 'email',
+                          child: const Icon(FontAwesomeIcons.envelope),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 10),
+                  FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        _isExpanded = !_isExpanded;
+                      });
+                    },
+                    backgroundColor: Theme.of(context).primaryColor,
+                    heroTag: 'main',
+                    child: Icon(
+                      _isExpanded ? Icons.close : Icons.contact_page_outlined,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

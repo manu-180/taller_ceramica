@@ -1,0 +1,26 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.manuelnavarro.tallerdeceramica.app-mergeDebugResources-55:/values-en/values-en.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Manuel\\Desktop\\Folder\\taller_ceramica_app\\taller_ceramica\\android\\app\\src\\main\\res\\values-en\\strings.xml",
+                    "from": {
+                        "startLines": "1",
+                        "startColumns": "4",
+                        "startOffsets": "17",
+                        "endColumns": "54",
+                        "endOffsets": "67"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "54",
+                        "endOffsets": "105"
+                    }
+                }
+            ]
+        }
+    ]
+}
