@@ -88,7 +88,7 @@ class HomeState extends State<Home> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(size.width * 0.04),
+                padding: EdgeInsets.fromLTRB(size.width * 0.04, size.width * 0.08,size.width * 0.04,0),
                 child: Text(
                   localizations.translate('homeScreenIntro'),
                   style: TextStyle(
