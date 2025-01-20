@@ -291,7 +291,7 @@ class AppLocalizations {
       "waitlistPosition": "Tu lugar en la lista de espera es: \$position",
       "workshopTitle": "Taller de Cerámica",
       "homeScreenIntro":
-          "Si eres administrador y aún no has creado tu cuenta, ¡es el momento de iniciar tu propio taller!.\nSi eres alumno, deberás solicitar al administrador que cree tu cuenta para comenzar.",
+          "-Administradores: creen su cuenta y comiencen su taller.\n-Alumnos: soliciten al administrador que registre su cuenta para iniciar.",
       "loginPrompt": "Inicia sesión :",
       "createWorkshopButton": "Crear Taller",
       "loginError": "Error de inicio de sesión: \$error",

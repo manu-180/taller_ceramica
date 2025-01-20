@@ -88,21 +88,14 @@ class HomeState extends State<Home> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(
-                    size.width * 0.05, 60, size.width * 0.05, 0),
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: color.primary.withAlpha(50),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    localizations.translate('homeScreenIntro'),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(fontSize: size.width * 0.04),
-                  ),
+                padding: EdgeInsets.all(size.width * 0.04),
+                child: Text(
+                  localizations.translate('homeScreenIntro'),
+                  style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: color.primary,
+                          ),
                 ),
               ),
               SizedBox(height: size.height * 0.02),

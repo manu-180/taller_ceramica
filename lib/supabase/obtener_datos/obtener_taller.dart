@@ -6,7 +6,11 @@ class ObtenerTaller {
         .from("usuarios")
         .select("taller")
         .eq("user_uid", userUid)
-        .single();
+        .maybeSingle();
+
+    if (data == null) {
+      throw Exception("No se encontró un taller para el usuario especificado.");
+    }
 
     return data["taller"];
   }
