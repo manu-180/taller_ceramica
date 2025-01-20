@@ -299,6 +299,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                           },
                                         );
 
+                                      
+
                                         await supabase.from('usuarios').insert({
                                           'id': await GenerarId()
                                               .generarIdUsuario(),

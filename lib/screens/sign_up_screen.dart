@@ -23,7 +23,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-  final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}\$');
+  final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
 
   String passwordError = '';
   String confirmPasswordError = '';
@@ -97,22 +98,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         const SizedBox(height: 16),
                         TextField(
-                          controller: emailController,
-                          decoration: InputDecoration(
-                            labelText: localizations.translate('emailLabel'),
-                            border: const OutlineInputBorder(),
-                            errorText: mailError.isEmpty ? null : mailError,
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                          onChanged: (value) {
-                            setState(() {
-                              mailError = !emailRegex
-                                      .hasMatch(emailController.text.trim())
-                                  ? localizations.translate('invalidEmail')
-                                  : '';
-                            });
-                          },
-                        ),
+  controller: emailController,
+  decoration: InputDecoration(
+    labelText: localizations.translate('emailLabel'),
+    border: const OutlineInputBorder(),
+    errorText: mailError.isEmpty ? null : mailError,
+  ),
+  keyboardType: TextInputType.emailAddress,
+  onChanged: (value) {
+    setState(() {
+      mailError = !emailRegex.hasMatch(emailController.text.trim())
+          ? localizations.translate('invalidEmail')
+          : '';
+    });
+  },
+),
                         const SizedBox(height: 16),
                         TextField(
                           controller: passwordController,
@@ -339,17 +339,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               );
                             }
                           },
-                          child:
-                              Text(localizations.translate('registerButton')),
+                          child: isLoading
+                                  ? const CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    )
+                                  : Text(AppLocalizations.of(context)
+                                      .translate('registerWorkshopButton')),
                         ),
-                        if (showSuccessMessage) ...[
-                          const SizedBox(height: 30),
-                          Text(localizations.translate('successMessage')),
-                        ],
-                        if (isLoading) ...[
-                          const SizedBox(height: 30),
-                          const CircularProgressIndicator(),
-                        ],
+                   
+        
                       ],
                     ),
                   ),
