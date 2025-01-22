@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/l10n/app_localizations.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
@@ -218,6 +219,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final color = Theme.of(context).primaryColor;
 
     return Scaffold(
       appBar:
@@ -242,77 +244,140 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                         itemCount: usuarios.length,
                         itemBuilder: (context, index) {
                           final usuario = usuarios[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            child: Card(
-                              surfaceTintColor:
-                                  usuario.admin ? Colors.amber : Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: ListTile(
-                                title: Text('${usuario.fullname}'),
-                                subtitle: Text(
-                                  usuario.clasesDisponibles == 1
-                                      ? "${usuario.clasesDisponibles} ${AppLocalizations.of(context).translate('singleCredit')}"
-                                      : "${usuario.clasesDisponibles} ${AppLocalizations.of(context).translate('multipleCredits')}",
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.delete,
-                                          color: Colors.red),
-                                      onPressed: () => mostrarDialogoEliminar(
-                                        context: context,
-                                        titulo: AppLocalizations.of(context)
-                                            .translate('deleteUser'),
-                                        contenido: AppLocalizations.of(context)
-                                            .translate('confirmDeleteUser'),
-                                        onConfirmar: () => eliminarUsuario(
-                                            usuario.id, usuario.userUid),
+                          return GestureDetector(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              child: Card(
+                                surfaceTintColor:
+                                    usuario.admin ? Colors.amber : Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: ListTile(
+                                  title: Text(usuario.fullname),
+                                  subtitle: Text(
+                                    usuario.clasesDisponibles == 1
+                                        ? "${usuario.clasesDisponibles} ${AppLocalizations.of(context).translate('singleCredit')}"
+                                        : "${usuario.clasesDisponibles} ${AppLocalizations.of(context).translate('multipleCredits')}",
+                                  ),
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+
+                                      IconButton(
+                                        icon: const Icon(Icons.add,
+                                            color: Colors.green),
+                                        onPressed: () =>
+                                            mostrarDialogoConContador(
+                                          context: context,
+                                          titulo: AppLocalizations.of(context)
+                                              .translate('addCredits'),
+                                          contenido: AppLocalizations.of(context)
+                                              .translate('selectCreditsToAdd'),
+                                          onConfirmar: (cantidad) async {
+                                            for (int i = 0; i < cantidad; i++) {
+                                              await agregarCredito(
+                                                  usuario.fullname);
+                                            }
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.add,
-                                          color: Colors.green),
-                                      onPressed: () =>
-                                          mostrarDialogoConContador(
-                                        context: context,
-                                        titulo: AppLocalizations.of(context)
-                                            .translate('addCredits'),
-                                        contenido: AppLocalizations.of(context)
-                                            .translate('selectCreditsToAdd'),
-                                        onConfirmar: (cantidad) async {
-                                          for (int i = 0; i < cantidad; i++) {
-                                            await agregarCredito(
-                                                usuario.fullname);
-                                          }
-                                        },
+                                      IconButton(
+                                        icon: const Icon(Icons.remove,
+                                            color: Colors.orange),
+                                        onPressed: () =>
+                                            mostrarDialogoConContador(
+                                          context: context,
+                                          titulo: AppLocalizations.of(context)
+                                              .translate('removeCredits'),
+                                          contenido: AppLocalizations.of(context)
+                                              .translate('selectCreditsToRemove'),
+                                          onConfirmar: (cantidad) async {
+                                            for (int i = 0; i < cantidad; i++) {
+                                              await removerCredito(
+                                                  usuario.fullname);
+                                            }
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.remove,
-                                          color: Colors.orange),
-                                      onPressed: () =>
-                                          mostrarDialogoConContador(
-                                        context: context,
-                                        titulo: AppLocalizations.of(context)
-                                            .translate('removeCredits'),
-                                        contenido: AppLocalizations.of(context)
-                                            .translate('selectCreditsToRemove'),
-                                        onConfirmar: (cantidad) async {
-                                          for (int i = 0; i < cantidad; i++) {
-                                            await removerCredito(
-                                                usuario.fullname);
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
+                            onTap: () async {
+  final alumno = usuario.fullname; 
+  const columna = 'mails'; 
+
+  try {
+    final clases = await AlumnosEnClase().clasesAlumno(alumno, columna);
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          clases.isNotEmpty
+              ? "Clases de $alumno:\n${clases.join('\n')}" 
+              : "No se encontraron clases para este alumno.",
+          style: const TextStyle(color: Colors.white),
+        ),
+        duration: const Duration(seconds: 7),
+      ),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          "Error al obtener las clases: $e",
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.red, // Cambia el color si quieres
+        duration: const Duration(seconds: 7),
+      ),
+    );
+  }
+} ,
+onLongPress: () {
+  final alumno = usuario.fullname; 
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Row(
+          children: [
+            FaIcon(FontAwesomeIcons.triangleExclamation, size: 30,),
+            SizedBox(width: 10),
+            Flexible(
+            child: Text(
+              "¿Quieres eliminar a $alumno?",
+            )),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cierra el diálogo
+            },
+            child: const Text("Cancelar"),
+          ),
+          SizedBox(
+            width: 2,
+            ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.red.shade700, // Rojo oscuro
+            ),
+            onPressed: () {
+              // Agregar lógica para eliminar al alumno
+              Navigator.of(context).pop(); // Cierra el diálogo
+            },
+            child: const Text("Eliminar"),
+          ),
+        ],
+      );
+    },
+  );
+},
                           );
                         },
                       ),
