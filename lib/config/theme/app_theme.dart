@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
 const List<Color> listColors = [
-  Colors.black,
-  Colors.black,
-  // Color(0xFFE74C3C),
-  // Color(0xFFF7D794),
-  // Color(0xFF55E6C1),
-  // Color(0xFF00CEC9),
-  // Color(0xFFADD8E6),
-  // Color(0xFFAF52DE),
+  Color(0xFFE74C3C),
+  Color(0xFFF7D794),
+  Color(0xFF55E6C1),
+  Color(0xFF00CEC9),
+  Color(0xFFADD8E6),
+  Color(0xFFAF52DE),
 ];
 
 class AppTheme {
