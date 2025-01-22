@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -6,14 +7,16 @@ import 'package:taller_ceramica/supabase/utiles/redirijir_usuario_al_taller.dart
 import 'package:taller_ceramica/l10n/app_localizations.dart';
 import 'dart:convert';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+import 'package:taller_ceramica/widgets/contactanos.dart';
+
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  HomeState createState() => HomeState();
+  LoginState createState() => LoginState();
 }
 
-class HomeState extends State<Home> {
+class LoginState extends State<Login> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FocusNode emailFocusNode = FocusNode();
@@ -76,13 +79,31 @@ class HomeState extends State<Home> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          localizations.translate('workshopTitle'),
-          style: const TextStyle(color: Colors.white),
+  automaticallyImplyLeading: false,
+  iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
+  toolbarHeight: kToolbarHeight * 1.1, 
+  title: GestureDetector(
+    child: Row(
+      children: [
+        Text(
+          AppLocalizations.of(context).translate('appTitle'),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         ),
-        backgroundColor: color.primary,
-        automaticallyImplyLeading: false,
-      ),
+        const SizedBox(width: 7),
+        FaIcon(
+          FontAwesomeIcons.fileLines,
+          color: Colors.white,
+          size: size.width * 0.055,
+        ),
+      ],
+    ),
+    onTap: () => context.go('/'),
+  ),
+  backgroundColor: color.primary,
+),
+
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -162,14 +183,11 @@ class HomeState extends State<Home> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                context.push("/creartaller");
-                              },
-                              child: Text(localizations
-                                  .translate('createWorkshopButton')),
-                            ),
-                            const SizedBox(width: 20),
+                             ElevatedButton(
+                                onPressed: () => context.go("/"),
+                                child: Text(AppLocalizations.of(context)
+                                    .translate('goBackButton'))),
+                            const SizedBox(width: 15),
                             FilledButton(
                               onPressed: () async {
                                 final email = emailController.text.trim();
@@ -269,6 +287,7 @@ class HomeState extends State<Home> {
           ),
         ),
       ),
+      floatingActionButton: Contactanos(),
     );
   }
 }

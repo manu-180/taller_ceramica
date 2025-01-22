@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -168,28 +169,16 @@ class TabletAppBarState extends State<TabletAppBar> {
                 onTap: () {
                   context.push("/home${taller ?? ''}");
                 },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context).translate('workshopOfLabel'),
-                      style: TextStyle(
-                        fontSize: size.width * 0.02,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      AppLocalizations.of(context).translate('ceramicsLabel'),
-                      style: TextStyle(
-                        fontSize: size.width * 0.02,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
+                child: Row(
+            children: [
+              Text(
+                AppLocalizations.of(context).translate('appTitle'),
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+              ),
+              SizedBox(width: 7),
+              FaIcon(FontAwesomeIcons.fileLines, color: Colors.white, size: size.width * 0.055,),
+            ],
+          ),
               ),
               SizedBox(width: size.width * 0.02),
               PopupMenuButton<String>(

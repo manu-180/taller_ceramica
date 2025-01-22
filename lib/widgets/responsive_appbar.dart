@@ -8,7 +8,7 @@ class ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   ResponsiveAppBar({super.key, required bool isTablet})
       : preferredSize = Size.fromHeight(
-          isTablet ? kToolbarHeight * 1.25 : kToolbarHeight * 1.25,
+          isTablet ? kToolbarHeight * 1.1 : kToolbarHeight * 1.1,
         );
 
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/screens/crear_taller.dart';
-import 'package:taller_ceramica/screens/home.dart';
+import 'package:taller_ceramica/screens/login.dart';
 import 'package:taller_ceramica/screens/home_screen.dart';
 import 'package:taller_ceramica/screens/mis_clases.dart';
 import 'package:taller_ceramica/screens/gestion_clases_screen.dart';
@@ -14,13 +14,18 @@ import 'package:taller_ceramica/screens/usuarios_screen.dart';
 import 'package:taller_ceramica/screens/configuracion.dart';
 import 'package:taller_ceramica/screens/cambiar_password.dart';
 import 'package:taller_ceramica/screens/update_name_screen.dart';
+import 'package:taller_ceramica/screens/welcome_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: "/",
   routes: [
     GoRoute(
       path: "/",
-      builder: (context, state) => const Home(),
+      builder: (context, state) => const WelcomeScreen(),
+    ),
+    GoRoute(
+      path: "/login",
+      builder: (context, state) => const Login(),
     ),
     GoRoute(
       path: "/home/:taller",

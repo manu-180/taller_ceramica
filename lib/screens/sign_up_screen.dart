@@ -345,7 +345,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           Colors.white),
                                     )
                                   : Text(AppLocalizations.of(context)
-                                      .translate('registerWorkshopButton')),
+                                      .translate('registerUserButton')),
                         ),
                    
         

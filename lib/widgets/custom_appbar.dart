@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -176,29 +177,18 @@ final userRoutes = [
             onTap: () {
               context.push("/home/${taller ?? ''}");
             },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  AppLocalizations.of(context).translate('workshopOfLabel'),
-                  style: TextStyle(
-                    fontSize: size.width * 0.05,
-                    fontWeight: FontWeight.bold,
-                    color: color.surface,
-                  ),
-                ),
-                Text(
-                  AppLocalizations.of(context).translate('ceramicsLabel'),
-                  style: TextStyle(
-                    fontSize: size.width * 0.05,
-                    fontWeight: FontWeight.bold,
-                    color: color.surface,
-                  ),
-                ),
-              ],
-            ),
+            child: Row(
+            children: [
+              Text(
+                AppLocalizations.of(context).translate('appTitle'),
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+              ),
+              SizedBox(width: 7),
+              FaIcon(FontAwesomeIcons.fileLines, color: Colors.white, size: size.width * 0.055,),
+            ],
           ),
-          SizedBox(width: size.width * 0.04),
+          ),
+          SizedBox(width: size.width * 0.02),
           PopupMenuButton<String>(
             onSelected: (value) => context.push(value),
             itemBuilder: (BuildContext context) => menuItems
