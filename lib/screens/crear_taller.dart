@@ -24,10 +24,37 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
 
   final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
+   
+
+  final List<String> rubros = [
+    "Clases de cerámica",
+    "Clases de pintura",
+    "Clases de música",
+    "Clases de idiomas",
+    "Clases de danza",
+    "Clases de actuación o teatro",
+    "Clases de cocina o repostería",
+    "Clases de tenis",
+    "Clases de natación",
+    "Entrenamientos de CrossFit",
+    "Clases de artes marciales",
+    "Clases de pilates",
+    "Clases de gimnasia artística",
+    "Clases de boxeo",
+    "Clases de surf",
+    "Clases de entrenamiento funcional",
+    "Clases de yoga",
+    "Clases de apoyo escolar",
+    "Clases de adiestramiento para perros",
+    "Clases de marketing digital",
+    "Clases de fotografía comercial",
+  ];
+
   String passwordError = '';
   String confirmPasswordError = '';
   String mailError = '';
   String tallerError = '';
+  String? selectedRubro;
   bool isLoading = false;
 
   Future<void> crearTablaTaller(String taller) async {
@@ -45,13 +72,18 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
       lugar_disponible INTEGER NOT NULL DEFAULT 0,
       mes INTEGER NOT NULL DEFAULT $mesActual,
       capacidad INTEGER NOT NULL DEFAULT 0
+      
+
     );
   '''
     });
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
+
     final color = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
 
@@ -163,6 +195,7 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                           },
                         ),
                         const SizedBox(height: 16),
+                        
                         TextField(
                           controller: tallerController,
                           decoration: InputDecoration(
@@ -182,6 +215,47 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                           },
                         ),
                         const SizedBox(height: 16),
+                        DropdownButtonFormField<String>(
+  decoration: InputDecoration(
+    labelText: "Seleccione su rubro",
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(4.0), // Bordes redondeados
+      borderSide: const BorderSide(
+        color: Colors.black, // Color del marco
+        width: 1.0, // Grosor del marco
+      ),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(4.0), // Bordes redondeados
+      borderSide: const BorderSide(
+        color: Colors.black, // Color del marco cuando no está seleccionado
+        width: 1.0,
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(4.0), // Bordes redondeados
+      borderSide:  BorderSide(
+        color: color.primary, // Color del marco cuando está enfocado
+        width: 1.5,
+      ),
+    ),
+  ),
+  value: selectedRubro,
+  onChanged: (String? newValue) {
+    setState(() {
+      selectedRubro = newValue;
+    });
+  },
+  items: rubros.map<DropdownMenuItem<String>>((String rubro) {
+    return DropdownMenuItem<String>(
+      value: rubro,
+      child: Text(rubro),
+    );
+  }).toList(),
+),
+const SizedBox(height: 16),
+
+      
                         TextField(
                           controller: passwordController,
                           decoration: InputDecoration(
@@ -335,6 +409,7 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
                                           "admin": true,
                                           "created_at":
                                               DateTime.now().toIso8601String(),
+                                              "rubro": selectedRubro,
                                         });
 
                                         crearTablaTaller(
@@ -397,7 +472,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
           ],
         ),
       ),
-      floatingActionButton: Contactanos(),
     );
   }
 }
+
+

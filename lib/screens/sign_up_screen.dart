@@ -39,12 +39,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final size = MediaQuery.of(context).size;
     final localizations = AppLocalizations.of(context);
 
+    String _formatName(String fullName) {
+    // Eliminar los espacios y convertir a minúsculas
+    return fullName.replaceAll(' ', '').toLowerCase();
+  }
+
     return Scaffold(
       appBar:
           ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
       body: SingleChildScrollView(
         child: Column(
           children: [
+    
             Padding(
               padding: EdgeInsets.fromLTRB(
                   size.width * 0.05, 20, size.width * 0.05, 0),
@@ -64,6 +70,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             SizedBox(height: size.height * 0.02),
+            ElevatedButton.icon(
+          icon: const Icon(Icons.info_outline), // Icono en el botón
+                  label: Text(AppLocalizations.of(context).translate('moreInfoButton')),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Atención'),
+                  content: Text(
+                    'Asegúrese de ingresar correctamente el nombre completo y el correo electrónico, ya que serán fundamentales para el inicio de sesión del usuario. La contraseña inicial se generará automáticamente, utilizando el nombre completo en minúsculas y sin espacios. Por ejemplo, si el nombre completo es "Manuel Navarro", la contraseña será "manuelnavarro". Posteriormente, el usuario podrá modificar estos datos según sus preferencias dentro de la aplicación.',
+                  ),
+                  actions: [
+                    TextButton(
+                      child: Text('Entendido'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
+        SizedBox(height: size.height * 0.02),
             Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 600),
@@ -114,46 +146,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   },
 ),
                         const SizedBox(height: 16),
-                        TextField(
-                          controller: passwordController,
-                          decoration: InputDecoration(
-                            labelText: localizations.translate('passwordLabel'),
-                            border: const OutlineInputBorder(),
-                            errorText:
-                                passwordError.isEmpty ? null : passwordError,
-                          ),
-                          obscureText: true,
-                          onChanged: (value) {
-                            setState(() {
-                              passwordError = value.length < 6
-                                  ? localizations.translate('passwordTooShort')
-                                  : '';
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          controller: confirmPasswordController,
-                          decoration: InputDecoration(
-                            labelText:
-                                localizations.translate('confirmPasswordLabel'),
-                            border: const OutlineInputBorder(),
-                            errorText: confirmPasswordError.isEmpty
-                                ? null
-                                : confirmPasswordError,
-                          ),
-                          obscureText: true,
-                          onChanged: (value) {
-                            setState(() {
-                              confirmPasswordError = value !=
-                                      passwordController.text
-                                  ? localizations.translate('passwordMismatch')
-                                  : '';
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
+                        FilledButton(
                           onPressed: () async {
                             setState(() {
                               isLoading = true;
@@ -270,7 +263,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               final AuthResponse res =
                                   await supabase.auth.signUp(
                                 email: email,
-                                password: password,
+                                password: _formatName(fullname),
                                 data: {
                                   'fullname': Capitalize().capitalize(fullname)
                                 },
