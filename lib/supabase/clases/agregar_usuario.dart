@@ -37,28 +37,28 @@ class AgregarUsuario {
                 .eq('id', idClase);
             ModificarLugarDisponible().removerLugarDisponible(idClase);
             if (parametro) {
-              // EnviarWpp().sendWhatsAppMessage(
-              // "HX13d84cd6816c60f21f172fe42bb3b0bb",
-              // 'whatsapp:+5491134272488',
-              // [user, clase.dia, clase.fecha, clase.hora]
-              //   );
+              EnviarWpp().sendWhatsAppMessage(
+              "HX13d84cd6816c60f21f172fe42bb3b0bb",
+              'whatsapp:+5491134272488',
+              [user, clase.dia, clase.fecha, clase.hora]
+                );
 
-              EnviarWpp().enviarMensajesViejo(
-                "$user se ha sumado existosamente a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                'whatsapp:+5491132820164',
-              );
+              // EnviarWpp().enviarMensajesViejo(
+              //   "$user se ha sumado existosamente a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+              //   'whatsapp:+5491132820164',
+              // );
             }
             if (!parametro) {
               ModificarCredito().removerCreditoUsuario(user);
-              // EnviarWpp().sendWhatsAppMessage(
-              // "HXefcf9346661c8871da3f019743967611",
-              // 'whatsapp:+5491134272488',
-              // [user, clase.dia, clase.fecha, clase.hora]
-              //   );
-              EnviarWpp().enviarMensajesViejo(
-                "has insertado existosamente a $user de las la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                'whatsapp:+5491132820164',
-              );
+              EnviarWpp().sendWhatsAppMessage(
+              "HXefcf9346661c8871da3f019743967611",
+              'whatsapp:+5491134272488',
+              [user, clase.dia, clase.fecha, clase.hora]
+                );
+              // EnviarWpp().enviarMensajesViejo(
+              //   "has insertado existosamente a $user de las la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+              //   'whatsapp:+5491132820164',
+              // );
             }
           }
         }
@@ -292,10 +292,10 @@ Future<void> agregarUsuarioEnCuatroClases(ClaseModels clase, String user,
   }
 
   if (count == 4) {
-    EnviarWpp().enviarMensajesViejo(
-      "has insertado exitosamente a $user de las 4 clases del día ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-      'whatsapp:+5491132820164',
-    );
+    // EnviarWpp().enviarMensajesViejo(
+    //   "has insertado exitosamente a $user de las 4 clases del día ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+    //   'whatsapp:+5491132820164',
+    // );
   }
 }
 

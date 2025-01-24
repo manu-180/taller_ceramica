@@ -20,9 +20,6 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController fullnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
   final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
 
@@ -155,14 +152,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             FocusScope.of(context).unfocus();
                             final fullname = fullnameController.text.trim();
                             final email = emailController.text.trim();
-                            final password = passwordController.text.trim();
-                            final confirmPassword =
-                                confirmPasswordController.text.trim();
 
                             if (fullname.isEmpty ||
-                                email.isEmpty ||
-                                password.isEmpty ||
-                                confirmPassword.isEmpty) {
+                                email.isEmpty
+                               ) {
                               setState(() {
                                 isLoading = false;
                               });
@@ -172,38 +165,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 SnackBar(
                                   content: Text(localizations
                                       .translate('allFieldsRequired')),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                              return;
-                            }
-
-                            if (password.length < 6) {
-                              setState(() {
-                                isLoading = false;
-                              });
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(localizations
-                                      .translate('passwordTooShort')),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                              return;
-                            }
-
-                            if (password != confirmPassword) {
-                              setState(() {
-                                isLoading = false;
-                              });
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(localizations
-                                      .translate('passwordMismatch')),
                                   backgroundColor: Colors.red,
                                 ),
                               );

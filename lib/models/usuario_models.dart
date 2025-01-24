@@ -9,6 +9,8 @@ class UsuarioModels {
   final int alertTrigger;
   final bool admin;
   final DateTime createdAt;
+  final String rubro;
+
 
   UsuarioModels({
     required this.id,
@@ -21,6 +23,7 @@ class UsuarioModels {
     required this.taller,
     required this.admin,
     required this.createdAt,
+    required this.rubro,
   });
 
   // Función para convertir el mapa a un objeto UsuarioModels
@@ -36,6 +39,8 @@ class UsuarioModels {
       taller: map['taller'],
       admin: map['admin'],
       createdAt: DateTime.parse(map['created_at']),
+      rubro: map['rubro'],
+
     );
   }
 
