@@ -212,8 +212,8 @@ class AppLocalizations {
     'es': {
       'helloWorld': '¡Hola Mundo!',
       'errorLoadingData': 'Error al cargar los datos',
-      'welcomeFemale': '¡Bienvenida al taller de \$taller!',
-      'welcomeMale': '¡Bienvenido al taller de \$taller!',
+      'welcomeFemale': '¡Bienvenida a \$taller!',
+      'welcomeMale': '¡Bienvenido a \$taller!',
       'helloAnonymous':
           '¡Hola y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!',
       'helloFemale':
@@ -225,6 +225,16 @@ class AppLocalizations {
           'Aquí, en nuestro taller, creamos desde pequeñas piezas decorativas hasta grandes obras de arte, todas con un toque especial y un diseño único.',
       'workshopClasses':
           'Ofrecemos clases para todos los niveles, desde principiantes hasta expertos, donde podrás aprender las técnicas de modelado, esmaltado y cocción, explorando tus propias ideas y estilo.',
+          'natacionHelloAnonymous':
+  '¡Hola y bienvenido/a a nuestro programa de natación, un espacio donde el aprendizaje, la diversión y el progreso se fusionan en el agua para mejorar tu técnica y confianza!',
+'natacionHelloFemale':
+  '¡Hola \$firstName y bienvenida a nuestro programa de natación, un espacio donde el aprendizaje, la diversión y el progreso se fusionan en el agua para mejorar tu técnica y confianza!',
+'natacionHelloMale':
+  '¡Hola \$firstName y bienvenido a nuestro programa de natación, un espacio donde el aprendizaje, la diversión y el progreso se fusionan en el agua para mejorar tu técnica y confianza!',
+'natacionDescription':
+  'En nuestro programa de natación, aprenderás desde técnicas básicas hasta estilos avanzados, con sesiones personalizadas y adaptadas a todos los niveles. Sumérgete en un ambiente seguro y profesional para perfeccionar tus habilidades acuáticas y alcanzar tus metas.',
+  'natacionClasses':
+  'Ofrecemos clases para todos los niveles, desde principiantes hasta expertos, donde podrás aprender técnicas de nado, estilos como crol, espalda y mariposa, además de ejercicios para mejorar tu resistencia, velocidad y confianza en el agua.',
       'usersSectionDescription':
           'En esta sección podrás ver los usuarios registrados, modificar sus créditos y eliminarlos si es necesario.',
       'deleteUser': 'Eliminar Usuario',
