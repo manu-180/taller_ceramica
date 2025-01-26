@@ -15,6 +15,7 @@ import 'package:taller_ceramica/screens/configuracion.dart';
 import 'package:taller_ceramica/screens/cambiar_password.dart';
 import 'package:taller_ceramica/screens/update_name_screen.dart';
 import 'package:taller_ceramica/screens/welcome_screen.dart';
+import 'package:taller_ceramica/widgets/chat_bot_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: "/",
@@ -112,5 +113,10 @@ final appRouter = GoRouter(
       path: "/subscription",
       builder: (context, state) => SubscriptionScreen(),
     ),
+    GoRoute(
+      path: "/chatbot",
+      builder: (context, state) => ChatBotScreen(),
+    ),
+    
   ],
 );

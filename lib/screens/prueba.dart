@@ -28,7 +28,7 @@ class Prueba extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push("/subscription");
+          context.push("/chatbot");
         },
         child: const Icon(Icons.arrow_back),
       ),

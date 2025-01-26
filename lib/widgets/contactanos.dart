@@ -10,8 +10,9 @@ class Contactanos extends StatefulWidget {
   State<Contactanos> createState() => _ContactanosState();
 }
 
-class _ContactanosState extends State<Contactanos> {
+class _ContactanosState extends State<Contactanos> with TickerProviderStateMixin {
   bool _isExpanded = false;
+  bool _showChatBot = false;
 
   void _launchWhatsApp() async {
     final link = WhatsAppUnilink(
@@ -42,6 +43,8 @@ class _ContactanosState extends State<Contactanos> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Stack(
       children: [
         Positioned.fill(
@@ -49,9 +52,10 @@ class _ContactanosState extends State<Contactanos> {
             alignment: Alignment.bottomRight,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end, 
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                if (_isExpanded)
+                const SizedBox(height: 10),
+                if (_isExpanded && !_showChatBot)
                   TweenAnimationBuilder(
                     duration: const Duration(milliseconds: 350),
                     tween: Tween<double>(begin: 12, end: 0),
@@ -70,10 +74,10 @@ class _ContactanosState extends State<Contactanos> {
                     ),
                   ),
                 const SizedBox(height: 10),
-                if (_isExpanded)
+                if (_isExpanded && !_showChatBot)
                   TweenAnimationBuilder(
                     duration: const Duration(milliseconds: 350),
-                    tween: Tween<double>(begin: 12, end: 0), 
+                    tween: Tween<double>(begin: 12, end: 0),
                     curve: Curves.easeOut,
                     builder: (context, value, child) => Transform.translate(
                       offset: Offset(0, value),
@@ -89,6 +93,101 @@ class _ContactanosState extends State<Contactanos> {
                     ),
                   ),
                 const SizedBox(height: 10),
+                if (_isExpanded)
+                  TweenAnimationBuilder(
+                    duration: const Duration(milliseconds: 350),
+                    tween: Tween<double>(begin: 12, end: 0),
+                    curve: Curves.easeOut,
+                    builder: (context, value, child) => Transform.translate(
+                      offset: Offset(0, value),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _showChatBot = !_showChatBot;
+                          });
+                        },
+                        child: Container(
+                          width: size.width * 0.143,
+                          height: size.height * 0.068,
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent,
+                            borderRadius: BorderRadius.circular(18),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 8,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.android,
+                            color: Colors.white,
+                            size: 33,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: 10),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: Container(
+                    width: _showChatBot ? size.width * 0.8 : 0,
+                    height: _showChatBot ? size.height * 0.4 : 0,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: _showChatBot
+                        ? Column(
+                            children: [
+                              Text(
+                                "ChatBot",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(color: Colors.black),
+                              ),
+                              const SizedBox(height: 10),
+                              Expanded(
+                                child: ListView(
+                                  children: const [
+                                    Text(
+                                      "Bot: ¿En qué puedo ayudarte hoy?",
+                                      style: TextStyle(color: Colors.black54),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TextField(
+                                decoration: InputDecoration(
+                                  hintText: "Escribe tu mensaje...",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                ),
+                                onSubmitted: (text) {
+                                  // Maneja el envío del mensaje
+                                },
+                              ),
+                            ],
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                ),
+                const SizedBox(height: 10),
                 IntrinsicWidth(
                   child: OutlinedButton(
                     onPressed: () {
@@ -97,13 +196,13 @@ class _ContactanosState extends State<Contactanos> {
                       });
                     },
                     child: Row(
-                      mainAxisSize: MainAxisSize.min, // Ajusta al tamaño del contenido
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           _isExpanded ? Icons.close : Icons.contact_page_outlined,
                           color: Theme.of(context).primaryColor,
                         ),
-                        const SizedBox(width: 5), 
+                        const SizedBox(width: 5),
                         const Text("Contáctanos"),
                       ],
                     ),

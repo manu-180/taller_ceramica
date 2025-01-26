@@ -235,6 +235,17 @@ class AppLocalizations {
   'En nuestro programa de natación, aprenderás desde técnicas básicas hasta estilos avanzados, con sesiones personalizadas y adaptadas a todos los niveles. Sumérgete en un ambiente seguro y profesional para perfeccionar tus habilidades acuáticas y alcanzar tus metas.',
   'natacionClasses':
   'Ofrecemos clases para todos los niveles, desde principiantes hasta expertos, donde podrás aprender técnicas de nado, estilos como crol, espalda y mariposa, además de ejercicios para mejorar tu resistencia, velocidad y confianza en el agua.',
+  'helloAnonymousPainting':
+    '¡Hola y bienvenido/a a nuestro taller de pintura, un espacio donde los colores cobran vida y las ideas se transforman en obras de arte únicas!',
+'helloFemalePainting':
+    '¡Hola \$firstName y bienvenida a nuestro taller de pintura, un espacio donde los colores cobran vida y las ideas se transforman en obras de arte únicas!',
+'helloMalePainting':
+    '¡Hola \$firstName y bienvenido a nuestro taller de pintura, un espacio donde los colores cobran vida y las ideas se transforman en obras de arte únicas!',
+'workshopDescriptionPainting':
+    'Aquí, en nuestro taller de pintura, exploramos diversas técnicas y estilos, desde acuarela y óleo hasta acrílico y carboncillo, fomentando la creatividad y el desarrollo personal.',
+'workshopClassesPainting':
+    'Ofrecemos clases para todos los niveles, desde principiantes hasta artistas avanzados, donde podrás aprender técnicas como mezcla de colores, perspectivas y creación de texturas, desarrollando tu propio estilo artístico.',
+
       'usersSectionDescription':
           'En esta sección podrás ver los usuarios registrados, modificar sus créditos y eliminarlos si es necesario.',
       'deleteUser': 'Eliminar Usuario',
