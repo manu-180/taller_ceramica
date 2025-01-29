@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
@@ -13,8 +12,6 @@ import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
 import 'package:taller_ceramica/l10n/app_localizations.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 
 class Configuracion extends ConsumerStatefulWidget {
   const Configuracion({super.key, this.taller});
@@ -28,7 +25,6 @@ class Configuracion extends ConsumerStatefulWidget {
 class _ConfiguracionState extends ConsumerState<Configuracion> {
   User? user;
   String? taller;
-  bool _isExpanded = false;
 
   @override
   void initState() {

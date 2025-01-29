@@ -53,12 +53,15 @@ class RemoverUsuario {
 
             ModificarCredito().removerCreditoUsuario(userEspera);
 
-            // EnviarWpp().enviarMensajesViejo(
-            //   "$userEspera estaba en lista de espera y fue agregado/a exitosamente a la clase del día ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-            //   'whatsapp:+5491134272488',
-            // );
+            EnviarWpp().sendWhatsAppMessage(
+          "HX28a321ebed0fb2ed0b0c2c5ac524748a",
+          'whatsapp:+5491134272488',
+          [user, clase.dia, clase.fecha, clase.hora]
+            );
 
-            return; // Salimos porque solo procesamos un usuario de la lista de espera
+          
+
+            return; 
           }
         }
       }
@@ -71,10 +74,7 @@ class RemoverUsuario {
           ModificarAlertTrigger().agregarAlertTrigger(user);
         }
 
-        // EnviarWpp().enviarMensajesViejo(
-        //   "$user ha cancelado exitosamente la clase del día ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-        //   'whatsapp:+5491132820164',
-        // );
+
         EnviarWpp().sendWhatsAppMessage(
           "HXd9ba581e7d5b1a3c7740c90d870fe7b7",
           'whatsapp:+5491134272488',
@@ -83,10 +83,7 @@ class RemoverUsuario {
                 : ["user", "clase.dia", "clase.fecha", "clase.hora", "Cancelo con menos de 24 horas de anticipacion, no podra recuperar la clase"],
             );
       } else {
-        // EnviarWpp().enviarMensajesViejo(
-        //   "Has removido exitosamente a $user de la clase del día ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-        //   'whatsapp:+5491132820164',
-        // );
+
          EnviarWpp().sendWhatsAppMessage(
           "HXc0f22718dded5d710b659d89b4117bb1",
           'whatsapp:+5491134272488',

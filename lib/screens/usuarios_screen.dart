@@ -219,7 +219,6 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final color = Theme.of(context).primaryColor;
 
     return Scaffold(
       appBar:

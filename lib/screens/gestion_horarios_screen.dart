@@ -248,6 +248,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                               if (insertarX4) {
                                 await AgregarUsuario(supabase)
                                     .agregarUsuarioEnCuatroClases(
+                                      context,
                                   clase,
                                   usuarioSeleccionado,
                                   (ClaseModels claseActualizada) {
@@ -436,7 +437,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                   color: colors.primary
-                                                      .withOpacity(0.1),
+                                                      .withAlpha(10),
                                                 ),
                                                 child: Text(
                                                   clase.hora,

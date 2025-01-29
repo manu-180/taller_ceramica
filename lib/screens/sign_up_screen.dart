@@ -36,7 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final size = MediaQuery.of(context).size;
     final localizations = AppLocalizations.of(context);
 
-    String _formatName(String fullName) {
+    String formatName(String fullName) {
     // Eliminar los espacios y convertir a minúsculas
     return fullName.replaceAll(' ', '').toLowerCase();
   }
@@ -224,7 +224,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               final AuthResponse res =
                                   await supabase.auth.signUp(
                                 email: email,
-                                password: _formatName(fullname),
+                                password: formatName(fullname),
                                 data: {
                                   'fullname': Capitalize().capitalize(fullname)
                                 },
@@ -273,7 +273,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 SnackBar(
                                   content: Text(localizations.translate(
                                       'registrationError',
-                                      params: {'error': e.message ?? ''})),
+                                      params: {'error': e.message })),
                                   backgroundColor: Colors.red,
                                 ),
                               );

@@ -336,6 +336,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
           'lugar_disponible': capacidad,
           'mes': mesActual, 
           'capacidad': capacidad,
+          "espera": [],
         });
       }
 

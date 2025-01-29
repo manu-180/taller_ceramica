@@ -35,7 +35,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       backgroundColor: Colors.black, // Fondo oscuro
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             height: size.height, // Altura total de la pantalla
             width: size.width, // Ancho total de la pantalla
             child: Column(

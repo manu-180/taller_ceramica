@@ -15,8 +15,7 @@ class EnviarWpp {
 
     const fromWhatsappNumber = 'whatsapp:+5491125303794';
 
-    try {
-      final response = await http.post(
+      await http.post(
         uri,
         headers: {
           'Authorization': 'Basic ${base64Encode(utf8.encode('$apiKeySid:$apiKeySecret'))}',
@@ -27,26 +26,15 @@ class EnviarWpp {
           'To': num,
           'ContentSid': contentSid, // Identificador de la plantilla
           'ContentVariables': jsonEncode({
-            "1": parameters[0], // Nombre del usuario
-            "2": parameters[1], // Día de la clase
-            "3": parameters[2], // Fecha de la clase
-            "4": parameters[3], // Hora de la clase
-            "5": parameters[4], // Mensaje adicional
-          }),
+  "1": parameters.isNotEmpty ? parameters[0] : "",
+  "2": parameters.length > 1 ? parameters[1] : "",
+  "3": parameters.length > 2 ? parameters[2] : "",
+  "4": parameters.length > 3 ? parameters[3] : "",
+  "5": parameters.length > 4 ? parameters[4] : "",
+}),
         },
       );
 
-      print("HTTP Status Code: ${response.statusCode}");
-      print("HTTP Response Body: ${response.body}");
-
-      if (response.statusCode == 201) {
-        print("¡Mensaje enviado con éxito!");
-      } else {
-        print("Error al enviar el mensaje: ${response.body}");
-      }
-    } catch (e) {
-      print("Error al enviar la solicitud HTTP: $e");
-    }
   }
 
   // void enviarMensajesViejo(String text, String num) async {

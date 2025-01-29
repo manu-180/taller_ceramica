@@ -245,6 +245,156 @@ class AppLocalizations {
     'Aquí, en nuestro taller de pintura, exploramos diversas técnicas y estilos, desde acuarela y óleo hasta acrílico y carboncillo, fomentando la creatividad y el desarrollo personal.',
 'workshopClassesPainting':
     'Ofrecemos clases para todos los niveles, desde principiantes hasta artistas avanzados, donde podrás aprender técnicas como mezcla de colores, perspectivas y creación de texturas, desarrollando tu propio estilo artístico.',
+    'helloAnonymousMusic':
+    '¡Hola y bienvenido/a a nuestras clases de música, un espacio donde la pasión por los sonidos se combina con la técnica para crear melodías únicas y emocionantes!',
+'helloFemaleMusic':
+    '¡Hola \$firstName y bienvenida a nuestras clases de música, un espacio donde la pasión por los sonidos se combina con la técnica para crear melodías únicas y emocionantes!',
+'helloMaleMusic':
+    '¡Hola \$firstName y bienvenido a nuestras clases de música, un espacio donde la pasión por los sonidos se combina con la técnica para crear melodías únicas y emocionantes!',
+'workshopDescriptionMusic': 
+    'En nuestras clases, exploramos desde los fundamentos de la música hasta la creación de composiciones complejas, todo diseñado para despertar tu creatividad y talento musical.',
+'workshopClassesMusic': 
+    'Ofrecemos clases para todos los niveles, desde principiantes hasta expertos, donde podrás aprender a dominar instrumentos, lectura de partituras, teoría musical y técnicas avanzadas para perfeccionar tu arte.',
+      'helloAnonymousLanguages':
+    '¡Hola y bienvenido/a a nuestras clases de idiomas, un espacio donde las palabras cobran vida y las culturas se conectan a través del aprendizaje!',
+
+'helloFemaleLanguages':
+    '¡Hola \$firstName y bienvenida a nuestras clases de idiomas, un espacio donde las palabras cobran vida y las culturas se conectan a través del aprendizaje!',
+
+'helloMaleLanguages':
+    '¡Hola \$firstName y bienvenido a nuestras clases de idiomas, un espacio donde las palabras cobran vida y las culturas se conectan a través del aprendizaje!',
+
+'workshopDescriptionLanguages':
+    'Aquí, en nuestras clases de idiomas, exploramos diversas técnicas de aprendizaje, desde conversación y gramática hasta comprensión auditiva y pronunciación, fomentando la confianza y el desarrollo lingüístico.',
+
+'workshopClassesLanguages':
+    'Ofrecemos clases para todos los niveles, desde principiantes hasta hablantes avanzados, donde podrás aprender vocabulario, expresiones idiomáticas y habilidades de comunicación, perfeccionando tu dominio del idioma de manera dinámica.',
+    'helloAnonymousDance':
+    '¡Hola y bienvenido/a a nuestras clases de danza, un espacio donde los movimientos cobran vida y la música se convierte en expresión!',
+    
+'helloFemaleDance':
+    '¡Hola \$firstName y bienvenida a nuestras clases de danza, un espacio donde los movimientos cobran vida y la música se convierte en expresión!',
+    
+'helloMaleDance':
+    '¡Hola \$firstName y bienvenido a nuestras clases de danza, un espacio donde los movimientos cobran vida y la música se convierte en expresión!',
+    
+'workshopDescriptionDance':
+    'Aquí, en nuestras clases de danza, exploramos diversos estilos y técnicas, desde ballet y jazz hasta salsa y danza contemporánea, fomentando la creatividad y la pasión por el arte del movimiento.',
+    
+'workshopClassesDance':
+    'Ofrecemos clases para todos los niveles, desde principiantes hasta bailarines avanzados, donde podrás aprender coreografías, técnicas de expresión corporal y habilidades rítmicas, desarrollando tu propio estilo en la danza.',
+    'helloAnonymousActing':
+    '¡Hola y bienvenido/a a nuestras clases de actuación, un espacio donde los personajes cobran vida y las emociones se convierten en arte!',
+
+'helloFemaleActing':
+    '¡Hola \$firstName y bienvenida a nuestras clases de actuación, un espacio donde los personajes cobran vida y las emociones se convierten en arte!',
+
+'helloMaleActing':
+    '¡Hola \$firstName y bienvenido a nuestras clases de actuación, un espacio donde los personajes cobran vida y las emociones se convierten en arte!',
+
+'workshopDescriptionActing':
+    'Aquí, en nuestras clases de actuación, exploramos diversas técnicas interpretativas, desde improvisación y análisis de guion hasta expresión corporal y vocal, fomentando la autenticidad y la creatividad.',
+
+'workshopClassesActing':
+    'Ofrecemos clases para todos los niveles, desde principiantes hasta actores avanzados, donde podrás aprender a desarrollar personajes, manejar emociones y perfeccionar tu presencia escénica, logrando interpretar con confianza.',
+'helloAnonymousCooking':
+    '¡Hola y bienvenido/a a nuestras clases de cocina, un espacio donde los ingredientes se convierten en deliciosas obras maestras y la creatividad no tiene límites!',
+
+'helloFemaleCooking':
+    '¡Hola \$firstName y bienvenida a nuestras clases de cocina, un espacio donde los ingredientes se convierten en deliciosas obras maestras y la creatividad no tiene límites!',
+
+'helloMaleCooking':
+    '¡Hola \$firstName y bienvenido a nuestras clases de cocina, un espacio donde los ingredientes se convierten en deliciosas obras maestras y la creatividad no tiene límites!',
+
+'workshopDescriptionCooking':
+    'Aquí, en nuestras clases de cocina, exploramos una variedad de técnicas culinarias, desde platillos tradicionales hasta innovadoras recetas internacionales, fomentando el amor por la gastronomía.',
+
+'workshopClassesCooking':
+    'Ofrecemos clases para todos los niveles, desde principiantes hasta cocineros experimentados, donde podrás aprender técnicas de preparación, presentación y combinación de sabores, desarrollando tu pasión por la cocina.',
+'helloAnonymousTennis':
+    '¡Hola y bienvenido/a a nuestras clases de tenis, un espacio donde la técnica, el esfuerzo y la pasión por el deporte se encuentran para alcanzar tu mejor nivel!',
+
+'helloFemaleTennis':
+    '¡Hola \$firstName y bienvenida a nuestras clases de tenis, un espacio donde la técnica, el esfuerzo y la pasión por el deporte se encuentran para alcanzar tu mejor nivel!',
+
+'helloMaleTennis':
+    '¡Hola \$firstName y bienvenido a nuestras clases de tenis, un espacio donde la técnica, el esfuerzo y la pasión por el deporte se encuentran para alcanzar tu mejor nivel!',
+
+'workshopDescriptionTennis':
+    'Aquí, en nuestras clases de tenis, aprenderás habilidades clave como golpes precisos, estrategias de juego y manejo del ritmo, mientras desarrollas tu confianza en la cancha.',
+
+'workshopClassesTennis':
+    'Ofrecemos clases para todos los niveles, desde principiantes hasta jugadores avanzados, donde podrás mejorar tus saques, voleas y movimientos, elevando tu rendimiento al máximo.',
+'helloAnonymousCrossFit':
+    '¡Hola y bienvenido/a a nuestros entrenamientos de CrossFit, un espacio donde la fuerza, la resistencia y la superación personal se encuentran!',
+
+'helloFemaleCrossFit':
+    '¡Hola \$firstName y bienvenida a nuestros entrenamientos de CrossFit, un espacio donde la fuerza, la resistencia y la superación personal se encuentran!',
+
+'helloMaleCrossFit':
+    '¡Hola \$firstName y bienvenido a nuestros entrenamientos de CrossFit, un espacio donde la fuerza, la resistencia y la superación personal se encuentran!',
+
+'workshopDescriptionCrossFit':
+    'Aquí, en nuestros entrenamientos de CrossFit, combinamos ejercicios funcionales, levantamiento de pesas y movimientos cardiovasculares para mejorar tu rendimiento físico y mental.',
+
+'workshopClassesCrossFit':
+    'Ofrecemos entrenamientos adaptados a todos los niveles, desde principiantes hasta avanzados, donde podrás trabajar en tu fuerza, flexibilidad y resistencia en un entorno motivador y dinámico.',
+'helloAnonymousMartialArts':
+    '¡Hola y bienvenido/a a nuestras clases de artes marciales, un espacio donde la disciplina y el respeto se combinan con la técnica para alcanzar tu máximo potencial!',
+
+'helloFemaleMartialArts':
+    '¡Hola \$firstName y bienvenida a nuestras clases de artes marciales, un espacio donde la disciplina y el respeto se combinan con la técnica para alcanzar tu máximo potencial!',
+
+'helloMaleMartialArts':
+    '¡Hola \$firstName y bienvenido a nuestras clases de artes marciales, un espacio donde la disciplina y el respeto se combinan con la técnica para alcanzar tu máximo potencial!',
+
+'workshopDescriptionMartialArts':
+    'Aquí, en nuestras clases de artes marciales, exploramos diversas técnicas y estilos, desde karate y jiu-jitsu hasta taekwondo y kung-fu, fomentando la confianza y el equilibrio entre mente y cuerpo.',
+
+'workshopClassesMartialArts':
+    'Ofrecemos clases para todos los niveles, desde principiantes hasta avanzados, donde podrás aprender técnicas de defensa personal, perfeccionar movimientos y desarrollar habilidades físicas y mentales de manera integral.',
+'helloAnonymousPilates':
+    '¡Hola y bienvenido/a a nuestras clases de pilates, un espacio donde la fuerza y la flexibilidad se encuentran para mejorar tu bienestar físico y mental!',
+
+'helloFemalePilates':
+    '¡Hola \$firstName y bienvenida a nuestras clases de pilates, un espacio donde la fuerza y la flexibilidad se encuentran para mejorar tu bienestar físico y mental!',
+
+'helloMalePilates':
+    '¡Hola \$firstName y bienvenido a nuestras clases de pilates, un espacio donde la fuerza y la flexibilidad se encuentran para mejorar tu bienestar físico y mental!',
+
+'workshopDescriptionPilates':
+    'Aquí, en nuestras clases de pilates, trabajamos en fortalecer el cuerpo, mejorar la postura y aumentar la flexibilidad a través de movimientos controlados y técnicas de respiración consciente.',
+
+'workshopClassesPilates':
+    'Ofrecemos clases para todos los niveles, desde principiantes hasta avanzados, donde podrás aprender ejercicios para fortalecer el core, mejorar el equilibrio y reducir el estrés en un ambiente relajado y motivador.',
+'helloAnonymousGymnastics':
+    '¡Hola y bienvenido/a a nuestras clases de gimnasia artística, un espacio donde la elegancia y la fuerza se combinan para alcanzar nuevos niveles de expresión física!',
+
+'helloFemaleGymnastics':
+    '¡Hola \$firstName y bienvenida a nuestras clases de gimnasia artística, un espacio donde la elegancia y la fuerza se combinan para alcanzar nuevos niveles de expresión física!',
+
+'helloMaleGymnastics':
+    '¡Hola \$firstName y bienvenido a nuestras clases de gimnasia artística, un espacio donde la elegancia y la fuerza se combinan para alcanzar nuevos niveles de expresión física!',
+'helloAnonymousBoxing':
+    '¡Hola y bienvenido/a a nuestras clases de boxeo, un espacio donde la técnica, la fuerza y la resistencia se combinan para potenciar tu cuerpo y mente!',
+
+'helloFemaleBoxing':
+    '¡Hola \$firstName y bienvenida a nuestras clases de boxeo, un espacio donde la técnica, la fuerza y la resistencia se combinan para potenciar tu cuerpo y mente!',
+
+'helloMaleBoxing':
+    '¡Hola \$firstName y bienvenido a nuestras clases de boxeo, un espacio donde la técnica, la fuerza y la resistencia se combinan para potenciar tu cuerpo y mente!',
+
+'workshopDescriptionBoxing':
+    'Aquí, en nuestras clases de boxeo, aprenderás a dominar técnicas de golpeo, mejorar tu velocidad y desarrollar una resistencia física impresionante mientras trabajas en equipo y te superas a ti mismo.',
+
+'workshopClassesBoxing':
+    'Ofrecemos clases para todos los niveles, desde principiantes hasta avanzados, donde podrás perfeccionar tus movimientos, trabajar en tu agilidad y aprender estrategias para destacar en este emocionante deporte.',
+
+'workshopDescriptionGymnastics':
+    'Aquí, en nuestras clases de gimnasia artística, trabajamos en desarrollar habilidades como la flexibilidad, la fuerza y el equilibrio, mientras dominamos movimientos técnicos y artísticos.',
+
+'workshopClassesGymnastics':
+    'Ofrecemos clases para todos los niveles, desde principiantes hasta avanzados, donde podrás aprender rutinas en suelo, barras y otros aparatos, perfeccionando cada detalle con dedicación y pasión.',
 
       'usersSectionDescription':
           'En esta sección podrás ver los usuarios registrados, modificar sus créditos y eliminarlos si es necesario.',
@@ -3210,7 +3360,7 @@ class AppLocalizations {
 
     if (params != null) {
       params.forEach((key, value) {
-        translation = translation.replaceAll('\$${key}', value);
+        translation = translation.replaceAll('\$$key', value);
       });
     }
 

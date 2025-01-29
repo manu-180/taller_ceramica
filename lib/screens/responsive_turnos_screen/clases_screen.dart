@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/l10n/app_localizations.dart';
@@ -554,7 +556,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
                       },
             style: ButtonStyle(
               
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStateProperty.all(
                 estaLlena ||
                         Calcular24hs().esMenorA0Horas(
                             clase.fecha, clase.hora, mesActual) ||
@@ -562,11 +564,11 @@ class _ClasesScreenState extends State<ClasesScreen> {
                     ? Colors.grey.shade400
                     : Colors.green,
               ),
-              shape: MaterialStateProperty.all(
+              shape: WidgetStateProperty.all(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(screenWidth * 0.03)),
               ),
-              padding: MaterialStateProperty.all(EdgeInsets.zero),
+              padding: WidgetStateProperty.all(EdgeInsets.zero),
             ),
             
             child: Stack(

@@ -30,8 +30,6 @@ class ObtenerCapacidadClase {
     final response =
         await Supabase.instance.client.from(taller).select('id, capacidad');
 
-    print("INFORMACION DE LA CAPACIDAD DE LAS CLASES: $response");
-
     return (response as List).map((e) => e as Map<String, dynamic>).toList();
   }
 }

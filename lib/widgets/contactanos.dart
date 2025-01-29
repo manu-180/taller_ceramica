@@ -114,7 +114,7 @@ class _ContactanosState extends State<Contactanos> with TickerProviderStateMixin
                             borderRadius: BorderRadius.circular(18),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withAlpha(10),
                                 blurRadius: 8,
                                 spreadRadius: 2,
                               ),
@@ -141,7 +141,7 @@ class _ContactanosState extends State<Contactanos> with TickerProviderStateMixin
                       borderRadius: BorderRadius.circular(15),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withAlpha(10),
                           blurRadius: 8,
                           spreadRadius: 2,
                         ),

@@ -45,3 +45,17 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 .env
+
+# Claves y archivos sensibles
+key.pem
+CertificateSigningRequest.certSigningRequest
+*.cer
+*.p12
+
+# OpenSSL outputs
+*.key
+*.csr
+
+# Otros archivos específicos del proyecto
+*.jks
+*.keystore

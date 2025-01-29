@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
 import 'package:taller_ceramica/main.dart';
@@ -40,25 +41,19 @@ class AgregarUsuario {
               EnviarWpp().sendWhatsAppMessage(
               "HX13d84cd6816c60f21f172fe42bb3b0bb",
               'whatsapp:+5491134272488',
-              [user, clase.dia, clase.fecha, clase.hora]
+              [user, clase.dia, clase.fecha, clase.hora, ""]
                 );
 
-              // EnviarWpp().enviarMensajesViejo(
-              //   "$user se ha sumado existosamente a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-              //   'whatsapp:+5491132820164',
-              // );
+      
             }
             if (!parametro) {
               ModificarCredito().removerCreditoUsuario(user);
               EnviarWpp().sendWhatsAppMessage(
-              "HXefcf9346661c8871da3f019743967611",
-              'whatsapp:+5491134272488',
-              [user, clase.dia, clase.fecha, clase.hora]
-                );
-              // EnviarWpp().enviarMensajesViejo(
-              //   "has insertado existosamente a $user de las la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-              //   'whatsapp:+5491132820164',
-              // );
+  "HXefcf9346661c8871da3f019743967611",
+  'whatsapp:+5491134272488',
+  [user, clase.dia, clase.fecha, clase.hora, ""] 
+);
+            
             }
           }
         }
@@ -66,7 +61,7 @@ class AgregarUsuario {
     }
   }
 
-Future<void> agregarUsuarioEnCuatroClases(ClaseModels clase, String user,
+Future<void> agregarUsuarioEnCuatroClases(BuildContext context,ClaseModels clase, String user,
     void Function(ClaseModels claseActualizada) callback) async {
   final usuarioActivo = Supabase.instance.client.auth.currentUser;
   final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
@@ -75,9 +70,7 @@ Future<void> agregarUsuarioEnCuatroClases(ClaseModels clase, String user,
           supabase: supabase, usuariosTable: 'usuarios', clasesTable: taller)
       .obtenerClases();
 
-  /// Función para obtener el índice del día de la semana basado en el idioma
   int obtenerIndiceDia(String dia, String idioma) {
-    // Listas de días por idioma
     final Map<String, List<String>> diasPorIdioma = {
       'es': [
         'lunes',
@@ -251,7 +244,8 @@ Future<void> agregarUsuarioEnCuatroClases(ClaseModels clase, String user,
     return DateTime(yyyy, mm, dd);
   }
 
-  final idioma = ui.window.locale.languageCode; // Detecta el idioma del sistema
+  final idioma = ui.window.locale.languageCode;
+ // Detecta el idioma del sistema}
 
   data.sort((a, b) {
     final diaA = obtenerIndiceDia(a.dia, idioma);
@@ -286,16 +280,18 @@ Future<void> agregarUsuarioEnCuatroClases(ClaseModels clase, String user,
           callback(item);
 
           count++;
-        }
+        
       }
     }
   }
 
   if (count == 4) {
-    // EnviarWpp().enviarMensajesViejo(
-    //   "has insertado exitosamente a $user de las 4 clases del día ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-    //   'whatsapp:+5491132820164',
-    // );
+   EnviarWpp().sendWhatsAppMessage(
+  "HX6dad986ed219654d62aed35763d10ccb",
+  'whatsapp:+5491134272488',
+  [user, clase.dia, clase.fecha, clase.hora, ""] 
+);
+  }
   }
 }
 

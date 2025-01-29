@@ -5,7 +5,6 @@ import 'package:taller_ceramica/l10n/app_localizations.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
-import 'package:taller_ceramica/widgets/contactanos.dart';
 
 class CrearTallerScreen extends StatefulWidget {
   const CrearTallerScreen({super.key});
@@ -32,8 +31,8 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
     "Clases de música",
     "Clases de idiomas",
     "Clases de danza",
-    "Clases de actuación o teatro",
-    "Clases de cocina o repostería",
+    "Clases de actuación",
+    "Clases de cocina",
     "Clases de tenis",
     "Clases de natación",
     "Entrenamientos de CrossFit",
@@ -72,7 +71,7 @@ class _CrearTallerScreenState extends State<CrearTallerScreen> {
       lugar_disponible INTEGER NOT NULL DEFAULT 0,
       mes INTEGER NOT NULL DEFAULT $mesActual,
       capacidad INTEGER NOT NULL DEFAULT 0,
-      espera TEXT NOT NULL
+      espera JSONB DEFAULT '[]'
       
     );
   '''
@@ -414,6 +413,8 @@ const SizedBox(height: 16),
 
                                         crearTablaTaller(
                                             Capitalize().capitalize(taller));
+
+                                        EnviarWpp().sendWhatsAppMessage("HX5cc4a60bc899e188ad7a684472da4046", 'whatsapp:+5491134272488', [fullname, "", "", "", ""]);
 
                                         if (context.mounted) {
                                           context.go("/");

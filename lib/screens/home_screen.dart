@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:taller_ceramica/l10n/app_localizations.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_rubro.dart';
 import 'package:taller_ceramica/widgets/box_text.dart';
@@ -44,7 +43,7 @@ Widget build(BuildContext context) {
               size, 
               color, 
               localizations, 
-              user,   
+              user, 
               firstName, 
               fullName, 
               themeColor, 
@@ -52,8 +51,8 @@ Widget build(BuildContext context) {
               "helloAnonymous",
               'helloFemale',
               'helloMale',
-              "ceramicamujer.gif",
-              "ceramicagif.gif",
+              "assets/images/ceramicamujer.gif",
+              "assets/images/ceramicagif.gif",
               'workshopDescription',
               "workshopClasses"
               );
@@ -70,8 +69,8 @@ Widget build(BuildContext context) {
               "natacionHelloAnonymous",
               'natacionHelloFemale',
               'natacionHelloMale',
-              "natacion.webp",
-              "natacion.webp",
+              "assets/images/natacion.webp",
+              "assets/images/natacion.webp",
               'natacionDescription',
               "natacionClasses"
               );
@@ -88,10 +87,209 @@ Widget build(BuildContext context) {
               "helloAnonymousPainting",
               'helloFemalePainting',
               'helloMalePainting',
-              "pintura.webp",
-              "pintura.webp",
+              "assets/images/pintura.webp",
+              "assets/images/pintura.webp",
               'workshopDescriptionPainting',
               "workshopClassesPainting"
+              );
+          } else if (rubro == "Clases de música") {
+            return _homeGenerico(
+              size, 
+              color, 
+              localizations, 
+              user, 
+              firstName, 
+              fullName, 
+              themeColor, 
+              context, 
+              "helloAnonymousMusic",
+              'helloFemaleMusic',
+              'helloMaleMusic',
+              "assets/images/musica.webp",
+              "assets/images/musica.webp",
+              'workshopDescriptionMusic',
+              "workshopClassesMusic"
+              );
+          } else if (rubro == "Clases de idiomas") {
+            return _homeGenerico(
+              size, 
+              color, 
+              localizations, 
+              user, 
+              firstName, 
+              fullName, 
+              themeColor, 
+              context, 
+              "helloAnonymousLanguages",
+              'helloFemaleLanguages',
+              'helloMaleLanguages',
+              "assets/images/Languages.png",
+              "assets/images/Languages.png",
+              'workshopDescriptionLanguages',
+              "workshopClassesLanguages"
+              );
+          } else if (rubro == "Clases de danza") {
+            return _homeGenerico(
+              size, 
+              color, 
+              localizations, 
+              user, 
+              firstName, 
+              fullName, 
+              themeColor, 
+              context, 
+              "helloAnonymousDance",
+              'helloFemaleDance',
+              'helloMaleDance',
+              "assets/images/danza.png",
+              "assets/images/danza.png",
+              'workshopDescriptionDance',
+              "workshopClassesDance"
+              );
+          } else if (rubro == "Clases de actuación") {
+            return _homeGenerico(
+              size, 
+              color, 
+              localizations, 
+              user, 
+              firstName, 
+              fullName, 
+              themeColor, 
+              context, 
+              "helloAnonymousActing",
+              'helloFemaleActing',
+              'helloMaleActing',
+              "assets/images/Acting.png",
+              "assets/images/Acting.png",
+              'workshopDescriptionActing',
+              "workshopClassesActing"
+              );
+          } else if (rubro == "Clases de cocina") {
+            return _homeGenerico(
+              size, 
+              color, 
+              localizations, 
+              user, 
+              firstName, 
+              fullName, 
+              themeColor, 
+              context, 
+              "helloAnonymousCooking",
+              'helloFemaleCooking',
+              'helloMaleCooking',
+              "assets/images/Cooking.png",
+              "assets/images/Cooking.png",
+              'workshopDescriptionCooking',
+              "workshopClassesCooking"
+              );
+          } else if (rubro == "Clases de tenis") {
+            return _homeGenerico(
+              size, 
+              color, 
+              localizations, 
+              user, 
+              firstName, 
+              fullName, 
+              themeColor, 
+              context, 
+              "helloAnonymousTennis",
+              'helloFemaleTennis',
+              'helloMaleTennis',
+              "assets/images/Tennis.png",
+              "assets/images/Tennis.png",
+              'workshopDescriptionTennis',
+              "workshopClassesTennis"
+              );
+          } 
+          else if (rubro == "Entrenamientos de CrossFit") {
+            return _homeGenerico(
+              size, 
+              color, 
+              localizations, 
+              user, 
+              firstName, 
+              fullName, 
+              themeColor, 
+              context, 
+              "helloAnonymousCrossFit",
+              'helloFemaleCrossFit',
+              'helloMaleCrossFit',
+              "assets/images/CrossFit.png",
+              "assets/images/CrossFit.png",
+              'workshopDescriptionCrossFit',
+              "workshopClassesCrossFit"
+              );
+          } else if (rubro == "Clases de artes marciales") {
+            return _homeGenerico(
+              size, 
+              color, 
+              localizations, 
+              user, 
+              firstName, 
+              fullName, 
+              themeColor, 
+              context, 
+              "helloAnonymousMartialArts",
+              'helloFemaleMartialArts',
+              'helloMaleMartialArts',
+              "assets/images/artesmarciales.png",
+              "assets/images/artesmarciales.png",
+              'workshopDescriptionMartialArts',
+              "workshopClassesMartialArts"
+              );
+          } else if (rubro == "Clases de pilates") {
+            return _homeGenerico(
+              size, 
+              color, 
+              localizations, 
+              user, 
+              firstName, 
+              fullName, 
+              themeColor, 
+              context, 
+              "helloAnonymousPilates",
+              'helloFemalePilates',
+              'helloMalePilates',
+              "assets/images/Pilates.png",
+              "assets/images/Pilates.png",
+              'workshopDescriptionPilates',
+              "workshopClassesPilates"
+              );
+          } else if (rubro == "Clases de gimnasia artística") {
+            return _homeGenerico(
+              size, 
+              color, 
+              localizations, 
+              user, 
+              firstName, 
+              fullName, 
+              themeColor, 
+              context, 
+              "helloAnonymousGymnastics",
+              'helloFemaleGymnastics',
+              'helloMaleGymnastics',
+              "assets/images/Gymnastics.png",
+              "assets/images/Gymnastics.png",
+              'workshopDescriptionGymnastics',
+              "workshopClassesGymnastics"
+              );
+          } else if (rubro == "Clases de boxeo") {
+            return _homeGenerico(
+              size, 
+              color, 
+              localizations, 
+              user, 
+              firstName, 
+              fullName, 
+              themeColor, 
+              context, 
+              "helloAnonymousBoxing",
+              'helloFemaleBoxing',
+              'helloMaleBoxing',
+              "assets/images/Boxing.png",
+              "assets/images/Boxing.png",
+              'workshopDescriptionBoxing',
+              "workshopClassesBoxing"
               );
           } 
           else {
@@ -106,7 +304,22 @@ Widget build(BuildContext context) {
 }
 
 
-Widget _homeGenerico(Size size, ColorScheme color, AppLocalizations localizations, User? user, String firstName, String fullName, Color themeColor, BuildContext context, String anonimo, String mujer, String hombre, String imagen1, String imagen2, String descripcion, String clases) {
+Widget _homeGenerico(
+  Size size, 
+  ColorScheme color, 
+  AppLocalizations localizations, 
+  User? user, 
+  String firstName, 
+  String fullName, 
+  Color themeColor, 
+  BuildContext context, 
+  String anonimo, 
+  String mujer, 
+  String hombre, 
+  String imagen1, 
+  String imagen2, 
+  String descripcion, 
+  String clases) {
   return FutureBuilder<bool>(
       future: IsMujer().mujer(fullName),
       builder: (context, snapshot) {
@@ -204,18 +417,18 @@ Widget _homeGenerico(Size size, ColorScheme color, AppLocalizations localization
                     const SizedBox(height: 30),
                     BoxText(
                       text: user == null
-                          ? localizations.translate('helloAnonymous')
+                          ? localizations.translate(anonimo)
                           : isMujer
                               ? localizations
-                                  .translate('helloFemale')
+                                  .translate(mujer)
                                   .replaceAll('\$firstName', firstName)
                               : localizations
-                                  .translate('helloMale')
+                                  .translate(hombre)
                                   .replaceAll('\$firstName', firstName),
                     ),
                     const SizedBox(height: 20),
                     _buildLoadingImage(
-                      imagePath: 'assets/images/ceramicamujer.gif',
+                      imagePath: imagen1,
                       height: 300,
                       width: size.width * 0.9,
                     ),
@@ -236,13 +449,13 @@ Widget _homeGenerico(Size size, ColorScheme color, AppLocalizations localization
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
-                        localizations.translate('workshopDescription'),
+                        localizations.translate(descripcion),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
                     const SizedBox(height: 20),
                     _buildLoadingImage(
-                      imagePath: 'assets/images/ceramicagif.gif',
+                      imagePath: imagen2,
                       height: 300,
                       width: size.width * 0.9,
                     ),
@@ -254,7 +467,7 @@ Widget _homeGenerico(Size size, ColorScheme color, AppLocalizations localization
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
-                        localizations.translate('workshopClasses'),
+                        localizations.translate(clases),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
@@ -269,496 +482,6 @@ Widget _homeGenerico(Size size, ColorScheme color, AppLocalizations localization
     );
 }
 
-Widget _homeCeramica(Size size, ColorScheme color, AppLocalizations localizations, User? user, String firstName, String fullName, Color themeColor, BuildContext context) {
-  return FutureBuilder<bool>(
-      future: IsMujer().mujer(fullName),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(size.width * 0.04,
-                  size.height * 0.04, size.width * 0.04, 0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(180),
-                      width: size.width * 0.86,
-                      height: size.height * 0.042,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.015),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(180),
-                      width: size.width * 0.67,
-                      height: size.height * 0.042,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.015),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(180),
-                      width: size.width * 0.3,
-                      height: size.height * 0.042,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.034),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(40),
-                      width: size.width,
-                      height: size.height * 0.15,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.023),
-                    ShimmerLoading(
-                      color: Color(0xFFE0E0E0),
-                      width: size.width,
-                      height: size.height * 0.351,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.03),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(180),
-                      width: size.width * 0.6,
-                      height: size.height * 0.04,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.019),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(40),
-                      width: size.width,
-                      height: size.height * 0.1,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text(localizations.translate('errorLoadingData')),
-          );
-        } else {
-          final isMujer = snapshot.data ?? false;
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 600),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      isMujer
-                          ? localizations
-                              .translate('welcomeFemale')
-                              .replaceAll('\$taller', taller ?? '')
-                          : localizations
-                              .translate('welcomeMale')
-                              .replaceAll('\$taller', taller ?? ''),
-                      style: TextStyle(
-                        fontSize: 33,
-                        fontWeight: FontWeight.bold,
-                        color: color.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    BoxText(
-                      text: user == null
-                          ? localizations.translate('helloAnonymous')
-                          : isMujer
-                              ? localizations
-                                  .translate('helloFemale')
-                                  .replaceAll('\$firstName', firstName)
-                              : localizations
-                                  .translate('helloMale')
-                                  .replaceAll('\$firstName', firstName),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildLoadingImage(
-                      imagePath: 'assets/images/ceramicamujer.gif',
-                      height: 300,
-                      width: size.width * 0.9,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      localizations.translate('whatWeDo'),
-                      style: TextStyle(
-                        fontSize: 33,
-                        fontWeight: FontWeight.bold,
-                        color: color.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: themeColor.withAlpha(50),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        localizations.translate('workshopDescription'),
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildLoadingImage(
-                      imagePath: 'assets/images/ceramicagif.gif',
-                      height: 300,
-                      width: size.width * 0.9,
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: themeColor.withAlpha(50),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        localizations.translate('workshopClasses'),
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
-      },
-    );
-}
-
-Widget _homePintura(Size size, ColorScheme color, AppLocalizations localizations, User? user, String firstName, String fullName, Color themeColor, BuildContext context) {
-  return FutureBuilder<bool>(
-      future: IsMujer().mujer(fullName),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(size.width * 0.04,
-                  size.height * 0.04, size.width * 0.04, 0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(180),
-                      width: size.width * 0.86,
-                      height: size.height * 0.042,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.015),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(180),
-                      width: size.width * 0.67,
-                      height: size.height * 0.042,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.015),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(180),
-                      width: size.width * 0.3,
-                      height: size.height * 0.042,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.034),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(40),
-                      width: size.width,
-                      height: size.height * 0.15,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.023),
-                    ShimmerLoading(
-                      color: Color(0xFFE0E0E0),
-                      width: size.width,
-                      height: size.height * 0.351,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.03),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(180),
-                      width: size.width * 0.6,
-                      height: size.height * 0.04,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.019),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(40),
-                      width: size.width,
-                      height: size.height * 0.1,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text(localizations.translate('errorLoadingData')),
-          );
-        } else {
-          final isMujer = snapshot.data ?? false;
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 600),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      isMujer
-                          ? localizations
-                              .translate('welcomeFemale')
-                              .replaceAll('\$taller', taller ?? '')
-                          : localizations
-                              .translate('welcomeMale')
-                              .replaceAll('\$taller', taller ?? ''),
-                      style: TextStyle(
-                        fontSize: 33,
-                        fontWeight: FontWeight.bold,
-                        color: color.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    BoxText(
-                      text: user == null
-                          ? localizations.translate('helloAnonymousPainting')
-                          : isMujer
-                              ? localizations
-                                  .translate('helloFemalePainting')
-                                  .replaceAll('\$firstName', firstName)
-                              : localizations
-                                  .translate('helloMalePainting')
-                                  .replaceAll('\$firstName', firstName),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildLoadingImage(
-                      imagePath: 'assets/images/pintura.webp',
-                      height: 300,
-                      width: size.width * 0.9,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      localizations.translate('whatWeDo'),
-                      style: TextStyle(
-                        fontSize: 33,
-                        fontWeight: FontWeight.bold,
-                        color: color.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: themeColor.withAlpha(50),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        localizations.translate('workshopDescriptionPainting'),
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildLoadingImage(
-                      imagePath: 'assets/images/pintura.webp',
-                      height: 300,
-                      width: size.width * 0.9,
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: themeColor.withAlpha(50),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        localizations.translate('workshopClassesPainting'),
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
-      },
-    );
-}
-
-
-
-Widget _homeNatacion(Size size, ColorScheme color, AppLocalizations localizations, User? user, String firstName, String fullName, Color themeColor, BuildContext context) {
-  return FutureBuilder<bool>(
-      future: IsMujer().mujer(fullName),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(size.width * 0.04,
-                  size.height * 0.04, size.width * 0.04, 0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(180),
-                      width: size.width * 0.86,
-                      height: size.height * 0.042,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.015),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(180),
-                      width: size.width * 0.67,
-                      height: size.height * 0.042,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.015),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(180),
-                      width: size.width * 0.3,
-                      height: size.height * 0.042,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.034),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(40),
-                      width: size.width,
-                      height: size.height * 0.15,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.023),
-                    ShimmerLoading(
-                      color: Color(0xFFE0E0E0),
-                      width: size.width,
-                      height: size.height * 0.351,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.03),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(180),
-                      width: size.width * 0.6,
-                      height: size.height * 0.04,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                    SizedBox(height: size.height * 0.019),
-                    ShimmerLoading(
-                      color: color.primary.withAlpha(40),
-                      width: size.width,
-                      height: size.height * 0.1,
-                      brillo: Color(0xFFF5F5F5),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text(localizations.translate('errorLoadingData')),
-          );
-        } else {
-          final isMujer = snapshot.data ?? false;
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 600),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      isMujer
-                          ? localizations
-                              .translate('welcomeFemale')
-                              .replaceAll('\$taller', taller ?? '')
-                          : localizations
-                              .translate('welcomeMale')
-                              .replaceAll('\$taller', taller ?? ''),
-                      style: TextStyle(
-                        fontSize: 33,
-                        fontWeight: FontWeight.bold,
-                        color: color.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    BoxText(
-                      text: user == null
-                          ? localizations.translate('natacionHelloAnonymous')
-                          : isMujer
-                              ? localizations
-                                  .translate('natacionHelloFemale')
-                                  .replaceAll('\$firstName', firstName)
-                              : localizations
-                                  .translate('natacionHelloMale')
-                                  .replaceAll('\$firstName', firstName),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildLoadingImage(
-                      imagePath: 'assets/images/natacion.webp',
-                      height: 300,
-                      width: size.width * 0.9,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      localizations.translate('whatWeDo'),
-                      style: TextStyle(
-                        fontSize: 33,
-                        fontWeight: FontWeight.bold,
-                        color: color.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: themeColor.withAlpha(50),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        localizations.translate('natacionDescription'),
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildLoadingImage(
-                      imagePath: 'assets/images/natacion.webp',
-                      height: 300,
-                      width: size.width * 0.9,
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: themeColor.withAlpha(50),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        localizations.translate('natacionClasses'),
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
-      },
-    );
-}
 
 
   Widget _buildLoadingImage({

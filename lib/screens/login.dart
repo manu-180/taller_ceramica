@@ -251,7 +251,7 @@ class LoginState extends State<Login> {
                                       SnackBar(
                                         content: Text(localizations
                                             .translate('loginError', params: {
-                                          'error': e.message ?? ''
+                                          'error': e.message 
                                         })),
                                         backgroundColor: Colors.red,
                                       ),
