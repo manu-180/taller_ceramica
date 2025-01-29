@@ -5,7 +5,7 @@ workflows:
     environment:
       vars:
         FLUTTER_BUILD_MODE: release
-        APPLE_CERTIFICATE_PASSWORD: $APPLE_CERTIFICATE_PASSWORD # Añade esto como variable de entorno en Codemagic
+        APPLE_CERTIFICATE_PASSWORD: 2488 # Añade esto como variable de entorno en Codemagic
       flutter: stable
     scripts:
       - name: Install dependencies
@@ -19,7 +19,12 @@ workflows:
     publishing:
       app_store_connect:
         api_key:
-          key_id: $APP_STORE_KEY_ID
-          issuer_id: $APP_STORE_ISSUER_ID
-          private_key: $APP_STORE_PRIVATE_KEY
+          key_id: 5X2C57X263
+          issuer_id: a42f6d03-89a5-4f05-a1e9-449150a579b
+          private_key: -----BEGIN PRIVATE KEY-----
+MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgvbpbWZwo2GxfDXpu
+wJj8MCFdaIHEB4qkgwAfjHl/pS+gCgYIKoZIzj0DAQehRANCAATDWHeGbBurN12X
+x3G4zklHWetygsb1SxpGdxoVhLhR2RLfpZ+umvNS7REbXhWmgt/VmEqf+1GeiXT8
+WsMyxKzh
+-----END PRIVATE KEY-----
         submit_to_app_store: true
