@@ -6,15 +6,10 @@ workflows:
       vars:
         FLUTTER_BUILD_MODE: release
         APPLE_CERTIFICATE_PASSWORD: $APPLE_CERTIFICATE_PASSWORD
-        IOS_DISTRIBUTION_P12: $IOS_DISTRIBUTION_P12
-      flutter: stable
     scripts:
       - name: Install dependencies
         script: |
           flutter pub get
-      - name: Decode and prepare .p12 file
-        script: |
-          echo $IOS_DISTRIBUTION_P12 | base64 --decode > ios_distribution.p12
       - name: Build iOS app
         script: |
           flutter build ipa --release
