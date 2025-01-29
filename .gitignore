@@ -47,15 +47,15 @@ app.*.map.json
 .env
 
 # Claves y archivos sensibles
-key.pem
-CertificateSigningRequest.certSigningRequest
-*.cer
-*.p12
+# key.pem
+# CertificateSigningRequest.certSigningRequest
+# *.cer
+# *.p12
 
-# OpenSSL outputs
-*.key
-*.csr
+# # OpenSSL outputs
+# *.key
+# *.csr
 
-# Otros archivos específicos del proyecto
-*.jks
-*.keystore
+# # Otros archivos específicos del proyecto
+# *.jks
+# *.keystore
