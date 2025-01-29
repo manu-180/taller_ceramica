@@ -1,4 +1,3 @@
-a
 workflows:
   ios-workflow:
     name: iOS Build
