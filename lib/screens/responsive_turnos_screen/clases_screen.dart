@@ -705,7 +705,7 @@ class _DiaSelection extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return ListView.builder(
+    return diasUnicos.isNotEmpty ?  ListView.builder(
       itemCount: diasUnicos.length,
       itemBuilder: (context, index) {
         final clase = diasUnicos[index];
@@ -756,6 +756,7 @@ class _DiaSelection extends StatelessWidget {
           return const SizedBox.shrink();
         }
       },
-    );
+    )
+    : const SizedBox.shrink();
   }
 }

@@ -188,202 +188,209 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     context: context,
     builder: (BuildContext context) {
       return StatefulBuilder(
-        builder: (context, setStateDialog) {
-          return AlertDialog(
-            title: Text(
-              localizations.translate('addNewClassDialogTitle', params: {
-                'day': dia,
-              }),
-            ),
-            content: isProcessing
-                ? null
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        controller: horaController,
-                        decoration: InputDecoration(
-                          hintText: localizations.translate('classTimeHint'),
-                        ),
-                      ),
-                      TextField(
-                        controller: capacidadController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          hintText: localizations.translate('classCapacityHint'),
-                        ),
-                      ),
-                    ],
-                  ),
-            actions: [
-              if (isProcessing)
-                ElevatedButton.icon(
-                  onPressed: null,
-                  icon: SizedBox(
-                    width: size.width * 0.05,
-                    height: size.width * 0.05,
-                    child: CircularProgressIndicator(
-                      strokeWidth: size.width * 0.006,
-                    ),
-                  ),
-                  label: Text(
-                    localizations.translate('loadingClassesLabel'),
-                  ),
-                )
-              else ...[
-                ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(
-                    localizations.translate('cancelButtonLabel'),
+  builder: (context, setStateDialog) {
+    return AlertDialog(
+      title: Text(
+        localizations.translate('addNewClassDialogTitle', params: {
+          'day': dia,
+        }),
+      ),
+      content: isProcessing
+          ? null
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: horaController,
+                  decoration: InputDecoration(
+                    hintText: localizations.translate('classTimeHint'),
                   ),
                 ),
-                FilledButton(
-  onPressed: () async {
-    if (mounted) {
-      setStateDialog(() {
-        isProcessing = true;
-      });
-    }
-
-    try {
-      final hora = horaController.text.trim();
-      if (hora.isEmpty || fechaSeleccionada == null) {
-        throw Exception(
-          localizations.translate('invalidTimeOrDateError'),
-        );
-      }
-
-      final capacidadText = capacidadController.text.trim();
-      final capacidad = int.tryParse(capacidadText);
-
-      if (capacidad == null) {
-        throw Exception(
-          localizations.translate('invalidCapacityError'),
-        );
-      }
-
-      final horaFormatoValido = RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
-      if (!horaFormatoValido) {
-        throw Exception(
-          localizations.translate('invalidTimeFormatError'),
-        );
-      }
-
-      final partesHora = hora.split(':');
-      final hh = int.tryParse(partesHora[0]) ?? -1;
-      final mm = int.tryParse(partesHora[1]) ?? -1;
-
-      if (hh < 0 || hh > 23 || mm < 0 || mm > 59) {
-        throw Exception(
-          localizations.translate('timeOutOfRangeError'),
-        );
-      }
-
-      final fechaBase = DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
-      final firstDayOfMonth = DateTime(fechaBase.year, fechaBase.month, 1);
-      final dayOfWeekSelected = fechaBase.weekday;
-
-      final difference = (7 + dayOfWeekSelected - firstDayOfMonth.weekday) % 7;
-      final firstTargetDate = firstDayOfMonth.add(Duration(days: difference));
-
-      final mesActual = await ObtenerMes().obtenerMes();
-
-      for (int i = 0; i < 5; i++) {
-        final fechaSemana = firstTargetDate.add(Duration(days: 7 * i));
-        final fechaStr = DateFormat('dd/MM/yyyy').format(fechaSemana);
-        final diaSemana = obtenerDia(fechaSemana);
-
-        final existingClass = await supabase
-            .from(taller)
-            .select()
-            .eq('fecha', fechaStr)
-            .eq('hora', hora)
-            .maybeSingle();
-
-        if (existingClass != null) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  localizations.translate('classAlreadyExists',
-                      params: {'date': fechaStr, 'time': hora}),
+                TextField(
+                  controller: capacidadController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    hintText: localizations.translate('classCapacityHint'),
+                  ),
                 ),
-              ),
-            );
-          }
-          continue;
-        } else {
-          if (mounted) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  localizations.translate('classAddedSuccess',
-                      params: {'date': fechaStr, 'time': hora}),
-                ),
-              ),
-            );
-          }
-        }
-
-        await supabase.from(taller).insert({
-          "id": await GenerarId().generarIdClase(),
-          'semana': EncontrarSemana().obtenerSemana(fechaStr),
-          'dia': diaSemana,
-          'fecha': fechaStr,
-          'hora': hora,
-          'mails': [],
-          'lugar_disponible': capacidad,
-          'mes': mesActual, 
-          'capacidad': capacidad,
-          "espera": [],
-        });
-      }
-
-      await cargarDatos();
-
-      if (fechaSeleccionada != null && mounted) {
-        setState(() {
-          clasesFiltradas = clasesDisponibles.where((clase) {
-            return clase.fecha == fechaSeleccionada;
-          }).toList();
-        });
-      }
-
-      if (mounted) {
-        Navigator.of(context).pop();
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setStateDialog(() {
-          isProcessing = false;
-        });
-      }
-    }
-  },
-  child: Text(
-    localizations.translate('addButtonLabel'),
-  ),
-)
-
-
               ],
-            ],
-          );
+            ),
+      actions: [
+        if (isProcessing)
+          ElevatedButton.icon(
+            onPressed: null,
+            icon: SizedBox(
+              width: size.width * 0.05,
+              height: size.width * 0.05,
+              child: CircularProgressIndicator(
+                strokeWidth: size.width * 0.006,
+              ),
+            ),
+            label: Text(
+              localizations.translate('loadingClassesLabel'),
+            ),
+          )
+        else ...[
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              localizations.translate('cancelButtonLabel'),
+            ),
+          ),
+          FilledButton(
+            onPressed: () async {
+              if (mounted) {
+                setStateDialog(() {
+                  isProcessing = true;
+                });
+              }
+
+              try {
+                final hora = horaController.text.trim();
+                if (hora.isEmpty || fechaSeleccionada == null) {
+                  throw Exception(
+                    localizations.translate('invalidTimeOrDateError'),
+                  );
+                }
+
+                final capacidadText = capacidadController.text.trim();
+                final capacidad = int.tryParse(capacidadText);
+
+                if (capacidad == null) {
+                  throw Exception(
+                    localizations.translate('invalidCapacityError'),
+                  );
+                }
+
+                final horaFormatoValido = RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
+                if (!horaFormatoValido) {
+                  throw Exception(
+                    localizations.translate('invalidTimeFormatError'),
+                  );
+                }
+
+                final partesHora = hora.split(':');
+                final hh = int.tryParse(partesHora[0]) ?? -1;
+                final mm = int.tryParse(partesHora[1]) ?? -1;
+
+                if (hh < 0 || hh > 23 || mm < 0 || mm > 59) {
+                  throw Exception(
+                    localizations.translate('timeOutOfRangeError'),
+                  );
+                }
+
+                final fechaBase = DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
+                final firstDayOfMonth = DateTime(fechaBase.year, fechaBase.month, 1);
+                final dayOfWeekSelected = fechaBase.weekday;
+
+                final difference =
+                    (7 + dayOfWeekSelected - firstDayOfMonth.weekday) % 7;
+                final firstTargetDate =
+                    firstDayOfMonth.add(Duration(days: difference));
+
+                final mesActual = await ObtenerMes().obtenerMes();
+
+                for (int i = 0; i < 5; i++) {
+                  if (!mounted) break;
+
+                  final fechaSemana =
+                      firstTargetDate.add(Duration(days: 7 * i));
+                  final fechaStr =
+                      DateFormat('dd/MM/yyyy').format(fechaSemana);
+                  final diaSemana = obtenerDia(fechaSemana);
+
+                  final existingClass = await supabase
+                      .from(taller)
+                      .select()
+                      .eq('fecha', fechaStr)
+                      .eq('hora', hora)
+                      .maybeSingle();
+
+                  if (existingClass != null) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            localizations.translate('classAlreadyExists',
+                                params: {'date': fechaStr, 'time': hora}),
+                          ),
+                        ),
+                      );
+                    }
+                    continue;
+                  } else {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            localizations.translate('classAddedSuccess',
+                                params: {'date': fechaStr, 'time': hora}),
+                          ),
+                        ),
+                      );
+                    }
+                  }
+
+                  await supabase.from(taller).insert({
+                    "id": await GenerarId().generarIdClase(),
+                    'semana': EncontrarSemana().obtenerSemana(fechaStr),
+                    'dia': diaSemana,
+                    'fecha': fechaStr,
+                    'hora': hora,
+                    'mails': [],
+                    'lugar_disponible': capacidad,
+                    'mes': mesActual,
+                    'capacidad': capacidad,
+                    "espera": [],
+                  });
+                }
+
+                await cargarDatos();
+
+                if (fechaSeleccionada != null && mounted) {
+                  setState(() {
+                    clasesFiltradas = clasesDisponibles.where((clase) {
+                      return clase.fecha == fechaSeleccionada;
+                    }).toList();
+                  });
+                }
+
+                if (mounted) {
+                  Navigator.of(context).pop();
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(e.toString()),
+                    ),
+                  );
+                }
+              } finally {
+                if (mounted) {
+                  setStateDialog(() {
+                    isProcessing = false;
+                  });
+                }
+              }
+            },
+            child: Text(
+              localizations.translate('addButtonLabel'),
+            ),
+          ),
+        ],
+      ],
+    );
+  },
+);
+
         },
       );
-    },
-  );
+    
+  
 }
 
 
