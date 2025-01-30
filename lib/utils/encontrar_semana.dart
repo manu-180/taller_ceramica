@@ -1,33 +1,26 @@
-import 'package:intl/intl.dart';
-
 class EncontrarSemana {
-  String obtenerSemana(String fechaStr) {
-    DateFormat formatoFecha = DateFormat("dd/MM/yyyy");
-    DateTime fecha = formatoFecha.parse(fechaStr);
+  String obtenerSemana(String fecha) {
+    // Convertir la fecha de String a DateTime
+    List<String> partes = fecha.split('/');
+    DateTime fechaConvertida = DateTime(
+      int.parse(partes[2]), // Año
+      int.parse(partes[1]), // Mes
+      int.parse(partes[0]), // Día
+    );
 
-    DateTime primerDiaMes = DateTime(fecha.year, fecha.month, 1);
+    // Obtener el primer día del mes
+    DateTime primerDiaDelMes = DateTime(fechaConvertida.year, fechaConvertida.month, 1);
 
-    // Encontrar el primer domingo del mes
-    int diasHastaPrimerDomingo = (7 - primerDiaMes.weekday) % 7;
-    DateTime primerDomingo =
-        primerDiaMes.add(Duration(days: diasHastaPrimerDomingo));
-
-    // Calcular los días desde el primer domingo
-    int diasDesdePrimerDomingo = fecha.difference(primerDomingo).inDays;
-
-    // Si la fecha está antes del primer domingo, es semana 1
-    if (diasDesdePrimerDomingo < 0) {
-      return 'semana1';
+    // Si la fecha está dentro de la primera semana (del 1 al domingo)
+    DateTime finPrimeraSemana = primerDiaDelMes.add(Duration(days: 7 - primerDiaDelMes.weekday));
+    if (fechaConvertida.isBefore(finPrimeraSemana)) {
+      return "semana1";
     }
 
-    // Calcular la semana a partir del primer domingo
-    int semana = (diasDesdePrimerDomingo / 7).floor() + 2;
+    // Calcular las semanas restantes
+    int diasDesdeInicio = fechaConvertida.difference(primerDiaDelMes).inDays;
+    int numeroSemana = ((diasDesdeInicio + primerDiaDelMes.weekday - 1) / 7).floor() + 1;
 
-    // Ajustar a un máximo de 5 semanas
-    if (semana > 5) {
-      semana = 5;
-    }
-
-    return 'semana$semana';
+    return "semana$numeroSemana";
   }
 }

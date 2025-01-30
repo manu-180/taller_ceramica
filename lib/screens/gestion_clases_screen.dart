@@ -9,6 +9,7 @@ import 'package:taller_ceramica/supabase/modificar_datos/modificar_lugar_disponi
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_total_info.dart';
+import 'package:taller_ceramica/supabase/utiles/generar_id.dart';
 import 'package:taller_ceramica/utils/generar_id.dart';
 import 'package:taller_ceramica/utils/utils_barril.dart';
 import 'package:taller_ceramica/main.dart';
@@ -238,9 +239,11 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                 ),
                 FilledButton(
   onPressed: () async {
-    setStateDialog(() {
-      isProcessing = true;
-    });
+    if (mounted) {
+      setStateDialog(() {
+        isProcessing = true;
+      });
+    }
 
     try {
       final hora = horaController.text.trim();
@@ -276,24 +279,18 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
         );
       }
 
-      final fechaBase =
-          DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
-      final firstDayOfMonth =
-          DateTime(fechaBase.year, fechaBase.month, 1);
+      final fechaBase = DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
+      final firstDayOfMonth = DateTime(fechaBase.year, fechaBase.month, 1);
       final dayOfWeekSelected = fechaBase.weekday;
 
       final difference = (7 + dayOfWeekSelected - firstDayOfMonth.weekday) % 7;
-
-      final firstTargetDate =
-          firstDayOfMonth.add(Duration(days: difference));
+      final firstTargetDate = firstDayOfMonth.add(Duration(days: difference));
 
       final mesActual = await ObtenerMes().obtenerMes();
 
       for (int i = 0; i < 5; i++) {
-        final fechaSemana =
-            firstTargetDate.add(Duration(days: 7 * i));
-        final fechaStr =
-            DateFormat('dd/MM/yyyy').format(fechaSemana);
+        final fechaSemana = firstTargetDate.add(Duration(days: 7 * i));
+        final fechaStr = DateFormat('dd/MM/yyyy').format(fechaSemana);
         final diaSemana = obtenerDia(fechaSemana);
 
         final existingClass = await supabase
@@ -304,30 +301,34 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
             .maybeSingle();
 
         if (existingClass != null) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                localizations.translate('classAlreadyExists',
-                    params: {'date': fechaStr, 'time': hora}),
+          if (mounted) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  localizations.translate('classAlreadyExists',
+                      params: {'date': fechaStr, 'time': hora}),
+                ),
               ),
-            ),
-          );
+            );
+          }
           continue;
         } else {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                localizations.translate('classAddedSuccess',
-                    params: {'date': fechaStr, 'time': hora}),
+          if (mounted) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  localizations.translate('classAddedSuccess',
+                      params: {'date': fechaStr, 'time': hora}),
+                ),
               ),
-            ),
-          );
+            );
+          }
         }
 
         await supabase.from(taller).insert({
-          "id": GenerarID().generarIdUnico(clasesDisponibles),
+          "id": await GenerarId().generarIdClase(),
           'semana': EncontrarSemana().obtenerSemana(fechaStr),
           'dia': diaSemana,
           'fecha': fechaStr,
@@ -342,7 +343,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
 
       await cargarDatos();
 
-      if (fechaSeleccionada != null) {
+      if (fechaSeleccionada != null && mounted) {
         setState(() {
           clasesFiltradas = clasesDisponibles.where((clase) {
             return clase.fecha == fechaSeleccionada;
@@ -350,24 +351,31 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
         });
       }
 
-      Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+          ),
+        );
+      }
     } finally {
-      setStateDialog(() {
-        isProcessing = false;
-      });
+      if (mounted) {
+        setStateDialog(() {
+          isProcessing = false;
+        });
+      }
     }
   },
   child: Text(
     localizations.translate('addButtonLabel'),
   ),
 )
+
 
               ],
             ],
