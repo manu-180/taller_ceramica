@@ -10,6 +10,7 @@ import 'package:taller_ceramica/supabase/clases/remover_usuario.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/utils/actualizar_fechas_database.dart';
+import 'package:taller_ceramica/utils/enviar_wpp.dart';
 import 'package:taller_ceramica/widgets/box_text.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/mostrar_dia_segun_fecha.dart';
@@ -274,6 +275,11 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                     }
                                   },
                                 );
+                                EnviarWpp().sendWhatsAppMessage(
+  "HX6dad986ed219654d62aed35763d10ccb",
+  'whatsapp:+5491132820164',
+  [usuarioSeleccionado, clase.dia, clase.fecha, clase.hora, ""] 
+);
                               } else {
                                 await AgregarUsuario(supabase)
                                     .agregarUsuarioAClase(

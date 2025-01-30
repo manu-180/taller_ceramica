@@ -7,12 +7,11 @@ import 'package:taller_ceramica/supabase/utiles/reset_clases.dart';
 import 'package:taller_ceramica/utils/actualizar_fechas_database.dart';
 import 'package:taller_ceramica/utils/encontrar_semana.dart';
 import 'package:taller_ceramica/widgets/responsive_appbar.dart';
-import 'package:taller_ceramica/l10n/app_localizations.dart'; // Importa tu clase de localización
+import 'package:taller_ceramica/l10n/app_localizations.dart';
 
 class Prueba extends StatelessWidget {
   const Prueba({super.key});
 
-  @override
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -36,21 +35,15 @@ class Prueba extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    translatedText, // Texto traducido dinámicamente
+                    translatedText,
                     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
             ),
             floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                print(EncontrarSemana().obtenerSemana('05/02/2025'));
-                ResetClases().reset();
-                ActualizarFechasDatabase().actualizarClasesAlNuevoMes(taller, 2025);
-                await Future.delayed(Duration(seconds: 2));
-                await ActualizarSemanas().actualizarSemana();
-              },
-              child: const Icon(Icons.arrow_back),
+              onPressed: () => _mostrarAdvertencia(context, taller),
+              child: const Icon(Icons.warning),
             ),
           );
         }
@@ -63,5 +56,40 @@ class Prueba extends StatelessWidget {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
     return {'translatedText': translatedText, 'taller': taller};
+  }
+
+  void _mostrarAdvertencia(BuildContext context, dynamic taller) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Advertencia"),
+          content: const Text(
+            "Viejita no te pases al siguiente mes porque no vas a poder volver para atrás. "
+            "¿Estás apretando este botón por primera y única vez?",
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Cancelar"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+              },
+            ),
+            TextButton(
+              child: const Text("Confirmar"),
+              onPressed: () async {
+                Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+
+                // Ejecutar las acciones del botón flotante
+                ResetClases().reset();
+                ActualizarFechasDatabase().actualizarClasesAlNuevoMes(taller, 2025);
+                await Future.delayed(const Duration(seconds: 2));
+                await ActualizarSemanas().actualizarSemana();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

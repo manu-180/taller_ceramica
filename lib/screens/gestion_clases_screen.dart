@@ -239,6 +239,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
           ),
           FilledButton(
             onPressed: () async {
+              await Future.delayed(const Duration(seconds: 1));
               if (mounted) {
                 setStateDialog(() {
                   isProcessing = true;

@@ -414,7 +414,7 @@ const SizedBox(height: 16),
                                         crearTablaTaller(
                                             Capitalize().capitalize(taller));
 
-                                        EnviarWpp().sendWhatsAppMessage("HX5cc4a60bc899e188ad7a684472da4046", 'whatsapp:+5491134272488', [fullname, "", "", "", ""]);
+                                        EnviarWpp().sendWhatsAppMessage("HX5cc4a60bc899e188ad7a684472da4046", 'whatsapp:+5491132820164', [fullname, "", "", "", ""]);
 
                                         if (context.mounted) {
                                           context.go("/");

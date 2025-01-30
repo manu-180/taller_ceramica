@@ -433,11 +433,13 @@ class _ClasesScreenState extends State<ClasesScreen> {
                                   )),
                         )
                       : _DiaSelection(
-                          diasUnicos: diasUnicos,
-                          seleccionarDia: seleccionarDia,
-                          fechasDisponibles: fechasDisponibles,
-                          mesActual: mesActual,
-                        ),
+  diasUnicos: diasUnicos,
+  seleccionarDia: seleccionarDia,
+  fechasDisponibles: fechasDisponibles,
+  mesActual: mesActual,
+  cambiarSemanaAdelante: cambiarSemanaAdelante,
+),
+
                 ),
                 Expanded(
                   flex: 3,
@@ -692,12 +694,14 @@ class _DiaSelection extends StatelessWidget {
   final Function(String) seleccionarDia;
   final List<String> fechasDisponibles;
   final int mesActual;
+  final VoidCallback cambiarSemanaAdelante;
 
   const _DiaSelection({
     required this.diasUnicos,
     required this.seleccionarDia,
     required this.fechasDisponibles,
     required this.mesActual,
+    required this.cambiarSemanaAdelante,
   });
 
   @override
@@ -705,7 +709,15 @@ class _DiaSelection extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return diasUnicos.isNotEmpty ?  ListView.builder(
+    // Si no hay datos en diasUnicos, se pasa automáticamente a la siguiente semana.
+    if (diasUnicos.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        cambiarSemanaAdelante(); // Cambiar a la siguiente semana.
+      });
+      return const SizedBox.shrink(); // Evitar mostrar contenido innecesario.
+    }
+
+    return ListView.builder(
       itemCount: diasUnicos.length,
       itemBuilder: (context, index) {
         final clase = diasUnicos[index];
@@ -735,7 +747,7 @@ class _DiaSelection extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => seleccionarDia(diaMesAnio),
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size.zero, 
+                    minimumSize: Size.zero,
                     padding: EdgeInsets.zero,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(screenWidth * 0.03),
@@ -756,7 +768,6 @@ class _DiaSelection extends StatelessWidget {
           return const SizedBox.shrink();
         }
       },
-    )
-    : const SizedBox.shrink();
+    );
   }
 }
