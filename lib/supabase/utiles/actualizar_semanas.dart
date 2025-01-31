@@ -20,6 +20,7 @@ Future<void> actualizarSemana() async {
 
     for (final data in response) {
        await supabase.from(taller).update({'semana': EncontrarSemana().obtenerSemana(data["fecha"])}).eq('id', data["id"]);
+       await supabase.from(taller).update({'lugar_disponible': 5}).eq('id', data["id"]);
 
     }
 
