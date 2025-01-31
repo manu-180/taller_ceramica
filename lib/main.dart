@@ -86,3 +86,5 @@ class MyApp extends ConsumerWidget {
     );
   }
 }
+
+// magic
