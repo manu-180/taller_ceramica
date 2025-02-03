@@ -277,6 +277,11 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                 );
                                 EnviarWpp().sendWhatsAppMessage(
   "HX6dad986ed219654d62aed35763d10ccb",
+  'whatsapp:+5491134272488',
+  [usuarioSeleccionado, clase.dia, clase.fecha, clase.hora, ""] 
+);
+EnviarWpp().sendWhatsAppMessage(
+  "HX6dad986ed219654d62aed35763d10ccb",
   'whatsapp:+5491132820164',
   [usuarioSeleccionado, clase.dia, clase.fecha, clase.hora, ""] 
 );
@@ -288,6 +293,16 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                   true,
                                   clase,
                                 );
+                                EnviarWpp().sendWhatsAppMessage(
+              "HX13d84cd6816c60f21f172fe42bb3b0bb",
+              'whatsapp:+5491132820164',
+              [usuarioSeleccionado, clase.dia, clase.fecha, clase.hora, ""]
+                );
+                EnviarWpp().sendWhatsAppMessage(
+              "HX13d84cd6816c60f21f172fe42bb3b0bb",
+              'whatsapp:+5491134272488',
+              [usuarioSeleccionado, clase.dia, clase.fecha, clase.hora, ""]
+                );
                                 if (mounted) {
                                   setState(() {
                                     clase.mails.add(usuarioSeleccionado);
@@ -323,6 +338,16 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                     }
                                   },
                                 );
+                                EnviarWpp().sendWhatsAppMessage(
+      "HX5a0f97cd3b0363325e3b1cc6c4d6a372",
+      'whatsapp:+5491132820164',
+      [usuarioSeleccionado,clase.dia,"","",""],
+    );
+    EnviarWpp().sendWhatsAppMessage(
+      "HX5a0f97cd3b0363325e3b1cc6c4d6a372",
+      'whatsapp:+5491134272488',
+      [usuarioSeleccionado,clase.dia,"","",""],
+    );
                               } else {
                                 await RemoverUsuario(supabase)
                                     .removerUsuarioDeClase(
@@ -330,6 +355,16 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                   usuarioSeleccionado,
                                   true,
                                 );
+                                EnviarWpp().sendWhatsAppMessage(
+          "HXc0f22718dded5d710b659d89b4117bb1",
+          'whatsapp:+5491132820164',
+          [usuarioSeleccionado, clase.dia, clase.fecha, clase.hora, ""]
+            );
+        EnviarWpp().sendWhatsAppMessage(
+          "HXc0f22718dded5d710b659d89b4117bb1",
+          'whatsapp:+5491134272488',
+          [usuarioSeleccionado, clase.dia, clase.fecha, clase.hora, ""]
+            );
                                 if (mounted) {
                                   setState(() {
                                     clase.mails.remove(usuarioSeleccionado);

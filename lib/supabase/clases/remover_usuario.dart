@@ -53,14 +53,6 @@ class RemoverUsuario {
 
             ModificarCredito().removerCreditoUsuario(userEspera);
 
-            EnviarWpp().sendWhatsAppMessage(
-          "HX28a321ebed0fb2ed0b0c2c5ac524748a",
-          'whatsapp:+5491132820164',
-          [user, clase.dia, clase.fecha, clase.hora, ""]
-            );
-
-          
-
             return; 
           }
         }
@@ -75,38 +67,30 @@ class RemoverUsuario {
         }
 
 
-        // EnviarWpp().sendWhatsAppMessage(
-        //   "HX3f978af0ae02cb7a14c6881ed685d9a3",
-        //   'whatsapp:+5491132820164',
-        //     Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)
-        //         ? ["user", "clase.dia", "clase.fecha", "clase.hora", "Se genero un credito para recuperar la clase"]
-        //         : ["user", "clase.dia", "clase.fecha", "clase.hora", "Cancelo con menos de 24 horas de anticipacion, no podra recuperar la clase"],
-        //     );
-
-          EnviarWpp().sendWhatsAppMessage(
-          "HX3f978af0ae02cb7a14c6881ed685d9a3",
+        EnviarWpp().sendWhatsAppMessage(
+          "HXc3a9c584ef95fdb872121c9cb8a09fd1",
           'whatsapp:+5491132820164',
-          
-                
-                [user, clase.dia, clase.fecha, clase.hora, ""],
+            Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)
+                ? [user, clase.dia, clase.fecha, clase.hora, "Se genero un credito para recuperar la clase"]
+                : [user, clase.dia, clase.fecha, clase.hora, "Cancelo con menos de 24 horas de anticipacion, no podra recuperar la clase"],
+            );
+        EnviarWpp().sendWhatsAppMessage(
+          "HXc3a9c584ef95fdb872121c9cb8a09fd1",
+          'whatsapp:+5491134272488',
+            Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)
+                ? [user, clase.dia, clase.fecha, clase.hora, "Se genero un credito para recuperar la clase"]
+                : [user, clase.dia, clase.fecha, clase.hora, "Cancelo con menos de 24 horas de anticipacion, no podra recuperar la clase"],
             );
 
             
-      } else {
-
-         EnviarWpp().sendWhatsAppMessage(
-          "HXc0f22718dded5d710b659d89b4117bb1",
-          'whatsapp:+5491132820164',
-          [user, clase.dia, clase.fecha, clase.hora, ""]
-            );
-      }
+      } 
     }
   }
 
   Future<void> removerUsuarioDeMuchasClase(
     ClaseModels clase,
     String user,
-    void Function(ClaseModels claseActualizada)? callback, // callback opcional
+    void Function(ClaseModels claseActualizada)? callback,
   ) async {
     final usuarioActivo = Supabase.instance.client.auth.currentUser;
     final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
@@ -127,6 +111,7 @@ class RemoverUsuario {
               .eq('id', item.id);
 
           ModificarLugarDisponible().agregarLugarDisponible(item.id);
+          
 
           if (callback != null) {
             callback(item);
@@ -135,17 +120,9 @@ class RemoverUsuario {
       }
     }
 
-    EnviarWpp().sendWhatsAppMessage(
-      "HX2dcf10749ec095471f99620be45dbc11",
-      'whatsapp:+5491132820164',
-      [user,"","","",""],
-    );
+    
 
 
-    // EnviarWpp().enviarMensajesViejo(
-    //   "has removido existosamente a $user de las 4 clases",
-    //   'whatsapp:+5491132820164',
-    // );
   }
 
   Future<void> removerUsuarioDeListaDeEspera(int idClase, String user) async {
@@ -166,10 +143,16 @@ class RemoverUsuario {
       
 
 
-      // EnviarWpp().enviarMensajesViejo(
-      //   "$user canceló su clase de lista de espera el ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-      //   'whatsapp:+5491132820164',
-      // );
+      EnviarWpp().sendWhatsAppMessage(
+          "HX28a321ebed0fb2ed0b0c2c5ac524748a",
+          'whatsapp:+5491132820164',
+          [user, clase.dia, clase.fecha, clase.hora, ""]
+            );
+            EnviarWpp().sendWhatsAppMessage(
+          "HX28a321ebed0fb2ed0b0c2c5ac524748a",
+          'whatsapp:+5491134272488',
+          [user, clase.dia, clase.fecha, clase.hora, ""]
+            );
     }
   }
 }

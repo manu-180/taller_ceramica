@@ -37,20 +37,17 @@ class AgregarUsuario {
                 .update(clase.toMap())
                 .eq('id', idClase);
             ModificarLugarDisponible().removerLugarDisponible(idClase);
-            if (parametro) {
-              EnviarWpp().sendWhatsAppMessage(
-              "HX13d84cd6816c60f21f172fe42bb3b0bb",
-              'whatsapp:+5491132820164',
-              [user, clase.dia, clase.fecha, clase.hora, ""]
-                );
-
-      
-            }
+ 
             if (!parametro) {
               ModificarCredito().removerCreditoUsuario(user);
               EnviarWpp().sendWhatsAppMessage(
-  "HXefcf9346661c8871da3f019743967611",
+  "HXb7f90c40c60e781a4c4be85825808e79",
   'whatsapp:+5491132820164',
+  [user, clase.dia, clase.fecha, clase.hora, ""] 
+);
+EnviarWpp().sendWhatsAppMessage(
+  "HXb7f90c40c60e781a4c4be85825808e79",
+  'whatsapp:+5491134272488',
   [user, clase.dia, clase.fecha, clase.hora, ""] 
 );
             

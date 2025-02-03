@@ -96,11 +96,10 @@ class Prueba extends StatelessWidget {
                 Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
                 corregirDia();
 
-                // Ejecutar las acciones del botón flotante
-                // ResetClases().reset();
-                // ActualizarFechasDatabase().actualizarClasesAlNuevoMes(taller, 2025);
-                // await Future.delayed(const Duration(seconds: 2));
-                // await ActualizarSemanas().actualizarSemana();
+                ResetClases().reset();
+                ActualizarFechasDatabase().actualizarClasesAlNuevoMes(taller, 2025);
+                await Future.delayed(const Duration(seconds: 2));
+                await ActualizarSemanas().actualizarSemana();
               },
             ),
           ],

@@ -5,7 +5,8 @@ workflows:
     environment:
       vars:
         FLUTTER_BUILD_MODE: release
-        APPLE_CERTIFICATE_PASSWORD: "2488"
+        APPLE_CERTIFICATE_PASSWORD: $APPLE_CERTIFICATE_PASSWORD 
+      flutter: stable
     scripts:
       - name: Install dependencies
         script: |
@@ -18,14 +19,7 @@ workflows:
     publishing:
       app_store_connect:
         api_key:
-          key_id: "VMPYZM4P66" # Aquí pasarías tu Key ID directamente
-          issuer_id: "a42f6d03-89a5-4f05-a1e9-449150a57f9b" # Issuer ID
-          private_key: |
-            -----BEGIN PRIVATE KEY-----
-            MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgcfndUpJNQSg5nl4J
-            55VbkjrNt/xgQwYKqyJzzq5FVkygCgYIKoZIzj0DAQehRANCAASy1kPCLZ5RI62n
-            wlXcHw3UJGGlJ/grAcfzaOEAuNsZsstAQ/siUq1FCJls7bPTH7QlMv4OMDZzDY2y
-            5k1YGh6X
-            -----END PRIVATE KEY-----
-
+          key_id: $APP_STORE_KEY_ID
+          issuer_id: $APP_STORE_ISSUER_ID
+          private_key: $APP_STORE_PRIVATE_KEY
         submit_to_app_store: true
