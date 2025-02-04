@@ -83,7 +83,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icon/
-    - .env
+    # - .env
 
 l10n:
   arb-dir: lib/l10n
