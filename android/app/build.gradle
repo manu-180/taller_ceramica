@@ -69,4 +69,4 @@ flutter {
 // Agregar dependencias necesarias
 dependencies {
     implementation 'com.android.billingclient:billing:5.1.0' // Biblioteca de facturación de Google Play
-}
+} 
