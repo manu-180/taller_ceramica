@@ -4,8 +4,8 @@ class GenerarFechasDelMes {
   List<String> generarFechasLunesAViernes() {
     final DateFormat formato = DateFormat('dd/MM/yyyy');
     final List<String> fechas = [];
-    final DateTime inicio = DateTime(2024, 12, 2);
-    final DateTime fin = DateTime(2024, 12, 31);
+    final DateTime inicio = DateTime(2025, 2, 3);
+    final DateTime fin = DateTime(2025, 2, 28);
 
     for (DateTime fecha = inicio;
         fecha.isBefore(fin) || fecha.isAtSameMomentAs(fin);

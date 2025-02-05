@@ -95686,7 +95686,7 @@ return A.o(A.a2q(n,A.Y(["From","whatsapp:+14155238886","To",b,"Body",a],l,l),nul
 case 3:return A.t(null,r)}})
 return A.u($async$fH,r)}}
 A.vf.prototype={
-xx(){var s,r,q=A.lN("dd/MM/yyyy"),p=A.b([],t.s),o=A.nQ(2024,12,2,0,0,0,0),n=A.nQ(2024,12,31,0,0,0,0),m=n.a,l=n.b,k=o
+xx(){var s,r,q=A.lN("dd/MM/yyyy"),p=A.b([],t.s),o=A.nQ(2025,2,3,0,0,0,0),n=A.nQ(2025,2,28,0,0,0,0),m=n.a,l=n.b,k=o
 while(!0){s=k.a
 if(s>=m)r=s===m&&k.b<l
 else r=!0
