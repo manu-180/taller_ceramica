@@ -6,6 +6,7 @@ import 'package:taller_ceramica/l10n/app_localizations.dart';
 import 'package:taller_ceramica/subscription/subscription_verifier.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/is_admin.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_capacidad_clase.dart';
+import 'package:taller_ceramica/supabase/obtener_datos/obtener_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_mes.dart';
 import 'package:taller_ceramica/supabase/obtener_datos/obtener_taller.dart';
 import 'package:taller_ceramica/main.dart';
@@ -113,33 +114,59 @@ class _ClasesScreenState extends State<ClasesScreen> {
   }
 
   Future<List<String>> obtenerDiasConClasesDisponibles() async {
-    final diasConClases = <String>{};
+  final diasConClases = <String>{};
+  final usuarioActivo = Supabase.instance.client.auth.currentUser;
+  final taller = await ObtenerTaller().retornarTaller(usuarioActivo!.id);
 
-    for (var entry in horariosPorDia.entries) {
-      final dia = entry.key;
-      final clases = entry.value;
+  // 🔥 Obtener todos los IDs de clases
+  final List<int> idsClases = horariosPorDia.values
+      .expand((clases) => clases.map((c) => c.id))
+      .toList();
 
-      for (var clase in clases) {
-        final capacidad = capacidadCache[clase.id] ?? 0;
-        final mailsLimpios = clase.mails.map((mail) => mail.trim()).toList();
-        final menorA24 =
-            Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual);
+  if (idsClases.isEmpty) return []; // Si no hay clases, retornamos una lista vacía
 
-        if (mailsLimpios.length < capacidad && !menorA24) {
-          final partesFecha = dia.split(' - ')[1].split('/');
-          final diaMes = int.parse(partesFecha[1]);
+  // 🔥 Construir el filtro con `.or()`
+  final String filtroOr = idsClases.map((id) => "id.eq.$id").join(",");
 
-          if (diaMes == mesActual) {
-            final diaSolo =
-                dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
-            diasConClases.add(diaSolo);
-          }
+  // 🔥 Consulta única a Supabase
+  final response = await Supabase.instance.client
+      .from(taller) // Tabla en Supabase
+      .select('id, lugar_disponible')
+      .or(filtroOr); // Filtra por múltiples IDs
+
+  // 🔹 Convertimos la respuesta en un mapa
+  final Map<int, int> lugaresPorClase = {
+    for (var row in response) row['id'] as int: row['lugar_disponible'] as int
+  };
+
+  // 🔹 Procesamos los datos con los lugares ya en memoria
+  for (var entry in horariosPorDia.entries) {
+    final dia = entry.key;
+    final clases = entry.value;
+
+    for (var clase in clases) {
+      final capacidad = capacidadCache[clase.id] ?? 0;
+      final mailsLimpios = clase.mails.map((mail) => mail.trim()).toList();
+      final menorA24 =
+          Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora, mesActual);
+      final lugarDisponible = lugaresPorClase[clase.id] ?? 0;
+
+      if (mailsLimpios.length < capacidad && !menorA24 && lugarDisponible > 0) {
+        final partesFecha = dia.split(' - ')[1].split('/');
+        final diaMes = int.parse(partesFecha[1]);
+
+        if (diaMes == mesActual) {
+          final diaSolo = dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
+          diasConClases.add(diaSolo);
         }
       }
     }
-
-    return diasConClases.toList();
   }
+
+  return diasConClases.toList();
+}
+
+
 
   @override
   void initState() {
