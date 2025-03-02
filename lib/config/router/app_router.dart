@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:taller_ceramica/screens/chat_screen.dart';
 import 'package:taller_ceramica/screens/crear_taller.dart';
 import 'package:taller_ceramica/screens/login.dart';
 import 'package:taller_ceramica/screens/home_screen.dart';
@@ -112,6 +113,11 @@ final appRouter = GoRouter(
       path: "/subscription",
       builder: (context, state) => SubscriptionScreen(),
     ),
+    GoRoute(
+      path: "/chatscreen",
+      builder: (context, state) => ChatScreen(),
+    ),
+    
  
     
   ],

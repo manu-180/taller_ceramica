@@ -1,29 +1,33 @@
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:whatsapp_unilink/whatsapp_unilink.dart';
+import 'package:taller_ceramica/widgets/custom_appbar.dart';
+import 'package:taller_ceramica/widgets/responsive_appbar.dart';
 
-class Contactanos extends StatefulWidget {
-  const Contactanos({super.key});
-
+class ChatScreen extends StatefulWidget {
   @override
-  State<Contactanos> createState() => _ContactanosState();
+  _ChatScreenState createState() => _ChatScreenState();
 }
 
-class _ContactanosState extends State<Contactanos> with TickerProviderStateMixin {
-  bool _isExpanded = false;
-  bool _showChatBot = false;
+class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
   List<Map<String, String>> _messages = []; // Solo almacena los mensajes visibles en la UI
   bool _isLoading = false;
 
   final String openAiApiKey = "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";
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
-  
-  get http => null;
+
+  @override
+  void initState() {
+    super.initState();
+    // Mensaje de bienvenida del bot
+    _messages.add({
+      "role": "assistant",
+      "content": "¡Hola! Mi nombre es AssistifyBot. Puedo brindarte cualquier información de la aplicación de forma rápida y precisa. ¿En qué puedo ayudarte?"
+    });
+  }
+
 
   Future<void> _sendMessage(String message) async {
     if (message.isEmpty) return;
@@ -39,7 +43,7 @@ class _ContactanosState extends State<Contactanos> with TickerProviderStateMixin
         {
           "role": "system",
           "content": """
-         Eres AssistifyBot, un asistente de una agenda inteligente diseñada para ayudar a los usuarios a gestionar sus horarios de manera eficiente.
+         Eres Assistify Bot, un asistente de una agenda inteligente diseñada para ayudar a los usuarios a gestionar sus horarios de manera eficiente.
 Tu función es responder preguntas sobre la aplicación Assistify y brindar asistencia en la gestión de tareas, eventos y recordatorios.
 
 📅 **FUNCIONES PRINCIPALES DE ASSISTIFY**:
@@ -167,144 +171,16 @@ Assistify tiene tres secciones principales: **Clases**, **Mis Clases** y **Confi
     }
   }
 
-  void _launchWhatsApp() async {
-    final link = WhatsAppUnilink(
-      phoneNumber: '+5491132820164',
-      text: '¡Hola! Me gustaría más información.',
-    );
-
-    if (await canLaunchUrl(Uri.parse('$link'))) {
-      await launchUrl(Uri.parse('$link'), mode: LaunchMode.externalApplication);
-    } else {
-      debugPrint('No se pudo abrir WhatsApp. Verifica que está instalado.');
-    }
-  }
-
-  void _launchEmail() async {
-    final String email = 'reycamila04@gmail.com';
-    final String subject = Uri.encodeComponent('Consulta');
-    final String body = Uri.encodeComponent('Hola, quisiera más información.');
-
-    final Uri emailUri = Uri.parse('mailto:$email?subject=$subject&body=$body');
-
-    if (await canLaunchUrl(emailUri)) {
-      await launchUrl(emailUri, mode: LaunchMode.externalApplication);
-    } else {
-      debugPrint('No se pudo abrir el cliente de correo.');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
 
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                const SizedBox(height: 10),
-                if (_isExpanded && !_showChatBot)
-                  TweenAnimationBuilder(
-                    duration: const Duration(milliseconds: 350),
-                    tween: Tween<double>(begin: 12, end: 0),
-                    curve: Curves.easeOut,
-                    builder: (context, value, child) => Transform.translate(
-                      offset: Offset(0, value),
-                      child: FloatingActionButton(
-                        onPressed: _launchWhatsApp,
-                        backgroundColor: Colors.green,
-                        heroTag: 'whatsapp',
-                        child: const Icon(
-                          FontAwesomeIcons.whatsapp,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                const SizedBox(height: 10),
-                if (_isExpanded && !_showChatBot)
-                  TweenAnimationBuilder(
-                    duration: const Duration(milliseconds: 350),
-                    tween: Tween<double>(begin: 12, end: 0),
-                    curve: Curves.easeOut,
-                    builder: (context, value, child) => Transform.translate(
-                      offset: Offset(0, value),
-                      child: FloatingActionButton(
-                        onPressed: _launchEmail,
-                        backgroundColor: Colors.red,
-                        heroTag: 'email',
-                        child: const Icon(
-                          FontAwesomeIcons.envelope,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                const SizedBox(height: 10),
-                if (_isExpanded)
-                  TweenAnimationBuilder(
-                    duration: const Duration(milliseconds: 350),
-                    tween: Tween<double>(begin: 12, end: 0),
-                    curve: Curves.easeOut,
-                    builder: (context, value, child) => Transform.translate(
-                      offset: Offset(0, value),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            context.push("/chatscreen");
-                          });
-                        },
-                        child: Container(
-                          width: size.width * 0.143,
-                          height: size.height * 0.068,
-                          decoration: BoxDecoration(
-                            color: Colors.blueAccent,
-                            borderRadius: BorderRadius.circular(18),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withAlpha(10),
-                                blurRadius: 8,
-                                spreadRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.android,
-                            color: Colors.white,
-                            size: 33,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                const SizedBox(height: 10),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: Container(
-                    width: _showChatBot ? size.width * 0.8 : 0,
-                    height: _showChatBot ? size.height * 0.4 : 0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withAlpha(10),
-                          blurRadius: 8,
-                          spreadRadius: 2,
-                        ),
-                      ],
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: _showChatBot
-                        ? Column(
+    final color = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      appBar: ResponsiveAppBar(isTablet: MediaQuery.of(context).size.width > 600),
+      body: Column(
         children: [
+          SizedBox(height: 30),
           Expanded(
             child: ListView.builder(
               itemCount: _messages.length,
@@ -317,7 +193,7 @@ Assistify tiene tres secciones principales: **Clases**, **Mis Clases** y **Confi
                   child: Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: isUser ? Colors.blue : Colors.grey[300],
+                      color: isUser ? color.primary.withAlpha(180) : Colors.grey[300],
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
@@ -356,39 +232,7 @@ Assistify tiene tres secciones principales: **Clases**, **Mis Clases** y **Confi
             ),
           ),
         ],
-      )
-                        : const SizedBox.shrink(),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Visibility(
-                  visible: !isKeyboardOpen, // Oculta si el teclado está abierto
-                  child: IntrinsicWidth(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        setState(() {
-                          _isExpanded = !_isExpanded;
-                        });
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            _isExpanded ? Icons.close : Icons.contact_page_outlined,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          const SizedBox(width: 5),
-                          const Text("Contáctanos"),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
