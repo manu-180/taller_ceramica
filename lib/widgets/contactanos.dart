@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,13 +15,15 @@ class Contactanos extends StatefulWidget {
 }
 
 class _ContactanosState extends State<Contactanos> with TickerProviderStateMixin {
+
+  
   bool _isExpanded = false;
   bool _showChatBot = false;
   final TextEditingController _controller = TextEditingController();
   List<Map<String, String>> _messages = []; // Solo almacena los mensajes visibles en la UI
   bool _isLoading = false;
 
-  final String openAiApiKey = "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";
+  final String? openAiApiKey = dotenv.env['OPEN_AI_KEY'];
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
   
   get http => null;
