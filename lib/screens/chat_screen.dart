@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -15,7 +16,7 @@ class _ChatScreenState extends State<ChatScreen> {
   List<Map<String, String>> _messages = []; // Solo almacena los mensajes visibles en la UI
   bool _isLoading = false;
 
-  final String openAiApiKey = "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";
+  final String? openAiApiKey = dotenv.env['OPEN_AI_KEY'];
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
 
   @override
