@@ -9,7 +9,7 @@ workflows:
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
       groups:
-        - Assistify
+        - Ayudar
 
     scripts:
       - name: Install dependencies
