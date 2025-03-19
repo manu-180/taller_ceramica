@@ -9,7 +9,7 @@ workflows:
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
       groups:
-        - app_store_credentials  # Asegurar que las variables de entorno sean accesibles
+        - assistify
 
     scripts:
       - name: Install dependencies
@@ -27,13 +27,7 @@ workflows:
     publishing:
       app_store_connect:
         api_key:
-          key_id: 5X2C57X263
-          issuer_id: a42f6d03-89a5-4f05-a1e9-449150a57f9b
-          private_key: |
-            -----BEGIN PRIVATE KEY-----
-            MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgO2RVVeZ0Ev7H69sK
-            ZOENMu0K+j3djDGk2uGmePZdF8ugCgYIKoZIzj0DAQehRANCAATChMt4cc3ogrv3
-            Xd/tQdPGD5fq+age1aRgkR8LVHZeZShv4X9tOMBFk+k7BnB1FLXzZYWh5bHMncI0
-            phOlex2p
-            -----END PRIVATE KEY-----
+          key_id: $APP_STORE_KEY_ID
+          issuer_id: $APP_STORE_ISSUER_ID
+          private_key: $APP_STORE_PRIVATE_KEY
         submit_to_app_store: true
