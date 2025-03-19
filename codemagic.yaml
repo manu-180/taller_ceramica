@@ -19,8 +19,8 @@ workflows:
     publishing:
       app_store_connect:
         api_key:
-          key_id: "5X2C57X263"
-          issuer_id: "a42f6d03-89a5-4f05-a1e9-449150a57f9b"
+          key_id: 5X2C57X263
+          issuer_id: a42f6d03-89a5-4f05-a1e9-449150a57f9b
           private_key: |
             -----BEGIN PRIVATE KEY-----
             MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgO2RVVeZ0Ev7H69sK
