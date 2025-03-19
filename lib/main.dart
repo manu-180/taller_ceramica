@@ -6,18 +6,31 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:taller_ceramica/config/router/app_router.dart';
 import 'package:taller_ceramica/config/theme/app_theme.dart';
-import 'package:taller_ceramica/l10n/app_localizations.dart'; 
+import 'package:taller_ceramica/l10n/app_localizations.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
 import 'package:taller_ceramica/subscription/subscription_manager.dart';
+import 'dart:io';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(fileName: ".env");
+  // Cargar variables de entorno solo si existe el archivo .env
+  if (File('.env').existsSync()) {
+    await dotenv.load(fileName: ".env");
+  }
+
+  // Seleccionar método de carga de variables según entorno
+  final supabaseUrl = Platform.environment.containsKey('CI')
+      ? String.fromEnvironment("SUPABASE_URL")
+      : dotenv.env['SUPABASE_URL'] ?? '';
+
+  final supabaseAnonKey = Platform.environment.containsKey('CI')
+      ? String.fromEnvironment("SUPABASE_ANON_KEY")
+      : dotenv.env['SUPABASE_ANON_KEY'] ?? '';
 
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL'] ?? '',
-    anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
+    url: supabaseUrl,
+    anonKey: supabaseAnonKey,
   );
 
   await initializeDateFormatting('es_ES', null);
@@ -45,46 +58,42 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: themeNotify.getColor(),
       localizationsDelegates: const [
-        AppLocalizationsDelegate(), 
-        GlobalMaterialLocalizations.delegate, 
-        GlobalWidgetsLocalizations.delegate, 
-        GlobalCupertinoLocalizations.delegate, 
+        AppLocalizationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-    Locale('en'), 
-    Locale('es'), 
-    Locale('fr'), 
-    Locale('pt'), 
-    Locale('de'), 
-    Locale('it'), 
-    
-    Locale('zh'), 
-    Locale('ja'), 
-    Locale('ko'), 
-    Locale('ar'), 
-    Locale('hi'), 
-    Locale('ru'),
-    Locale('tr'), 
-    Locale('nl'), 
-    Locale('sv'), 
-    Locale('pl'), 
-],
+        Locale('en'),
+        Locale('es'),
+        Locale('fr'),
+        Locale('pt'),
+        Locale('de'),
+        Locale('it'),
+        Locale('zh'),
+        Locale('ja'),
+        Locale('ko'),
+        Locale('ar'),
+        Locale('hi'),
+        Locale('ru'),
+        Locale('tr'),
+        Locale('nl'),
+        Locale('sv'),
+        Locale('pl'),
+      ],
       localeResolutionCallback: (locale, supportedLocales) {
-  if (locale == null) {
-    return const Locale('en');
-  }
+        if (locale == null) {
+          return const Locale('en');
+        }
 
-  for (var supportedLocale in supportedLocales) {
-    if (supportedLocale.languageCode == locale.languageCode) {
-      return supportedLocale;
-    }
-  }
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode) {
+            return supportedLocale;
+          }
+        }
 
-  return const Locale('en');
-},
-
+        return const Locale('en');
+      },
     );
   }
 }
-
-// magic

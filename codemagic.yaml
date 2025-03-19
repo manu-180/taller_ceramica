@@ -3,17 +3,31 @@ workflows:
     name: iOS Build
     max_build_duration: 60
     environment:
-      vars:
-        FLUTTER_BUILD_MODE: release
-        APPLE_CERTIFICATE_PASSWORD: $APPLE_CERTIFICATE_PASSWORD 
-      flutter: stable
+      FLUTTER_BUILD_MODE: release
+      APPLE_CERTIFICATE_PASSWORD: $APPLE_CERTIFICATE_PASSWORD
+      SUPABASE_URL: $SUPABASE_URL
+      SUPABASE_ANON_KEY: $SUPABASE_ANON_KEY
+      SERVICE_ROLE_KEY: $SERVICE_ROLE_KEY
+      API_KEY_SID: $API_KEY_SID
+      API_KEY_SECRET: $API_KEY_SECRET
+      ACCOUNT_SID: $ACCOUNT_SID
+      AUTH_TOKEN: $AUTH_TOKEN
+      OPEN_AI_KEY: $OPEN_AI_KEY
+      XCODE_WORKSPACE: "ios/Runner.xcworkspace"
+      XCODE_SCHEME: "Runner"
+      COCOAPODS_VERSION: "1.16.2"
     scripts:
       - name: Install dependencies
         script: |
+          flutter clean
           flutter pub get
+          cd ios
+          pod repo update
+          pod install
+          cd ..
       - name: Build iOS app
         script: |
-          flutter build ipa --release
+          flutter build ipa --no-codesign
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:
