@@ -19,8 +19,8 @@ workflows:
     publishing:
       app_store_connect:
         api_key:
-          key_id: "TU_KEY_ID_AQUI"
-          issuer_id: "TU_ISSUER_ID_AQUI"
+          key_id: "5X2C57X263"
+          issuer_id: "a42f6d03-89a5-4f05-a1e9-449150a57f9b"
           private_key: |
             -----BEGIN PRIVATE KEY-----
             TU_CLAVE_PRIVADA_AQUI
