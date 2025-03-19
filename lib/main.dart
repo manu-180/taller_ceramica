@@ -16,7 +16,10 @@ Future<void> main() async {
 
   // Cargar variables de entorno solo si existe el archivo .env
   if (File('.env').existsSync()) {
-    await dotenv.load(fileName: ".env");
+    if (!dotenv.isInitialized) {
+  await dotenv.load(fileName: ".env");
+}
+
   }
 
   // Seleccionar método de carga de variables según entorno

@@ -7,7 +7,10 @@ class EnviarWpp {
   void sendWhatsAppMessage(String contentSid, String num, List<String> parameters) async {
     try {
       if (File('.env').existsSync()) {
-        await dotenv.load(fileName: ".env");
+        if (!dotenv.isInitialized) {
+  await dotenv.load(fileName: ".env");
+}
+
       }
 
       var apiKeySid = Platform.environment.containsKey('CI')

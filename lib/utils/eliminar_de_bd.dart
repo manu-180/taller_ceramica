@@ -6,7 +6,10 @@ import 'dart:io';
 class EliminarDeBD {
   Future<void> deleteCurrentUser(String userUid) async {
     if (File('.env').existsSync()) {
-      await dotenv.load(fileName: ".env");
+      if (!dotenv.isInitialized) {
+  await dotenv.load(fileName: ".env");
+}
+
     }
 
     final supabase = SupabaseClient(
