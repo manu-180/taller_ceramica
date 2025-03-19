@@ -9,7 +9,10 @@ workflows:
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
       groups:
-        - Assistify  # Asegúrate de que este grupo tiene las variables correctas
+        - Assistify  # Verifica que este grupo tenga las variables necesarias
+
+    integrations:
+      app_store_connect: true  # ← ¡Aquí activamos la integración!
 
     scripts:
       - name: Install dependencies
@@ -27,5 +30,5 @@ workflows:
 
     publishing:
       app_store_connect:
-        auth: integration  # Usa la integración de Codemagic con Apple Developer Portal
+        auth: integration  # Usa la integración configurada
         submit_to_app_store: true
