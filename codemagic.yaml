@@ -1,7 +1,15 @@
 workflows:
   ios-workflow:
-    name: iOS Build
+    name: "iOS Build"
     max_build_duration: 60
+    instance_type: mac_mini_m2  # Definimos el tipo de instancia para la build
+    environment:
+      vars:
+        FLUTTER_BUILD_MODE: "release"
+        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+      groups:
+        - app_store_credentials  # Asegurar que las variables de entorno sean accesibles
 
     scripts:
       - name: Install dependencies
@@ -19,8 +27,8 @@ workflows:
     publishing:
       app_store_connect:
         api_key:
-          key_id: 5X2C57X263
-          issuer_id: a42f6d03-89a5-4f05-a1e9-449150a57f9b
+          key_id: "5X2C57X263"
+          issuer_id: "a42f6d03-89a5-4f05-a1e9-449150a57f9b"
           private_key: |
             -----BEGIN PRIVATE KEY-----
             MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgO2RVVeZ0Ev7H69sK
