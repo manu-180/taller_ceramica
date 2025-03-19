@@ -19,6 +19,14 @@ workflows:
     scripts:
       - name: Install dependencies
         script: |
+          export SUPABASE_URL=$SUPABASE_URL
+          export SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY
+          export SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY
+          export API_KEY_SID=$API_KEY_SID
+          export API_KEY_SECRET=$API_KEY_SECRET
+          export ACCOUNT_SID=$ACCOUNT_SID
+          export AUTH_TOKEN=$AUTH_TOKEN
+          export OPEN_AI_KEY=$OPEN_AI_KEY
           flutter clean
           flutter pub get
           cd ios
