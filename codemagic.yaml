@@ -19,7 +19,10 @@ workflows:
     publishing:
       app_store_connect:
         api_key:
-          key_id: $APP_STORE_KEY_ID
-          issuer_id: $APP_STORE_ISSUER_ID
-          private_key: $APP_STORE_PRIVATE_KEY
+          key_id: "TU_KEY_ID_AQUI"
+          issuer_id: "TU_ISSUER_ID_AQUI"
+          private_key: |
+            -----BEGIN PRIVATE KEY-----
+            TU_CLAVE_PRIVADA_AQUI
+            -----END PRIVATE KEY-----
         submit_to_app_store: true
