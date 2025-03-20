@@ -12,7 +12,7 @@ workflows:
         - Assistify  # Verifica que este grupo tenga las variables necesarias
 
     integrations:
-      app_store_connect: true  # ← ¡Aquí activamos la integración!
+      app_store_connect: assistifyfinal  # ← ¡Aquí activamos la integración!
 
     scripts:
       - name: Install dependencies
