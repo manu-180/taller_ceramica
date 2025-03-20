@@ -6,7 +6,7 @@ A new Flutter project.
 
 Para cambiar el nombre de la app :
 ""
-dart run change_app_package_name:main com.manuelnavarro.tallerdeceramica
+dart run change_app_package_name:main com.manuelnavarro.assistify
 ""
 seleccionar el icono :
 ""

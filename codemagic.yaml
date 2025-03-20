@@ -9,10 +9,10 @@ workflows:
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
       groups:
-        - Assistify  # Verifica que este grupo tenga las variables necesarias
+        - Assistify  # Asegúrate de que este grupo tenga las credenciales correctas
 
     integrations:
-      app_store_connect: assistifyfinal  # ← ¡Aquí activamos la integración!
+      app_store_connect: assistifyfinal  # Vincula Codemagic con App Store Connect
 
     scripts:
       - name: Install dependencies
@@ -31,5 +31,4 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration  # Usa la integración configurada
-        submit_to_app_store: true
-        submit_to_testflight: true  # ← Envío a TestFlight
+        submit_to_app_store: true  # Enviar a App Store Connect automáticamente
