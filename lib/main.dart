@@ -11,6 +11,7 @@ import 'package:taller_ceramica/providers/theme_provider.dart';
 import 'package:taller_ceramica/subscription/subscription_manager.dart';
 import 'dart:io';
 
+// prueba
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
