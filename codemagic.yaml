@@ -24,7 +24,7 @@ workflows:
           cd ..
       - name: Build iOS app
         script: |
-          flutter build ipa --release
+          flutter build ipa --release --no-codesign
     artifacts:
       - build/ios/ipa/*.ipa
 
@@ -32,4 +32,4 @@ workflows:
       app_store_connect:
         auth: integration  # Usa la integración configurada
         submit_to_app_store: true  # Enviar a App Store Connect automáticamente
-        submit_to_testflight: true    # Enviar a App Store Connect automáticyamente
+        submit_to_testflight: true    # Enviar a App Store Connect automáticamente
