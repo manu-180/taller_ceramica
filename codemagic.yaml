@@ -24,7 +24,7 @@ workflows:
           cd ..
       - name: Build iOS app
         script: |
-          flutter build ipa --release 
+          flutter build ipa --release --no-codesign
     artifacts:
       - build/ios/ipa/*.ipa
       - /Users/builder/clone/build/ios/ipa/*.ipa
