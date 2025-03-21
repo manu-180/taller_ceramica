@@ -27,6 +27,8 @@ workflows:
           flutter build ipa --release --no-codesign
     artifacts:
       - build/ios/ipa/*.ipa
+      - /Users/builder/clone/build/ios/ipa/*.ipa
+
 
     publishing:
       app_store_connect:
