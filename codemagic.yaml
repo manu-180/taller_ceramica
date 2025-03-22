@@ -13,11 +13,6 @@ workflows:
       groups:
         - Assistify
 
-    auto_code_signing:
-      signing_certificate: "Apple Distribution"
-      team_id: Y82Q48DSZ2
-      app_identifier: com.manuelnavarro.assistifyapp
-
     integrations:
       app_store_connect: assistifyfinal
 
@@ -42,3 +37,8 @@ workflows:
         auth: integration
         submit_to_testflight: true
         submit_to_app_store: true
+        auto_code_signing:
+          signing_certificate: "Apple Distribution"
+          team_id: Y82Q48DSZ2
+          app_identifier: com.manuelnavarro.assistifyapp
+
