@@ -19,21 +19,23 @@ workflows:
 
 
     scripts:
-      - name: Install dependencies
+      - name: Verificar contenido del .mobileprovision
+        script: |
+          echo "📄 Imprimiendo contenido del provisioning profile..."
+          security cms -D -i Certificates/assistifyaibo.mobileprovision || echo "❌ No se pudo leer el provisioning profile"
+
+      - name: Instalar dependencias
         script: |
           flutter clean
           flutter pub get
           cd ios
           pod install
           cd ..
-        
-      - name: Mostrar contenido del .mobileprovision
-        script: |
-          security cms -D -i Certificates/assistifyaibo.mobileprovision
 
-      - name: Build iOS app
+      - name: Compilar IPA para producción
         script: |
           flutter build ipa --export-options-plist=ios/ExportOptions.plist
+
 
     artifacts:
       - build/ios/ipa/*.ipa
