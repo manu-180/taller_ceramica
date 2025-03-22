@@ -12,7 +12,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.manuelnavarro.assistify"
+    namespace = "com.manuelnavarro.tallerdeceramica"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -27,7 +27,7 @@ android {
 
     defaultConfig {
         // Application ID único.
-        applicationId = "com.manuelnavarro.assistify"
+        applicationId = "com.manuelnavarro.tallerdeceramica"
         // Configuración mínima y objetivo.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion

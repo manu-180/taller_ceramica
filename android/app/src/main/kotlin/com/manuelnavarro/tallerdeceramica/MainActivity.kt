@@ -1,4 +1,4 @@
-package com.manuelnavarro.assistify
+package com.manuelnavarro.tallerdeceramica
 
 import io.flutter.embedding.android.FlutterActivity
 
