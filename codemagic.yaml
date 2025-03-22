@@ -26,6 +26,11 @@ workflows:
           cd ios
           pod install
           cd ..
+        
+      - name: Mostrar contenido del .mobileprovision
+        script: |
+          security cms -D -i Certificates/assistifyaibo.mobileprovision
+
       - name: Build iOS app
         script: |
           flutter build ipa --export-options-plist=ios/ExportOptions.plist
