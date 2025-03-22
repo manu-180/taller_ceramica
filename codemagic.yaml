@@ -2,7 +2,7 @@ workflows:
   ios-workflow:
     name: "iOS Build"
     max_build_duration: 60
-    instance_type: mac_mini_m2  
+    instance_type: mac_mini_m2
 
     environment:
       vars:
@@ -10,19 +10,23 @@ workflows:
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
       groups:
-        - Assistify  # Asegurate de que este grupo tenga las credenciales correctas
+        - Assistify  # Tus variables seguras están en este grupo
       flutter: stable
 
     integrations:
-      app_store_connect: assistifyfinal  # Ya tenés esta integración activa
+      app_store_connect: assistifyfinal  # Ya vinculaste esta integración
 
-
+    code_signing:
+      certificates:
+        - Certificates/ios_distribution.p12
+      provisioning_profiles:
+        - Certificates/Assistify_Prod_Profile.mobileprovision
 
     scripts:
-      - name: Verificar contenido del .mobileprovision
+      - name: Verificar contenido del provisioning profile
         script: |
-          echo "📄 Imprimiendo contenido del provisioning profile..."
-          security cms -D -i Certificates/assistifyaibo.mobileprovision || echo "❌ No se pudo leer el provisioning profile"
+          echo "📄 Contenido del provisioning:"
+          security cms -D -i Certificates/Assistify_Prod_Profile.mobileprovision || echo "⚠️ No se pudo leer el profile"
 
       - name: Instalar dependencias
         script: |
@@ -36,12 +40,11 @@ workflows:
         script: |
           flutter build ipa --export-options-plist=ios/ExportOptions.plist
 
-
     artifacts:
       - build/ios/ipa/*.ipa
 
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_app_store: true
         submit_to_testflight: true
+        submit_to_app_store: true
