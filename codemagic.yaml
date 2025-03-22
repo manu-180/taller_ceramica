@@ -16,12 +16,11 @@ workflows:
     integrations:
       app_store_connect: assistifyfinal
 
-    scripts:
-      - name: Verificar contenido del provisioning profile
-        script: |
-          echo "📄 Contenido del provisioning:"
-          security cms -D -i Certificates/Assistify_Prod_Profile.mobileprovision || echo "⚠️ No se pudo leer el profile"
+    ios_signing:
+      distribution_type: app_store
+      bundle_identifier: com.manuelnavarro.assistifyapp
 
+    scripts:
       - name: Instalar dependencias
         script: |
           flutter clean
@@ -42,10 +41,3 @@ workflows:
         auth: integration
         submit_to_testflight: true
         submit_to_app_store: true
-
-# 👇 Esta sección va FUERA del workflow
-
-signing:
-  certificate_path: Certificates/ios_distribution.p12
-  certificate_password: $P12_CERTIFICATE_PASSWORD
-  provisioning_profile_path: Certificates/Assistify_Prod_Profile.mobileprovision
