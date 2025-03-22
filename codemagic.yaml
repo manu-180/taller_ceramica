@@ -10,15 +10,16 @@ workflows:
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
       groups:
-        - Assistify  # Tus variables seguras están en este grupo
+        - Assistify
       flutter: stable
 
     integrations:
-      app_store_connect: assistifyfinal  # Ya vinculaste esta integración
+      app_store_connect: assistifyfinal
 
-    code_signing:
+    signing:
       certificates:
-        - Certificates/ios_distribution.p12
+        - path: Certificates/ios_distribution.p12
+          password: $P12_CERTIFICATE_PASSWORD
       provisioning_profiles:
         - Certificates/Assistify_Prod_Profile.mobileprovision
 
