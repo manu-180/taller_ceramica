@@ -12,10 +12,11 @@ workflows:
         XCODE_SCHEME: "Runner"
       groups:
         - Assistify
-      auto_code_signing:
-        signing_certificate: "Apple Distribution"
-        team_id: Y82Q48DSZ2
-        app_identifier: com.manuelnavarro.assistifyapp
+
+    auto_code_signing:
+      signing_certificate: "Apple Distribution"
+      team_id: Y82Q48DSZ2
+      app_identifier: com.manuelnavarro.assistifyapp
 
     integrations:
       app_store_connect: assistifyfinal
@@ -31,7 +32,7 @@ workflows:
 
       - name: Compilar IPA para producción
         script: |
-          flutter build ipa
+          flutter build ipa --export-options-plist=ios/ExportOptions.plist
 
     artifacts:
       - build/ios/ipa/*.ipa
@@ -41,8 +42,3 @@ workflows:
         auth: integration
         submit_to_testflight: true
         submit_to_app_store: true
-
-    triggering:
-      events:
-        - push
-
