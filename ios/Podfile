@@ -1,0 +1,21 @@
+# Podfile generado para Codemagic
+platform :ios, '12.0'
+
+# Desactiva las advertencias de todas las librerías externas
+install! 'cocoapods', :disable_input_output_paths => true
+
+# Inhibir advertencias de todas las dependencias
+inhibit_all_warnings!
+
+# Usa frameworks estáticos (mejor compatibilidad con Flutter)
+use_frameworks! :linkage => :static
+
+target 'Runner' do
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      flutter_additional_ios_build_settings(target)
+    end
+  end
+end
