@@ -16,12 +16,6 @@ workflows:
     integrations:
       app_store_connect: assistifyfinal
 
-    code_signing:
-      certificate:
-        path: Certificates/ios_distribution.p12
-        password: $P12_CERTIFICATE_PASSWORD
-      provisioning_profile: Certificates/Assistify_Prod_Profile.mobileprovision
-
     scripts:
       - name: Verificar contenido del provisioning profile
         script: |
@@ -48,3 +42,11 @@ workflows:
         auth: integration
         submit_to_testflight: true
         submit_to_app_store: true
+
+# 👇 Esto va **fuera del workflow**, como bloque global:
+signing:
+  certificates:
+    - path: Certificates/ios_distribution.p12
+      password: $P12_CERTIFICATE_PASSWORD
+  provisioning_profiles:
+    - Certificates/Assistify_Prod_Profile.mobileprovision
