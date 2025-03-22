@@ -16,12 +16,7 @@ workflows:
     integrations:
       app_store_connect: assistifyfinal  # Ya tenés esta integración activa
 
-    code_signing:
-      distribution_certificates:
-        - certificate: Certificates/ios_distribution.p12
-          certificate_password: $P12_CERTIFICATE_PASSWORD
-      provisioning_profiles:
-        - Certificates/assistifyaibo.mobileprovision  #
+
 
     scripts:
       - name: Install dependencies
