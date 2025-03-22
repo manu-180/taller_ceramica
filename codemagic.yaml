@@ -16,10 +16,11 @@ workflows:
     integrations:
       app_store_connect: assistifyfinal
 
-    manual_code_signing:
-      certificate_path: Certificates/ios_distribution.p12
-      certificate_password: $P12_CERTIFICATE_PASSWORD
-      provisioning_profile_path: Certificates/Assistify_Prod_Profile.mobileprovision
+    code_signing:
+      certificate:
+        path: Certificates/ios_distribution.p12
+        password: $P12_CERTIFICATE_PASSWORD
+      provisioning_profile: Certificates/Assistify_Prod_Profile.mobileprovision
 
     scripts:
       - name: Verificar contenido del provisioning profile
