@@ -45,8 +45,7 @@ workflows:
 
 # 👇 Esto va **fuera del workflow**, como bloque global:
 signing:
-  certificates:
-    - path: Certificates/ios_distribution.p12
-      password: $P12_CERTIFICATE_PASSWORD
-  provisioning_profiles:
-    - Certificates/Assistify_Prod_Profile.mobileprovision
+  certificate_path: Certificates/ios_distribution.p12
+  certificate_password: $P12_CERTIFICATE_PASSWORD
+  provisioning_profile_path: Certificates/Assistify_Prod_Profile.mobileprovision
+
