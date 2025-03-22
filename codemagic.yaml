@@ -16,9 +16,6 @@ workflows:
     integrations:
       app_store_connect: assistifyfinal
 
-    ios_signing:
-      distribution_type: app_store
-      bundle_identifier: com.manuelnavarro.assistifyapp
 
     scripts:
       - name: Instalar dependencias
