@@ -37,10 +37,8 @@ workflows:
         script: |
           flutter build ipa --export-options-plist=ios/ExportOptions.plist --output build/ios/archive
 
-
     artifacts:
       - build/ios/archive/*.ipa
-
 
     publishing:
       app_store_connect:

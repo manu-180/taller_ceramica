@@ -32,5 +32,5 @@ git commit -m "actualizando pagina webbb"
 git push
 
 git add .
-git commit -m "actualizando build" 
+git commit -m "actualizando build Check" 
 git push origin main
