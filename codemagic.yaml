@@ -55,14 +55,6 @@ workflows:
           xcodebuild -workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
             -scheme "$XCODE_SCHEME" -showBuildSettings
 
-      - name: Forzar configuración de firma
-        script: |
-          xcodebuild -workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
-            -scheme "$XCODE_SCHEME" \
-            -configuration Release \
-            -allowProvisioningUpdates \
-            -showBuildSettings
-
       - name: Compilar Flutter para iOS
         script: |
           flutter build ios --release --build-name=2.0.14 --build-number=82
@@ -73,8 +65,6 @@ workflows:
             --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
             --scheme "$XCODE_SCHEME" \
             --config Release
-
-
 
     artifacts:
       - build/ios/ipa/*.ipa
