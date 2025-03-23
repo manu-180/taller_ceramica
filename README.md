@@ -30,3 +30,7 @@ cp -r build/web/* docs/
 git add .
 git commit -m "actualizando pagina webbb" 
 git push
+
+git add .
+git commit -m "actualizando build" 
+git push origin main

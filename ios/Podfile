@@ -1,14 +1,16 @@
-require_relative '../Flutter/flutter_export_environment'
-load File.join(__dir__, 'Flutter', 'Generated.xcconfig')
-
 platform :ios, '12.0'
 
-use_frameworks! :linkage => :static
+# Desactiva las advertencias de todas las librerías externas
 install! 'cocoapods', :disable_input_output_paths => true
+
+# Inhibir advertencias de todas las dependencias
 inhibit_all_warnings!
 
+# Usa frameworks estáticos (mejor compatibilidad con Flutter)
+use_frameworks! :linkage => :static
+
 target 'Runner' do
-    install_all_flutter_pods(File.dirname(__FILE__))
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
