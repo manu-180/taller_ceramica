@@ -41,13 +41,18 @@ workflows:
         script: |
           flutter build ipa --export-options-plist=ios/ExportOptions.plist
 
+      - name: Mostrar contenido de build/ios
+        script: |
+          echo "Contenido de build/ios:"
+          ls -l build/ios
+
       - name: Verificar si se generó el .ipa
         script: |
-          echo "Contenido de build/ios/ipa:"
-          ls -l build/ios/ipa
+          echo "Buscando IPA en build/ios..."
+          find build/ios -name "*.ipa"
 
     artifacts:
-      - $CM_BUILD_DIR/build/ios/ipa/*.ipa
+      - build/ios/**/*.ipa
 
     publishing:
       app_store_connect:
