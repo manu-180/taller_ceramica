@@ -55,6 +55,11 @@ workflows:
             -allowProvisioningUpdates \
             -showBuildSettings
 
+      - name: Compilar Flutter para iOS
+        script: |
+          flutter build ios --release --no-codesign
+
+
       - name: Compilar y exportar IPA para App Store
         script: |
           xcode-project build-ipa \
