@@ -1,4 +1,5 @@
-require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), __dir__)
+require_relative '../Flutter/flutter_export_environment'
+load File.join(__dir__, 'Flutter', 'Generated.xcconfig')
 
 platform :ios, '12.0'
 
