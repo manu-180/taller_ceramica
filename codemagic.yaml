@@ -28,6 +28,14 @@ workflows:
           pod install
           cd ..
 
+      - name: Descargar perfil de firma si no existe
+        script: |
+          app-store-connect fetch-signing-files "com.manuelnavarro.assistifyapp" --type IOS_APP_STORE --create
+
+      - name: Importar certificado
+        script: |
+          keychain add-certificates
+
       - name: Configurar firma automática
         script: |
           keychain initialize
@@ -37,8 +45,13 @@ workflows:
         script: |
           flutter build ipa --export-options-plist=ios/ExportOptions.plist
 
+      - name: Verificar si se generó el .ipa
+        script: |
+          echo "Contenido de build/ios/ipa:"
+          ls -l build/ios/ipa
+
     artifacts:
-      - build/ios/ipa/*.ipa
+      - $CM_BUILD_DIR/build/ios/ipa/*.ipa
 
     publishing:
       app_store_connect:
