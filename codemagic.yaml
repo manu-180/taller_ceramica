@@ -35,7 +35,8 @@ workflows:
 
       - name: Compilar IPA para producción
         script: |
-          flutter build ipa --export-options-plist=ios/ExportOptions.plist
+          flutter build ipa --export-options-plist=ios/ExportOptions.plist --output build/ios/archive
+
 
     artifacts:
       - build/ios/archive/*.ipa
