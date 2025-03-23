@@ -8,7 +8,7 @@ install! 'cocoapods', :disable_input_output_paths => true
 inhibit_all_warnings!
 
 target 'Runner' do
-  flutter_install_all_ios_pods File.dirname(__FILE__)
+    install_all_flutter_pods(File.dirname(__FILE__))
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
