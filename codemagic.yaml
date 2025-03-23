@@ -11,6 +11,7 @@ workflows:
         FLUTTER_BUILD_MODE: "release"
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
+        XCODE_CONFIGURATION: "Release"  # 👈
       groups:
         - Assistify
       ios_signing:
@@ -57,7 +58,7 @@ workflows:
 
       - name: Compilar Flutter para iOS
         script: |
-          flutter build ios --release --no-codesign
+          flutter build ios --release --no-codesign --build-name=2.0.14 --build-number=82
 
 
       - name: Compilar y exportar IPA para App Store
@@ -65,7 +66,7 @@ workflows:
           xcode-project build-ipa \
             --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
             --scheme "$XCODE_SCHEME" \
-            --config Release
+            --config "$XCODE_CONFIGURATION"
 
 
 
