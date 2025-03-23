@@ -37,19 +37,16 @@ workflows:
           keychain initialize
           xcode-project use-profiles
 
-      - name: Compilar IPA para producción
+      - name: Compilar y exportar IPA para App Store
         script: |
-          flutter build ipa --export-options-plist=ios/ExportOptions.plist
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
 
       - name: Mostrar contenido de build/ios
         script: |
           echo "Contenido de build/ios:"
           ls -l build/ios
-
-      - name: Mostrar contenido de build/ios/archive
-        script: |
-          echo "Contenido de build/ios/archive:"
-          ls -l build/ios/archive
 
       - name: Verificar si se generó el .ipa
         script: |
@@ -57,12 +54,10 @@ workflows:
           find build/ios -name "*.ipa"
 
     artifacts:
-      - build/ios/archive/*.ipa
-      - build/ios/ipa/*.ipa
       - build/ios/**/*.ipa
 
     publishing:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-        submit_to_app_store: true
+        submit_to_app_store: false  # Cambialo a true cuando quieras enviarla a revisión
