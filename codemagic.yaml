@@ -14,7 +14,7 @@ workflows:
         - Assistify
 
     integrations:
-      app_store_connect: assistifyaibo
+      app_store_connect: assistifyfinal
 
     scripts:
       - name: Instalar dependencias
