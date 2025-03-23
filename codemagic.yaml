@@ -36,7 +36,6 @@ workflows:
         script: |
           keychain initialize
 
-
       - name: Compilar IPA para producción
         script: |
           flutter build ipa --export-options-plist=ios/ExportOptions.plist
@@ -46,10 +45,16 @@ workflows:
           echo "Contenido de build/ios:"
           ls -l build/ios
 
+      - name: Mostrar contenido de build/ios/archive
+        script: |
+          echo "Contenido de build/ios/archive:"
+          ls -l build/ios/archive
+
       - name: Verificar si se generó el .ipa
         script: |
           echo "Buscando IPA en build/ios..."
           find build/ios -name "*.ipa"
+
 
     artifacts:
       - build/ios/archive/*.ipa
