@@ -32,9 +32,10 @@ workflows:
         script: |
           keychain add-certificates
 
-      - name: Inicializar llavero
+      - name: Configurar firma con perfil subido
         script: |
           keychain initialize
+          xcode-project use-profiles
 
       - name: Compilar IPA para producción
         script: |
@@ -55,14 +56,10 @@ workflows:
           echo "Buscando IPA en build/ios..."
           find build/ios -name "*.ipa"
 
-
     artifacts:
       - build/ios/archive/*.ipa
       - build/ios/ipa/*.ipa
       - build/ios/**/*.ipa
-
-
-
 
     publishing:
       app_store_connect:
