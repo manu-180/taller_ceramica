@@ -12,6 +12,9 @@ workflows:
         XCODE_SCHEME: "Runner"
       groups:
         - Assistify
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.manuelnavarro.assistifyapp
 
     integrations:
       app_store_connect: assistifyaibo
@@ -25,10 +28,10 @@ workflows:
           pod install
           cd ..
 
-      - name: Actualizar repositorios de CocoaPods
+      - name: Configurar firma automática
         script: |
-          pod repo update
-          rm -rf ios/Podfile.lock
+          keychain initialize
+          xcode-project use-profiles
 
       - name: Compilar IPA para producción
         script: |
