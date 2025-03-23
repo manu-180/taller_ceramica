@@ -72,9 +72,8 @@ workflows:
           xcode-project build-ipa \
             --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
             --scheme "$XCODE_SCHEME" \
-            --config "Release" \
-            --export-options-method app-store \
-            --archive-flags="-allowProvisioningUpdates"
+            --config Release
+
 
     artifacts:
       - build/ios/ipa/*.ipa
