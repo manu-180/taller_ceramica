@@ -6,6 +6,7 @@ workflows:
 
     environment:
       flutter: stable
+      xcode: latest
       vars:
         FLUTTER_BUILD_MODE: "release"
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
@@ -32,10 +33,21 @@ workflows:
         script: |
           keychain add-certificates
 
-      - name: Configurar firma con perfil subido
+      - name: Inicializar llavero y configurar perfil
         script: |
           keychain initialize
           xcode-project use-profiles
+
+      # 🔍 Paso 4: Mostrar esquemas disponibles en el workspace
+      - name: Verificar esquemas disponibles
+        script: |
+          xcodebuild -list -workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE"
+
+      # 🔍 Paso 5: Mostrar configuración de Xcode
+      - name: Mostrar configuración de Xcode
+        script: |
+          xcodebuild -workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" -showBuildSettings
 
       - name: Compilar y exportar IPA para App Store
         script: |
@@ -48,16 +60,23 @@ workflows:
           echo "Contenido de build/ios:"
           ls -l build/ios
 
+      - name: Mostrar contenido de build/ios/ipa
+        script: |
+          echo "Contenido de build/ios/ipa:"
+          ls -l build/ios/ipa || echo "No existe la carpeta ipa"
+
       - name: Verificar si se generó el .ipa
         script: |
           echo "Buscando IPA en build/ios..."
           find build/ios -name "*.ipa"
 
     artifacts:
+      - build/ios/ipa/*.ipa
+      - build/ios/archive/*.ipa
       - build/ios/**/*.ipa
 
     publishing:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-        submit_to_app_store: false  # Cambialo a true cuando quieras enviarla a revisión
+        submit_to_app_store: false
