@@ -32,10 +32,10 @@ workflows:
         script: |
           keychain add-certificates
 
-      - name: Configurar firma automática
+      - name: Inicializar llavero
         script: |
           keychain initialize
-          xcode-project use-profiles
+
 
       - name: Compilar IPA para producción
         script: |
