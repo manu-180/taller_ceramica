@@ -32,10 +32,6 @@ workflows:
         script: |
           keychain add-certificates
 
-      - name: Descargar perfil de firma si no existe
-        script: |
-          app-store-connect fetch-signing-files "com.manuelnavarro.assistifyapp" --type IOS_APP_STORE --create
-
       - name: Configurar firma automática
         script: |
           keychain initialize
@@ -49,7 +45,6 @@ workflows:
         script: |
           echo "Contenido de build/ios/ipa:"
           ls -l build/ios/ipa
-
 
     artifacts:
       - $CM_BUILD_DIR/build/ios/ipa/*.ipa
