@@ -70,10 +70,12 @@ workflows:
             -scheme "$XCODE_SCHEME" \
             -configuration Release \
             -archivePath build/ios/archive/Runner.xcarchive \
+            -destination 'generic/platform=iOS' \
             CODE_SIGN_IDENTITY="Apple Distribution" \
             CODE_SIGN_STYLE=Manual \
             DEVELOPMENT_TEAM=Y82Q48DSZ2 \
-            COMPILER_INDEX_STORE_ENABLE=NO | xcpretty || exit 1
+            COMPILER_INDEX_STORE_ENABLE=NO | tee build.log | xcpretty || { cat build.log; exit 1; }
+
 
     artifacts:
       - build/ios/ipa/*.ipa
