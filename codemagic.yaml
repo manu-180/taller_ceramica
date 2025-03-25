@@ -14,10 +14,6 @@ workflows:
       groups:
         - Assistify
 
-    ios_signing:
-      distribution_type: app_store
-      bundle_identifier: com.manuelnavarro.assistifyapp
-
     integrations:
       app_store_connect: assistifyaibo
 
@@ -80,3 +76,4 @@ workflows:
         auth: integration
         submit_to_testflight: true
         submit_to_app_store: false
+        code_signing: automatic
