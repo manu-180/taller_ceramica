@@ -26,14 +26,8 @@ workflows:
           flutter clean
           flutter pub get
           cd ios
-          pod install --verbose
+          pod install
           cd ..
-
-      - name: Verificar perfiles instalados
-        script: |
-          echo "🔐 Perfiles disponibles:"
-          security find-identity -v
-          profiles list
 
       - name: Importar certificado
         script: |
@@ -52,7 +46,7 @@ workflows:
         script: |
           xcodebuild -workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
             -scheme "$XCODE_SCHEME" \
-            -configuration "$XCODE_CONFIGURATION" \
+            -configuration Release \
             -showBuildSettings | grep -i configuration
 
       - name: Mostrar configuración de Xcode
@@ -64,23 +58,16 @@ workflows:
         script: |
           flutter build ios --release --build-name=2.0.14 --build-number=82
 
-      - name: Compilar IPA manualmente (debug detallado)
+      - name: Compilar y exportar IPA para App Store
         script: |
-          xcodebuild -workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
-            -scheme "$XCODE_SCHEME" \
-            -configuration Release \
-            -archivePath build/ios/archive/Runner.xcarchive \
-            -destination 'generic/platform=iOS' \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            CODE_SIGN_STYLE=Manual \
-            DEVELOPMENT_TEAM=Y82Q48DSZ2 \
-            COMPILER_INDEX_STORE_ENABLE=NO | tee build.log | xcpretty || { cat build.log; exit 1; }
-
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
 
     artifacts:
       - build/ios/ipa/*.ipa
-      - build/ios/archive/*.ipa
-      - build/ios/**/*.ipa
+      - build/ios/archive/*.xcarchive
+      - /Users/builder/clone/build/ios/ipa/*.ipa
 
     publishing:
       app_store_connect:
