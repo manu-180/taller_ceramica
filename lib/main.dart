@@ -15,7 +15,7 @@ import 'dart:io';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Cargar variables de entorno solo si existe el archivo .env
+  // Cargar variables de entorno asdfsolo si existe el archivo .env
   if (File('.env').existsSync()) {
     if (!dotenv.isInitialized) {
   await dotenv.load(fileName: ".env");
