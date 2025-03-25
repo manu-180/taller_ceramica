@@ -58,10 +58,10 @@ workflows:
         script: |
           flutter build ios --release --build-name=2.0.14 --build-number=82
 
-
       - name: Compilar y exportar IPA para App Store
         script: |
           set -e
+          mkdir -p build/ios/archive
           xcodebuild -workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
             -scheme "$XCODE_SCHEME" \
             -archivePath build/ios/archive/Runner.xcarchive \
@@ -71,7 +71,6 @@ workflows:
             DEVELOPMENT_TEAM=Y82Q48DSZ2 \
             COMPILER_INDEX_STORE_ENABLE=NO | tee build.log
 
-          # Mostrar las últimas 100 líneas si falla
           EXIT_CODE=$?
           if [ $EXIT_CODE -ne 0 ]; then
             echo "🔴 ERROR al compilar:"
@@ -79,11 +78,10 @@ workflows:
             exit $EXIT_CODE
           fi
 
-
     artifacts:
       - build/ios/ipa/*.ipa
       - build/ios/archive/*.xcarchive
-      - /Users/builder/clone/build/ios/ipa/*.ipa
+      - build.log
 
     publishing:
       app_store_connect:
