@@ -1,53 +1,76 @@
 workflows:
-  ios-release:
-    name: Build iOS release
-    environment:
-      vars:
-        FLUTTER_BUILD_MODE: release
-        XCODE_WORKSPACE: ios/Runner.xcworkspace
-        XCODE_SCHEME: Runner
-      flutter: stable
-      xcode: 16.2
-    cache:
-      cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
-        - ios/Pods
-        - .dart_tool
-    scripts:
-      - name: Instalar dependencias Flutter
-        script: flutter pub get
+  ios-workflow:
+    name: "iOS Build"
+    max_build_duration: 60
+    instance_type: mac_mini_m2
 
-      - name: Instalar dependencias iOS (Pods)
+    environment:
+      flutter: stable
+      xcode: latest
+      vars:
+        FLUTTER_BUILD_MODE: "release"
+        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+      groups:
+        - Assistify
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.manuelnavarro.assistifyapp
+
+    integrations:
+      app_store_connect: assistifyaibo
+
+    scripts:
+      - name: Instalar dependencias
         script: |
+          flutter clean
+          flutter pub get
           cd ios
           pod install
+          cd ..
+
+      - name: Importar certificado
+        script: |
+          keychain add-certificates
+
+      - name: Inicializar llavero y configurar perfil
+        script: |
+          keychain initialize
+          xcode-project use-profiles
+
+      - name: Verificar esquemas disponibles
+        script: |
+          xcodebuild -list -workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE"
+
+      - name: Verificar configuración del esquema
+        script: |
+          xcodebuild -workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Release \
+            -showBuildSettings | grep -i configuration
+
+      - name: Mostrar configuración de Xcode
+        script: |
+          xcodebuild -workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" -showBuildSettings
 
       - name: Compilar Flutter para iOS
-        script: flutter build ios --release --no-codesign
+        script: |
+          flutter build ios --release --build-name=2.0.14 --build-number=82
 
       - name: Compilar y exportar IPA para App Store
         script: |
-          xcodebuild -workspace "$XCODE_WORKSPACE" \
-            -scheme "$XCODE_SCHEME" \
-            -archivePath build/ios/archive/Runner.xcarchive \
-            -configuration Release \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            CODE_SIGN_STYLE=Manual \
-            DEVELOPMENT_TEAM=Y82Q48DSZ2 \
-            COMPILER_INDEX_STORE_ENABLE=NO archive
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
 
-          xcodebuild -exportArchive \
-            -archivePath build/ios/archive/Runner.xcarchive \
-            -exportOptionsPlist exportOptions.plist \
-            -exportPath build/ios/ipa
     artifacts:
       - build/ios/ipa/*.ipa
+      - build/ios/archive/*.xcarchive
+      - /Users/builder/clone/build/ios/ipa/*.ipa
+
     publishing:
       app_store_connect:
-        api_key:
-          key_id: $APP_STORE_KEY_ID
-          issuer_id: $APP_STORE_ISSUER_ID
-          private_key: $APP_STORE_PRIVATE_KEY
-
-
-
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
