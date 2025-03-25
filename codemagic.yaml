@@ -11,7 +11,6 @@ workflows:
         FLUTTER_BUILD_MODE: "release"
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
-        XCODE_CONFIGURATION: "Release"
       groups:
         - Assistify
       ios_signing:
@@ -64,7 +63,6 @@ workflows:
           xcode-project build-ipa \
             --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
             --scheme "$XCODE_SCHEME" \
-            --config Release
 
     artifacts:
       - build/ios/ipa/*.ipa
