@@ -42,10 +42,12 @@ workflows:
             -exportPath build/ios/ipa
     artifacts:
       - build/ios/ipa/*.ipa
+
     publishing:
       app_store_connect:
-        api_key: 
+        api_key:
           key_id: $APP_STORE_KEY_ID
           issuer_id: $APP_STORE_ISSUER_ID
           private_key: $APP_STORE_PRIVATE_KEY
+
 
