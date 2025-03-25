@@ -13,9 +13,10 @@ workflows:
         XCODE_SCHEME: "Runner"
       groups:
         - Assistify
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.manuelnavarro.assistifyapp
+      signing:
+        ios:
+          distribution_type: app_store
+          bundle_identifier: com.manuelnavarro.assistifyapp
 
     integrations:
       app_store_connect: assistifyaibo
@@ -28,10 +29,6 @@ workflows:
           cd ios
           pod install
           cd ..
-
-      - name: Importar certificado
-        script: |
-          keychain add-certificates
 
       - name: Inicializar llavero y configurar perfil
         script: |
@@ -61,14 +58,10 @@ workflows:
       - name: Compilar y exportar IPA para App Store
         script: |
           set -e
-          mkdir -p build/ios/archive
           xcodebuild -workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
             -scheme "$XCODE_SCHEME" \
             -archivePath build/ios/archive/Runner.xcarchive \
             -configuration Release \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            CODE_SIGN_STYLE=Manual \
-            DEVELOPMENT_TEAM=Y82Q48DSZ2 \
             COMPILER_INDEX_STORE_ENABLE=NO | tee build.log
 
           EXIT_CODE=$?
@@ -81,7 +74,6 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
       - build/ios/archive/*.xcarchive
-      - build.log
 
     publishing:
       app_store_connect:
