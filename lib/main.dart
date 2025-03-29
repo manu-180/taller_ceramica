@@ -15,27 +15,13 @@ import 'dart:io';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Cargar variables de entorno asdasdffsolo si existe el archivo .env
-  if (File('.env').existsSync()) {
-    if (!dotenv.isInitialized) {
   await dotenv.load(fileName: ".env");
-}
-
-  }
-
-  // Seleccionar método de carga de variables según entorno
-  final supabaseUrl = Platform.environment.containsKey('CI')
-      ? String.fromEnvironment("SUPABASE_URL")
-      : dotenv.env['SUPABASE_URL'] ?? '';
-
-  final supabaseAnonKey = Platform.environment.containsKey('CI')
-      ? String.fromEnvironment("SUPABASE_ANON_KEY")
-      : dotenv.env['SUPABASE_ANON_KEY'] ?? '';
 
   await Supabase.initialize(
-    url: supabaseUrl,
-    anonKey: supabaseAnonKey,
+    url: dotenv.env['SUPABASE_URL'] ?? '',
+    anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
   );
+
 
   await initializeDateFormatting('es_ES', null);
 

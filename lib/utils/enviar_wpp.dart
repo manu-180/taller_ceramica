@@ -5,72 +5,63 @@ import 'dart:io';
 
 class EnviarWpp {
   void sendWhatsAppMessage(String contentSid, String num, List<String> parameters) async {
-    try {
-      if (File('.env').existsSync()) {
-        if (!dotenv.isInitialized) {
-  await dotenv.load(fileName: ".env");
-}
+  try {
+    // Cargar variables de entorno
+    await dotenv.load(fileName: ".env");
 
-      }
+    var apiKeySid = dotenv.env['API_KEY_SID'] ?? '';
+    var apiKeySecret = dotenv.env['API_KEY_SECRET'] ?? '';
+    var accountSid = dotenv.env['ACCOUNT_SID'] ?? '';
 
-      var apiKeySid = Platform.environment.containsKey('CI')
-          ? String.fromEnvironment("API_KEY_SID")
-          : dotenv.env['API_KEY_SID'] ?? '';
+    print("API_KEY_SID: $apiKeySid");
+    print("API_KEY_SECRET: $apiKeySecret");
+    print("ACCOUNT_SID: $accountSid");
 
-      var apiKeySecret = Platform.environment.containsKey('CI')
-          ? String.fromEnvironment("API_KEY_SECRET")
-          : dotenv.env['API_KEY_SECRET'] ?? '';
+    final uri = Uri.parse(
+        'https://api.twilio.com/2010-04-01/Accounts/$accountSid/Messages.json');
+    print("URI creada: $uri");
 
-      var accountSid = Platform.environment.containsKey('CI')
-          ? String.fromEnvironment("ACCOUNT_SID")
-          : dotenv.env['ACCOUNT_SID'] ?? '';
+    const fromWhatsappNumber = 'whatsapp:+5491125303794';
+    print("Número de WhatsApp origen: $fromWhatsappNumber");
 
-      print("API_KEY_SID: $apiKeySid");
-      print("API_KEY_SECRET: $apiKeySecret");
-      print("ACCOUNT_SID: $accountSid");
+    // Crear cuerpo de la solicitud
+    var body = {
+      'From': fromWhatsappNumber,
+      'To': num,
+      'ContentSid': contentSid, // Identificador de la plantilla
+      'ContentVariables': jsonEncode({
+        "1": parameters.isNotEmpty ? parameters[0] : "",
+        "2": parameters.length > 1 ? parameters[1] : "",
+        "3": parameters.length > 2 ? parameters[2] : "",
+        "4": parameters.length > 3 ? parameters[3] : "",
+        "5": parameters.length > 4 ? parameters[4] : "",
+      }),
+    };
 
-      final uri = Uri.parse(
-          'https://api.twilio.com/2010-04-01/Accounts/$accountSid/Messages.json');
-      print("URI creada: $uri");
+    print("Cuerpo de la solicitud: $body");
 
-      const fromWhatsappNumber = 'whatsapp:+5491125303794';
-      print("Número de WhatsApp origen: $fromWhatsappNumber");
+    // Hacer la solicitud HTTP POST
+    var response = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Basic ${base64Encode(utf8.encode('$apiKeySid:$apiKeySecret'))}',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body,
+    );
 
-      var body = {
-        'From': fromWhatsappNumber,
-        'To': num,
-        'ContentSid': contentSid,
-        'ContentVariables': jsonEncode({
-          "1": parameters.isNotEmpty ? parameters[0] : "",
-          "2": parameters.length > 1 ? parameters[1] : "",
-          "3": parameters.length > 2 ? parameters[2] : "",
-          "4": parameters.length > 3 ? parameters[3] : "",
-          "5": parameters.length > 4 ? parameters[4] : "",
-        }),
-      };
+    // Imprimir el estado de la respuesta
+    print("Estado de la respuesta: ${response.statusCode}");
+    print("Cuerpo de la respuesta: ${response.body}");
 
-      print("Cuerpo de la solicitud: $body");
-
-      var response = await http.post(
-        uri,
-        headers: {
-          'Authorization': 'Basic ${base64Encode(utf8.encode('$apiKeySid:$apiKeySecret'))}',
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: body,
-      );
-
-      print("Estado de la respuesta: ${response.statusCode}");
-      print("Cuerpo de la respuesta: ${response.body}");
-
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        print("Mensaje enviado correctamente.");
-      } else {
-        print("Error al enviar el mensaje. Código de error: ${response.statusCode}");
-      }
-    } catch (e) {
-      print("Error: $e");
+    // Verificar si la solicitud fue exitosa
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      print("Mensaje enviado correctamente.");
+    } else {
+      print("Error al enviar el mensaje. Código de error: ${response.statusCode}");
     }
+  } catch (e) {
+    print("Error: $e");
   }
 }
 
@@ -100,4 +91,4 @@ class EnviarWpp {
   //     },
   //   );
   // }
-
+}
